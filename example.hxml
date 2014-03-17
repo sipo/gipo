@@ -1,0 +1,8 @@
+-swf bin/swf/ExampleMain.swf
+-main ExampleMain
+-debug
+-D fdb
+-swf-version 11.8
+-swf-header 480:720:30:ffffff
+-cp src
+-cp example
