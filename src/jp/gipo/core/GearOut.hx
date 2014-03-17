@@ -1,0 +1,28 @@
+package jp.sipo.gipo.core;
+/**
+ * 外部からGearを呼び出した場合に使用できるメソッド一覧
+ * 
+ * @auther sipo
+ */
+import haxe.PosInfos;
+interface GearOut
+{
+	/**
+	 * 親がなくとも動作するGearとして設定する
+	 * 
+	 * @param parentDiffuser Diffuserのみをどこからか引き継ぎたい場合に設定する。不必要ならnull
+	 */
+	public function initializeTop(parentDiffuser:Diffuser):Void;
+	
+	/**
+	 * 消去処理の追加。実行は追加の逆順で行われる
+	 */
+	public function disposeTask(func:Void -> Void, ?pos:PosInfos):Void;
+	
+	/**
+	 * Gearの実態を取得する。
+	 * Gear内部での処理にしか使わない
+	 */
+	@:allow(Gear)
+	private function getImplement():Gear;
+}
