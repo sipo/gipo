@@ -41,9 +41,8 @@ class GearExample
 	public function new() 
 	{
 		top = new TopGear();
-		// 外部から、initializeTopを呼び出されたGearは、親を持たないで存在することができる。
-		// 何がトップであるかを決めるのは外部であり、自身がトップであることを定義することは普通はあまり無い
-		// 引数には、diffuserを指定でき、Gearの親子関係が繋がっていないが、diffuserを繋げたい場合に利用する
+		// 一番上は最初に、initializeTopを呼び出すことで動き出す。
+		// 引数は基本的にはnull
 		top.getGear().initializeTop(null);
 	}
 }
@@ -111,7 +110,7 @@ class TopGear extends GearHolderImpl
 		// ただし、diffuseと同時に処理する場合や、初期化処理をまとめたい場合initialize関数でtool.bookChildを使用すること。
 		// 同じインスタンスへの処理をなるべく近くに書き、抜けをなくすのがGipoの設計思想の１つなので。
 		
-		// 消去処理をタイマーで登録する
+		// 消去処理をタイマーで登録する（これはテストのため）
 		Timer.delay(delay, 5000);
 	}
 	
@@ -159,6 +158,8 @@ class ChildExample extends GearHolderImpl
 		// 各種ハンドラ関数を登録する
 		gear.addDiffusibleHandler(initialize);
 		gear.addRunHandler(run);
+		// 消去処理を追加
+		gear.disposeTask(function () trace("ChildExampleの消去処理"));
 	}
 	
 	/*
@@ -171,8 +172,6 @@ class ChildExample extends GearHolderImpl
 		trace("ChildExampleの初期化処理");
 		// 重要クラスを取得
 		importInstance = gear.absorb(ImportClass);	// 対象のクラスをキーにして取得する。
-		// 消去処理を追加
-		gear.disposeTask(function () trace("ChildExampleの消去処理"));
 	}
 	
 	/* 初期化後処理 */
