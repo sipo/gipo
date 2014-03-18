@@ -1,4 +1,5 @@
 package jp.sipo.gipo.core.state;
+import jp.sipo.util.SipoError;
 import flash.Vector;
 import jp.sipo.gipo.util.ListCall;
 import jp.sipo.gipo.core.config.GearNoteTag;

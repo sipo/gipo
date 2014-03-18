@@ -8,11 +8,16 @@ import haxe.PosInfos;
 interface GearOut
 {
 	/**
-	 * 親がなくとも動作するGearとして設定する
+	 * 親がなくとも動作するGearHolderとして設定する
 	 * 
 	 * @param parentDiffuser Diffuserのみをどこからか引き継ぎたい場合に設定する。不必要ならnull
 	 */
 	public function initializeTop(parentDiffuser:Diffuser):Void;
+	
+	/**
+	 * 親がなくとも動作するGearHolderを消去する
+	 */
+	public function disposeTop():Void;
 	
 	/**
 	 * 消去処理の追加。実行は追加の逆順で行われる

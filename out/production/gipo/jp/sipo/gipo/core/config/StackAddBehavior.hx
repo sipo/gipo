@@ -5,6 +5,7 @@ package jp.sipo.gipo.core.config;
  * 
  * @author sipo
  */
+import jp.sipo.util.SipoError;
 class StackAddBehavior 
 {
 	

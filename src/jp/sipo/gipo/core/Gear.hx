@@ -359,9 +359,7 @@ class Gear implements GearOut
 	}
 	
 	/**
-	 * 最上位Gearとして削除する
-	 * 
-	 * @param parentDiffuser diffuserだけ他から親子関係を持つ場合に、親として設定されるdiffuser。nullの場合は親を持たない
+	 * 親がなくとも動作するGearHolderを消去する
 	 */
 	public function disposeTop():Void
 	{

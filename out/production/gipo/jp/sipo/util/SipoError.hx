@@ -1,4 +1,4 @@
-package jp.sipo;
+package jp.sipo.util;
 /**
  * 
  * @auther sipo

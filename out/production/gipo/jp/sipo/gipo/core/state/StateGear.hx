@@ -4,6 +4,7 @@ package jp.sipo.gipo.core.state;
  * 
  * @author sipo
  */
+import jp.sipo.util.SipoError;
 @:final
 class StateGear
 {

@@ -1,5 +1,5 @@
--swf bin/swf/ExampleMain.swf
--main ExampleMain
+-swf bin/swf/GearExample.swf
+-main GearExample
 -debug
 -D fdb
 -swf-version 11.8

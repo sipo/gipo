@@ -1,4 +1,5 @@
 package jp.sipo.gipo.util;
+import jp.sipo.util.SipoError;
 import haxe.PosInfos;
 /**
  * 関数処理を保持し、実行する

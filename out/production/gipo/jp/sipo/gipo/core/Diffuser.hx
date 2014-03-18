@@ -5,6 +5,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import jp.sipo.util.SipoError;
 class Diffuser
 {
 	/* 親Diffuser */
