@@ -6,12 +6,21 @@ package ;
  * ・消去処理を行なうサンプル
  * ・重要クラスをDiffuseするサンプル
  * 
+ * 用語解説
+ * ・Gear
+ * 　Gipoライブラリの基本機能を持つインスタンス。階層構造を生成する。
+ * 　正確にはGearを持つGearHolderが階層構造を生成し、Gearはその手助けをするイメージになる
+ * ・diffuse
+ * 　特定のインスタンスを階層構造の下位全てから取得することが出来るようにする
+ * 　その階層構造が消去されると自動的に消去されるため、安全に末端のインスタンスまで引き渡しができる
+ * ・absorb
+ * 　diffuseしたインスタンスを下位レイヤーで取得すること。
+ * 
  * @auther sipo
  */
 import jp.sipo.gipo.core.GearHolderImpl;
 import haxe.Timer;
 import GearExample.ChildExample;
-import jp.sipo.gipo.core.GearHolder;
 import jp.sipo.gipo.core.GearDiffuseTool;
 class GearExample
 {
@@ -46,7 +55,7 @@ class GearExample
  */
 class TopGear extends GearHolderImpl
 {
-	/* システム全体で使う重要なインスタンス想定 */
+	/* システム全体で使う重要なインスタンス（という想定） */
 	private var importInstance:ImportClass;
 	/* 階層構造の子の例 */
 	private var child:ChildExample;
@@ -137,7 +146,7 @@ class ImportClass
  */
 class ChildExample extends GearHolderImpl
 {
-	/* システム全体で使う重要なインスタンス */
+	/* システム全体で使う重要なインスタンス（という想定） */
 	private var importInstance:ImportClass;
 	
 	/**
