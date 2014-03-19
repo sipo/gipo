@@ -66,12 +66,12 @@ class StateSwitcherGear
 		// ２重追加ロックを解除
 		changeLock = false; 
 		// GearStateを有効化する
-		stateHolder.getGearState().activationState(this);
+		stateHolder.getStateGear().activationState(this);
 	}
 	
 	/**
 	 * 前回のstateの取り扱い
-	 * デフォルトではremove、継承して扱いを変えることができる。
+	 * デフォルトではremove、継承して扱いを変えることができる。// FIXME:修正
 	 */
 	private function default_lastStateTreatment(lastStateHolder:StateGearHolder):Void
 	{

@@ -1,12 +1,12 @@
 package jp.sipo.gipo.core.state;
 class StateSwitcherGearHolderImpl extends GearHolderImpl implements StateSwitcherGearHolder
 {
-	private var gearStateSwitcher:StateSwitcherGear;
+	private var stateSwitcherGear:StateSwitcherGear;
 	
 	public function new()
 	{
 		super();
-		gearStateSwitcher = new StateSwitcherGear(this, gear);
+		stateSwitcherGear = new StateSwitcherGear(this, gear);
 	}
 	
 }

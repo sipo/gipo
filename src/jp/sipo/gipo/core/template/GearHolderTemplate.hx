@@ -1,6 +1,5 @@
 package jp.sipo.gipo.core.template;
-class GearHolderTemplate 
-extends GearHolderImpl
+class GearHolderTemplate extends GearHolderImpl
 {
 	/** コンストラクタ */
 	public function new()

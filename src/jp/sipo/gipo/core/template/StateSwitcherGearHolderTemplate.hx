@@ -7,8 +7,7 @@ class TmpState extends StateGearHolderImpl
 	/** コンストラクタ */
 	public function new() { super(); }
 }
-class GearStateSwitcherHolderTemplate 
-extends StateSwitcherGearHolderImpl
+class StateSwitcherGearHolderTemplate extends StateSwitcherGearHolderImpl
 {
 	/* 初期state */
 	private var firstState:TmpState;
@@ -27,7 +26,7 @@ extends StateSwitcherGearHolderImpl
 		// 処理登録
 		gear.addDiffusibleHandler(initialize);
 		gear.addRunHandler(run);
-		gearStateSwitcher.entryHandlerStateAssignment(stateAssignment);
+		stateSwitcherGear.entryHandlerStateAssignment(stateAssignment);
 	}
 	
 	/* 初期化処理 */
@@ -51,7 +50,7 @@ extends StateSwitcherGearHolderImpl
 	/* 初期化後処理 */
 	private function run():Void
 	{
-		gearStateSwitcher.changeState(firstState);
+		stateSwitcherGear.changeState(firstState);
 	}
 	
 	/* ================================================================

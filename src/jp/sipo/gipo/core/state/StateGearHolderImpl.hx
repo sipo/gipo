@@ -1,16 +1,16 @@
 package jp.sipo.gipo.core.state;
 class StateGearHolderImpl extends GearHolderImpl implements StateGearHolder 
 {
-	private var gearState:StateGear;
+	private var stateGear:StateGear;
 	
 	public function new()
 	{
 		super();
-		gearState = new StateGear(this, gear);
+		stateGear = new StateGear(this, gear);
 	}
 	
 	public function getGearState():StateGear
 	{
-		return gearState;
+		return stateGear;
 	}
 }

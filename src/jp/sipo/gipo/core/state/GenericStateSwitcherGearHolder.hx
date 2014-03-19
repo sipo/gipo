@@ -1,6 +1,7 @@
 package jp.sipo.gipo.core.state;
 /**
  * stateを型変換する機能まで備えたGearStateSwitcherHolder
+ * // FIXME:修正こちらを、StateSwitcherGearHolderImplにする
  * 
  * @auther sipo
  */
@@ -13,7 +14,7 @@ class GenericStateSwitcherGearHolder<TState> extends StateSwitcherGearHolderImpl
 	public function new() 
 	{
 		super();
-		gearStateSwitcher.entryHandlerStateAssignment(stateAssignment);
+		stateSwitcherGear.entryHandlerStateAssignment(stateAssignment);
 	}
 	
 	/**
@@ -21,7 +22,7 @@ class GenericStateSwitcherGearHolder<TState> extends StateSwitcherGearHolderImpl
 	 */
 	public function changeState(nextState:TState):Void
 	{
-		gearStateSwitcher.changeState(cast(nextState, StateGearHolder));
+		stateSwitcherGear.changeState(cast(nextState, StateGearHolder));
 	}
 	
 	/**
