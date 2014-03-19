@@ -70,8 +70,8 @@ class StateSwitcherGear
 	}
 	
 	/**
-	 * 前回のstateの取り扱い
-	 * デフォルトではremove、継承して扱いを変えることができる。// FIXME:修正
+	 * 前回のstateの取り扱いのデフォルト処理
+	 * 単に削除をする処理
 	 */
 	private function default_lastStateTreatment(lastStateHolder:StateGearHolder):Void
 	{

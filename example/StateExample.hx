@@ -5,7 +5,7 @@ package ;
  * @auther sipo
  */
 import jp.sipo.gipo.core.GearDiffuseTool;
-import jp.sipo.gipo.core.state.GenericStateSwitcherGearHolder;
+import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
 import jp.sipo.gipo.core.GearHolderImpl;
 class StateExample
 {
@@ -42,7 +42,7 @@ class StateExample
  * 
  * @auther sipo
  */
-class TopGear extends GenericStateSwitcherGearHolder<ChildState>	// 子をGenericで指定する
+class TopGear extends StateSwitcherGearHolderImpl<ChildState>	// 子をGenericで指定する
 {
 	
 	/**

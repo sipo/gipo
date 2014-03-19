@@ -1,13 +1,13 @@
 package jp.sipo.gipo.core.template;
 import jp.sipo.gipo.core.state.StateGearHolder;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
-import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
+import jp.sipo.gipo.core.state.StateSwitcherGearHolderLowLevelImpl;
 class TmpState extends StateGearHolderImpl
 {
 	/** コンストラクタ */
 	public function new() { super(); }
 }
-class StateSwitcherGearHolderTemplate extends StateSwitcherGearHolderImpl
+class StateSwitcherGearHolderTemplate extends StateSwitcherGearHolderLowLevelImpl
 {
 	/* 初期state */
 	private var firstState:TmpState;
