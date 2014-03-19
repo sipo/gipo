@@ -1,12 +1,34 @@
 package jp.sipo.gipo.core.state;
-class StateSwitcherGearHolderImpl extends GearHolderImpl implements StateSwitcherGearHolder
+/**
+ * stateを型変換する機能まで備えたGearStateSwitcherHolder
+ * 
+ * @auther sipo
+ */
+class StateSwitcherGearHolderImpl<TState> extends StateSwitcherGearHolderLowLevelImpl
 {
-	private var gearStateSwitcher:StateSwitcherGear;
+	/** シーン */
+	public var scene(default, null):TState;
 	
-	public function new()
+	/** コンストラクタ */
+	public function new() 
 	{
 		super();
-		gearStateSwitcher = new StateSwitcherGear(this, gear);
+		stateSwitcherGear.addStateAssignmentHandler(stateAssignment);
 	}
 	
+	/**
+	 * Stateの切り替え
+	 */
+	public function changeState(nextState:TState):Void
+	{
+		stateSwitcherGear.changeState(cast(nextState, StateGearHolder));
+	}
+	
+	/**
+	 * Stateの型変換
+	 */
+	inline private function stateAssignment(scene:StateGearHolder):Void
+	{
+		this.scene = cast(scene);
+	}
 }

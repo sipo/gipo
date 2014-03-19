@@ -90,7 +90,7 @@ class ChildState extends StateGearHolderImpl
 	private function stateRun():Void
 	{
 		// stateの共通処理は、それぞれがchangeStateされた時に最初に呼び出されることになる。
-		trace('${this}のChildState共通処理');
+		trace('${this}の共通処理');
 	}
 }
 /**

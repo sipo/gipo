@@ -35,12 +35,12 @@ class GearExample
 	}
 	
 	/* 最上位のGear */
-	private var top:TopGear;
+	private var top:Top;
 	
 	/** コンストラクタ */
 	public function new() 
 	{
-		top = new TopGear();
+		top = new Top();
 		// 一番上は最初に、initializeTopを呼び出すことで動き出す。
 		// 引数は基本的にはnull
 		top.getGear().initializeTop(null);
@@ -52,7 +52,7 @@ class GearExample
  * 
  * @auther sipo
  */
-class TopGear extends GearHolderImpl
+class Top extends GearHolderImpl
 {
 	/* システム全体で使う重要なインスタンス（という想定） */
 	private var importInstance:ImportClass;

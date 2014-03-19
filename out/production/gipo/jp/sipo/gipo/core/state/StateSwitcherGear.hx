@@ -66,12 +66,12 @@ class StateSwitcherGear
 		// ２重追加ロックを解除
 		changeLock = false; 
 		// GearStateを有効化する
-		stateHolder.getGearState().activationState(this);
+		stateHolder.getStateGear().activationState(this);
 	}
 	
 	/**
-	 * 前回のstateの取り扱い
-	 * デフォルトではremove、継承して扱いを変えることができる。
+	 * 前回のstateの取り扱いのデフォルト処理
+	 * 単に削除をする処理
 	 */
 	private function default_lastStateTreatment(lastStateHolder:StateGearHolder):Void
 	{
@@ -88,7 +88,7 @@ class StateSwitcherGear
 	 * 「AfterChangeState」ではないので注意。changeStateの処理の最中に呼び出されている。
 	 * FlashだとstateがDynamicになっているので高速化の意味合いもある
 	 */
-	public function entryHandlerStateAssignment(stateAssignment:StateGearHolder -> Void):Void
+	public function addStateAssignmentHandler(stateAssignment:StateGearHolder -> Void):Void
 	{
 		stateAssignmentList.push(stateAssignment);
 	}
@@ -97,7 +97,7 @@ class StateSwitcherGear
 	 * 切り替えた場合の前回Stateの処遇を設定。
 	 * 上書きはエラー
 	 */
-	public function setHandlerLastStateTreatment(lastStateTreatment:StateGearHolder -> Void):Void
+	public function setLastStateTreatmentHandler(lastStateTreatment:StateGearHolder -> Void):Void
 	{
 		if (this.lastStateTreatment != null) throw new SipoError('既にlastStateTreatmentが登録されています ${lastStateTreatment}');
 		this.lastStateTreatment = lastStateTreatment;

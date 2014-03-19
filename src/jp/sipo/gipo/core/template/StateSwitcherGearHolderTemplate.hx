@@ -26,7 +26,7 @@ class StateSwitcherGearHolderTemplate extends StateSwitcherGearHolderLowLevelImp
 		// 処理登録
 		gear.addDiffusibleHandler(initialize);
 		gear.addRunHandler(run);
-		stateSwitcherGear.entryHandlerStateAssignment(stateAssignment);
+		stateSwitcherGear.addStateAssignmentHandler(stateAssignment);
 	}
 	
 	/* 初期化処理 */

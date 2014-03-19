@@ -13,7 +13,7 @@ class StateSwitcherGearHolderImpl<TState> extends StateSwitcherGearHolderLowLeve
 	public function new() 
 	{
 		super();
-		stateSwitcherGear.entryHandlerStateAssignment(stateAssignment);
+		stateSwitcherGear.addStateAssignmentHandler(stateAssignment);
 	}
 	
 	/**

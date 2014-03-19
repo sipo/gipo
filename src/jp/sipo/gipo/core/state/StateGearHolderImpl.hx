@@ -1,5 +1,5 @@
 package jp.sipo.gipo.core.state;
-class StateGearHolderImpl extends GearHolderImpl implements StateGearHolder 
+class StateGearHolderImpl extends GearHolderImpl implements StateGearHolder
 {
 	private var stateGear:StateGear;
 	
@@ -9,7 +9,7 @@ class StateGearHolderImpl extends GearHolderImpl implements StateGearHolder
 		stateGear = new StateGear(this, gear);
 	}
 	
-	public function getGearState():StateGear
+	public function getStateGear():StateGear
 	{
 		return stateGear;
 	}

@@ -28,7 +28,8 @@ class StateGear
 	 * Stateが切り替わった直後に呼び出される
 	 * この後に処理を挟みたい場合は、runを使用する
 	 */
-	public inline function activationState(switcher:StateSwitcherGear):Void
+	@:allow(jp.sipo.gipo.core.state.StateSwitcherGear)
+	private function activationState(switcher:StateSwitcherGear):Void
 	{
 		this.switcher = switcher;
 		changeStateLock = false;
