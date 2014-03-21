@@ -55,7 +55,7 @@ class GearExample
 class Top extends GearHolderImpl
 {
 	/* システム全体で使う重要なインスタンス（という想定） */
-	private var importInstance:ImportClass;
+	private var importInstance:ImportantClass;
 	/* 階層構造の子の例 */
 	private var child:ChildExample;
 	
@@ -91,8 +91,8 @@ class Top extends GearHolderImpl
 	{
 		trace("TopGearの初期化処理");
 		// 重要クラスの定義
-		importInstance = new ImportClass();	// 作成する
-		tool.diffuse(importInstance, ImportClass);	// diffuse（下位Gearで自由に取得できるようになる）する
+		importInstance = new ImportantClass();	// 作成する
+		tool.diffuse(importInstance, ImportantClass);	// diffuse（下位Gearで自由に取得できるようになる）する
 		gear.disposeTask(function (){	// 消去処理を登録する
 			importInstance.dispose();
 			importInstance = null;
@@ -129,7 +129,7 @@ class Top extends GearHolderImpl
  * 
  * @auther sipo
  */
-class ImportClass
+class ImportantClass
 {
 	/** コンストラクタ */
 	public function new() {  }
@@ -146,7 +146,7 @@ class ImportClass
 class ChildExample extends GearHolderImpl
 {
 	/* システム全体で使う重要なインスタンス（という想定） */
-	private var importInstance:ImportClass;
+	private var importInstance:ImportantClass;
 	
 	/**
 	 * コンストラクタ
@@ -171,7 +171,7 @@ class ChildExample extends GearHolderImpl
 	{
 		trace("ChildExampleの初期化処理");
 		// 重要クラスを取得
-		importInstance = gear.absorb(ImportClass);	// 対象のクラスをキーにして取得する。
+		importInstance = gear.absorb(ImportantClass);	// 対象のクラスをキーにして取得する。
 	}
 	
 	/* 初期化後処理 */

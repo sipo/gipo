@@ -1,6 +1,5 @@
 package jp.sipo.gipo.core.state;
 import jp.sipo.util.SipoError;
-import flash.Vector;
 import jp.sipo.gipo.util.ListCall;
 import jp.sipo.gipo.core.config.GearNoteTag;
 import jp.sipo.util.Note;
@@ -20,7 +19,7 @@ class StateSwitcherGear
 	 * -------------------------------*/
 	
 	/* 代入が確定した際にstateを引数に取って呼び出される関数 */
-	private var stateAssignmentList:Vector<StateGearHolder -> Void>;
+	private var stateAssignmentList:Array<StateGearHolder -> Void>;
 	/* 前回シーンの扱いに関する関数（単体） */
 	private var lastStateTreatment:StateGearHolder -> Void;
 	
@@ -29,7 +28,7 @@ class StateSwitcherGear
 		this.gear = gear;
 		changeNote = new Note([GearNoteTag.gearSystem, GearNoteTag.stateChange]);
 		// HandlerListの初期化
-		stateAssignmentList = new Vector<StateGearHolder -> Void>();
+		stateAssignmentList = new Array<StateGearHolder -> Void>();
 		gear.disposeTask(function (){
 			stateAssignmentList = null;
 		});

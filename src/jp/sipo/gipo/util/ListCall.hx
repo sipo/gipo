@@ -1,5 +1,4 @@
 package jp.sipo.gipo.util;
-import flash.Vector;
 /**
  * リスト関数の呼び出しショートカット
  * 
@@ -8,7 +7,7 @@ import flash.Vector;
 class ListCall {
 	
 	/* ハンドラの呼び出しショートカット */
-	inline static public function call(funcList:Vector<Void -> Void>):Void
+	inline static public function call(funcList:Array<Void -> Void>):Void
 	{
 		for (i in 0...funcList.length) {
 			Reflect.callMethod(null, funcList[i], []);
@@ -16,7 +15,7 @@ class ListCall {
 	}
 	
 	/* ハンドラの呼び出しショートカット */
-	inline static public function withArgument(funcList:Dynamic/*Vector<? -> Void>*/, argumentList:Array<Dynamic>):Void
+	inline static public function withArgument(funcList:Dynamic/*Array<? -> Void>*/, argumentList:Array<Dynamic>):Void
 	{
 		for (i in 0...funcList.length) {
 			Reflect.callMethod(null, funcList[i], argumentList);

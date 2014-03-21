@@ -9,6 +9,7 @@ class FrameworkExample
 
 	/* メインインスタンス */
 	private static var _main:FrameworkExample;
+	
 	/**
 	 * 起動関数
 	 */
