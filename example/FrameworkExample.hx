@@ -4,6 +4,7 @@ package ;
  * 
  * @auther sipo
  */
+import frameworkExample.core.Top;
 class FrameworkExample
 {
 
@@ -16,5 +17,15 @@ class FrameworkExample
 	public static function main():Void
 	{
 		_main = new FrameworkExample();
+	}
+	
+	/* 最上位GearHolder */
+	private var top:Top;
+	
+	/** コンストラクタ */
+	public function new() 
+	{
+		top = new Top();
+		
 	}
 }
