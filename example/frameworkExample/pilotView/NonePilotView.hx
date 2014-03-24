@@ -4,7 +4,7 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
-class PilotNoneView extends PilotViewScene
+class NonePilotView extends PilotViewScene
 {
 	/** コンストラクタ */
 	public function new() 

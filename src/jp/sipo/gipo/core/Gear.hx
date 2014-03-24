@@ -267,7 +267,7 @@ class Gear implements GearOut
 	 * @gearDispose
 	 */
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
-	private function diffuseWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
+	private function diffuseWithEnum(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
 		checkPhaseInitialize("処理の順序が間違っています。diffuseは、initializeメソッドの中で追加されなければいけません");
 		diffuser.addWithEnum(diffuseInstance, enumKey);	// 追加処理
@@ -390,14 +390,14 @@ class Gear implements GearOut
 	 * 対象Gearに限定してキーによるdiffuseを行う
 	 * @gearDispose
 	 */
-	public function otherDiffuseWithKey(target:GearHolder, diffuseInstance:Dynamic, key:EnumValue):Void
+	public function otherDiffuseWithEnum(target:GearHolder, diffuseInstance:Dynamic, key:EnumValue):Void
 	{
 		target.getGear().getImplement();
 		var targetGear:Gear = getGear(target);
-		targetGear.otherDiffuseWithKey_(diffuseInstance, key);
+		targetGear.otherDiffusWitEnum_(diffuseInstance, key);
 	}
 	/* 内部処理 */
-	inline private function otherDiffuseWithKey_(diffuseInstance:Dynamic, key:EnumValue):Void
+	inline private function otherDiffusWitEnum_(diffuseInstance:Dynamic, key:EnumValue):Void
 	{
 		checkPhaseCreate('別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
 		diffuser.addWithEnum(diffuseInstance, key);	// 追加処理

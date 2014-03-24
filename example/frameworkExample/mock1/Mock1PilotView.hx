@@ -1,29 +1,34 @@
-package frameworkExample.mock0;
+package frameworkExample.mock1;
 /**
  * 
  * 
  * @auther sipo
  */
-import frameworkExample.mock0.Mock0;
 import frameworkExample.core.ViewLogicInput;
-import frameworkExample.core.Hook;
+import frameworkExample.mock1.Mock1;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import frameworkExample.pilotView.PilotViewScene;
-private typedef SceneOrder = Mock0Order;
-private typedef SceneInput = Mock0Input;
-class Mock0PilotView extends PilotViewScene
+private typedef SceneOrder = Mock1Order;
+private typedef SceneInput = Mock1Input;
+private typedef ScenePeek = Mock1Peek;
+class Mock1PilotView extends PilotViewScene
 {
 	/* 表示レイヤー */
 	private var uiLayer:Sprite;
 	private var bgLayer:Sprite;
 	/* デモUIコンテナ */
 	private var uiContainer:MinimalcompsGipoContainer;
+	/* peek */
+	private var peek:ScenePeek;
+	/* Countを表示するラベル */
+	private var countLabel:com.bit101.components.Label;
 	
 	/** コンストラクタ */
-	public function new() 
+	public function new(peek:ScenePeek) 
 	{
 		super();
+		this.peek = peek;
 		gear.addRunHandler(run);
 		orderHandlerContainer.set(SceneOrder, order);
 	}
@@ -42,18 +47,14 @@ class Mock0PilotView extends PilotViewScene
 		gear.addChild(uiContainer);
 		// 表示設置
 		// ラベルの設置
-		uiContainer.addLabel("開発テスト画面0");
+		uiContainer.addLabel("開発テスト画面1");
 		// ボタンの設置
-		uiContainer.addPushButton("入力テスト", demoDisplayButton_click);
 		uiContainer.addPushButton("遷移テスト", demoChangeSceneButton_click);
-		
+		// カウンターの表示
+		countLabel = uiContainer.addLabel("count");
+		countDraw();
 	}
 	
-	/* 反応テスト */
-	private function demoDisplayButton_click():Void
-	{
-		hook.viewInput(ViewLogicInput.Scene(SceneInput.DemoDisplayButton));
-	}
 	
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
@@ -64,9 +65,20 @@ class Mock0PilotView extends PilotViewScene
 	/* Logicからの命令 */
 	private function order(command:SceneOrder):Void
 	{
-		switch(command)
-		{
-			case SceneOrder.DemoDisplay : uiContainer.addLabel("ボタン入力がありました");
-		}
+		// 特になし
+	}
+	
+	/**
+	 * 表示の更新
+	 */
+	override public function draw():Void
+	{
+		countDraw();
+	}
+	
+	/* カウントの表示 */
+	private function countDraw():Void
+	{
+		countLabel.text = "count = " + peek.count;
 	}
 }

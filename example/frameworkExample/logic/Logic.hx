@@ -7,6 +7,7 @@ package frameworkExample.logic;
  * 
  * @auther sipo
  */
+import jp.sipo.util.SipoError;
 import frameworkExample.core.ViewLogicReady;
 import frameworkExample.core.ViewLogicInput;
 import frameworkExample.logic.LogicInitialize;
@@ -34,6 +35,16 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene>
 	 */
 	public function viewInput(command:ViewLogicInput):Void
 	{
+		switch(command)
+		{
+			case ViewLogicInput.Common(commonInput) : viewInputCommon(commonInput);
+			case ViewLogicInput.Scene(sceneInput) : state.sceneViewInput(sceneInput);
+		}
+	}
+	/* Viewからの入力のうち共通処理 */
+	private function viewInputCommon(commonInput:ViewLogicInputCommon):Void
+	{
+		throw new SipoError('未実装');
 	}
 	
 	/**
@@ -41,6 +52,7 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene>
 	 */
 	public function viewReady(command:ViewLogicReady):Void
 	{
+		throw new SipoError('未実装');
 	}
 	
 	/**

@@ -26,6 +26,15 @@ import jp.sipo.gipo.core.GearHolderImpl;
 interface Hook extends GearHolder
 {
 
+	/**
+	 * Viewからの入力
+	 */
+	public function viewInput(command:ViewLogicInput):Void;
+	
+	/**
+	 * Viewからの準備完了通知
+	 */
+	public function viewReady(command:ViewLogicReady):Void;
 }
 class HookBasic extends GearHolderImpl implements Hook
 {
