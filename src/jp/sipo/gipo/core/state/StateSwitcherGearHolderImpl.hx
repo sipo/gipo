@@ -6,8 +6,8 @@ package jp.sipo.gipo.core.state;
  */
 class StateSwitcherGearHolderImpl<TState> extends StateSwitcherGearHolderLowLevelImpl
 {
-	/** シーン */
-	public var scene(default, null):TState;
+	/** State */
+	public var state(default, null):TState;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -27,8 +27,8 @@ class StateSwitcherGearHolderImpl<TState> extends StateSwitcherGearHolderLowLeve
 	/**
 	 * Stateの型変換
 	 */
-	inline private function stateAssignment(scene:StateGearHolder):Void
+	inline private function stateAssignment(state:StateGearHolder):Void
 	{
-		this.scene = cast(scene);
+		this.state = cast(state);
 	}
 }

@@ -46,19 +46,19 @@ class Top extends GearHolderImpl
 		tool.diffuse(devConfig, DevConfig);
 		// hookの用意
 		var hookClass = devConfig.hook;
-		hook = new hookClass();
+		hook = Type.createInstance(hookClass, []);
 		tool.diffuse(hook, Hook);
 		tool.bookChild(hook);
 		// viewの用意
 		var viewClass = devConfig.view;
-		view = new viewClass();
+		view = Type.createInstance(viewClass, []);
 		viewLayer = new Sprite();
 		current.addChild(viewLayer);
 		view.setContext(viewLayer);
 		gear.otherEntryDispose(view, function (){	// layerの削除処理
 			current.removeChild(viewLayer);
 		});
-		tool.diffuse(view, Hook);
+		tool.diffuse(view, View);
 		tool.bookChild(view);
 		// logicの用意
 		logic = new Logic();

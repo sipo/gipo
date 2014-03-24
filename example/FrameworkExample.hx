@@ -4,7 +4,11 @@ package ;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.config.GearNoteTag;
+import jp.sipo.util.Note;
+import frameworkExample.config.DevConfig;
 import frameworkExample.core.Top;
+import flash.Lib;
 class FrameworkExample
 {
 
@@ -25,7 +29,8 @@ class FrameworkExample
 	/** コンストラクタ */
 	public function new() 
 	{
-		top = new Top();
-		
+		Note.setTags([GearNoteTag.gearSystem], []);
+		top = new Top(Lib.current, new DevConfig());
+		top.getGear().initializeTop(null);
 	}
 }

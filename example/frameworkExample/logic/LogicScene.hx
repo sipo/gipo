@@ -25,4 +25,12 @@ class LogicScene extends StateGearHolderImpl
 		view = gear.absorb(View);
 		logic = gear.absorb(Logic);
 	}
+	
+	/**
+	 * 更新処理
+	 */
+	public function update():Void
+	{
+		
+	}
 }

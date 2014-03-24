@@ -5,10 +5,11 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
+import frameworkExample.core.View;
 import frameworkExample.logic.LogicViewOrder;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
 import flash.display.Sprite;
-class PilotView extends StateSwitcherGearHolderImpl
+class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements View
 {
 	/** コンストラクタ */
 	public function new() 

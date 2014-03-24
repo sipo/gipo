@@ -7,6 +7,8 @@ package frameworkExample.logic;
  * 
  * @auther sipo
  */
+import frameworkExample.core.ViewLogicReady;
+import frameworkExample.core.ViewLogicInput;
 import frameworkExample.logic.LogicInitialize;
 import frameworkExample.logic.LogicScene;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
@@ -39,5 +41,13 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene>
 	 */
 	public function viewReady(command:ViewLogicReady):Void
 	{
+	}
+	
+	/**
+	 * 更新処理
+	 */
+	public function update():Void
+	{
+		state.update();
 	}
 }

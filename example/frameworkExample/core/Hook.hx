@@ -27,7 +27,7 @@ interface Hook extends GearHolder
 {
 
 }
-class HookBasic extends GearHolderImpl
+class HookBasic extends GearHolderImpl implements Hook
 {
 	/* absorb */
 	private var logic:Logic;

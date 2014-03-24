@@ -6,7 +6,7 @@ package frameworkExample.config;
  * 
  * @auther sipo
  */
-import frameworkExample.core.View.PilotView;
+import frameworkExample.pilotView.PilotView;
 import frameworkExample.core.Hook.HookBasic;
 class DevConfig
 {

@@ -5,6 +5,7 @@ package frameworkExample.logic;
  * 
  * @auther sipo
  */
+import frameworkExample.mock1.Mock1.Mock1Peek;
 enum LogicViewOrder
 {
 	/** シーンの変更を依頼する */
