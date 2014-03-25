@@ -67,7 +67,7 @@ class Top extends GearHolderImpl
 	{
 		super();
 		// 各種ハンドラ関数を登録する
-		gear.addDiffusibleHandler(diffusible);	// FIXME:initializeの関数名をすべてdiffusableに変える。ドキュメントも。
+		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
 	}
 	
