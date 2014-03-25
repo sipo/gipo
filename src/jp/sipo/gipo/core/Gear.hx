@@ -15,7 +15,7 @@ enum GearPhase
 	/* 生成時（初期値） */
 	Create;
 	/* 初期化中 */
-	Initialize;
+	Diffusible;
 	/* 初期化で予約されたものの実行 */
 	Fulfill;
 	/* メイン処理中 */
@@ -89,16 +89,16 @@ class Gear implements GearOut
 		switch(phase)
 		{
 			case GearPhase.Create: 
-			case GearPhase.Initialize, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError(message);
+			case GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError(message);
 		}
 	}
 	
 	/* Initialize時チェック */
-	private function checkPhaseInitialize(message:String):Void
+	private function checkPhaseDiffusible(message:String):Void
 	{
 		switch(phase)
 		{
-			case GearPhase.Initialize: 
+			case GearPhase.Diffusible: 
 			case GearPhase.Create, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError(message);
 		}
 	}
@@ -108,7 +108,7 @@ class Gear implements GearOut
 	{
 		switch(phase)
 		{
-			case GearPhase.Create, GearPhase.Initialize, GearPhase.Fulfill, GearPhase.Middle: 
+			case GearPhase.Create, GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle: 
 			case GearPhase.Dispose, GearPhase.Invalid: throw new SipoError(message);
 		}
 	}
@@ -183,7 +183,7 @@ class Gear implements GearOut
 		// 上位Diffuserがあれば設定
 		if (parentDiffuser != null) diffuser.setParent(parentDiffuser);
 		// 初期動作を呼び出し
-		phase = GearPhase.Initialize;	// 初期化状態
+		phase = GearPhase.Diffusible;	// 初期化状態
 		// 登録された初期化関数の呼び出し
 		diffusibleHandlerList.execute();
 		diffusibleHandlerList = null;
@@ -258,7 +258,7 @@ class Gear implements GearOut
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
 	private function diffuse(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
 	{
-		checkPhaseInitialize("処理の順序が間違っています。diffuseは、initializeメソッドの中で追加されなければいけません");
+		checkPhaseDiffusible("処理の順序が間違っています。diffuseは、initializeメソッドの中で追加されなければいけません");
 		diffuser.add(diffuseInstance, clazz);	// 追加処理
 	}
 	
@@ -269,7 +269,7 @@ class Gear implements GearOut
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
 	private function diffuseWithEnum(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
-		checkPhaseInitialize("処理の順序が間違っています。diffuseは、initializeメソッドの中で追加されなければいけません");
+		checkPhaseDiffusible("処理の順序が間違っています。diffuseは、initializeメソッドの中で追加されなければいけません");
 		diffuser.addWithEnum(diffuseInstance, enumKey);	// 追加処理
 	}
 	
@@ -281,7 +281,7 @@ class Gear implements GearOut
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
 	private function bookChild(child:GearHolder, ?pos:PosInfos):Void
 	{
-		checkPhaseInitialize("処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません");
+		checkPhaseDiffusible("処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません");
 		// 後で追加するリストに入れる
 		bookChildList.push(new PosWrapper(child, pos)); // posを引き継いで、追加された箇所がわかるように
 	}
@@ -304,7 +304,7 @@ class Gear implements GearOut
 		switch(phase)
 		{
 			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError("Gearは処理中にしか子を登録することはできません。(" + phase + ")");
-			case GearPhase.Initialize : throw new SipoError("initialize時のaddChildは、明示的にaddChildDelayを使用してください。(" + phase + ")");
+			case GearPhase.Diffusible : throw new SipoError("initialize時のaddChildは、明示的にaddChildDelayを使用してください。(" + phase + ")");
 			case GearPhase.Fulfill, GearPhase.Middle : 
 		}
 		// 追加

@@ -45,11 +45,11 @@ class HookBasic extends GearHolderImpl implements Hook
 	public function new() 
 	{
 		super();
-		gear.addDiffusibleHandler(initialize);
+		gear.addRunHandler(run);
 	}
 	
-	/* 初期化処理 */
-	private function initialize(tool:GearDiffuseTool):Void
+	/* 初期化後処理 */
+	private function run():Void
 	{
 		// インスタンスの取得
 		logic = gear.absorb(Logic);

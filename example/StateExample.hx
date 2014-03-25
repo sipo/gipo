@@ -54,12 +54,12 @@ class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>	// 子をGener
 	{
 		super();
 		// 各種ハンドラ関数を登録する
-		gear.addDiffusibleHandler(initialize);
+		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
 	}
 	
 	/* 初期化処理 */
-	private function initialize(tool:GearDiffuseTool):Void
+	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		trace("TopGearの初期化処理");
 	}

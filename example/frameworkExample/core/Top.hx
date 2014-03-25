@@ -35,12 +35,12 @@ class Top extends GearHolderImpl
 		this.current = current;
 		this.devConfig = devConfig;
 		//
-		gear.addDiffusibleHandler(initialize);
+		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
 	}
 	
 	/* 初期化とDiffuse */
-	private function initialize(tool:GearDiffuseTool):Void
+	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		// configの拡散
 		tool.diffuse(devConfig, DevConfig);

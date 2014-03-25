@@ -67,7 +67,7 @@ class Top extends GearHolderImpl
 	{
 		super();
 		// 各種ハンドラ関数を登録する
-		gear.addDiffusibleHandler(initialize);	// FIXME:initializeの関数名をすべてdiffusableに変える。ドキュメントも。
+		gear.addDiffusibleHandler(diffusible);	// FIXME:initializeの関数名をすべてdiffusableに変える。ドキュメントも。
 		gear.addRunHandler(run);
 	}
 	
@@ -87,7 +87,7 @@ class Top extends GearHolderImpl
 	 * 消去処理はGearHolderが階層構造から外れる際に自動的に、登録の逆順で呼び出される。
 	 * 
 	 */
-	private function initialize(tool:GearDiffuseTool):Void
+	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		trace("TopGearの初期化処理");
 		// 重要クラスの定義
@@ -156,7 +156,7 @@ class ChildExample extends GearHolderImpl
 	{
 		super();
 		// 各種ハンドラ関数を登録する
-		gear.addDiffusibleHandler(initialize);
+		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
 		// 消去処理を追加
 		gear.disposeTask(function () trace("ChildExampleの消去処理"));
@@ -167,11 +167,9 @@ class ChildExample extends GearHolderImpl
 	 * 
 	 * absorb（diffuseしたインスタンスの取得）は、initialize関数、run関数のどちらでも取得可能
 	 */
-	private function initialize(tool:GearDiffuseTool):Void
+	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		trace("ChildExampleの初期化処理");
-		// 重要クラスを取得
-		importInstance = gear.absorb(ImportantClass);	// 対象のクラスをキーにして取得する。
 	}
 	
 	/* 初期化後処理 */
@@ -179,5 +177,7 @@ class ChildExample extends GearHolderImpl
 	{
 		// 色々処理を登録する
 		trace("ChildExampleの処理が開始");
+		// 重要クラスを取得
+		importInstance = gear.absorb(ImportantClass);	// 対象のクラスをキーにして取得する。
 	}
 }

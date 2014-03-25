@@ -5,12 +5,12 @@ class GearHolderTemplate extends GearHolderImpl
 	public function new()
 	{
 		super();
-		gear.addDiffusibleHandler(initialize);
+		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
 	}
 	
 	/* 初期化処理 */
-	private function initialize(tool:GearDiffuseTool):Void
+	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		// インスタンスの取得
 		gear.absorb;
