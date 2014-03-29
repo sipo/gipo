@@ -30,6 +30,7 @@ class Mock1PilotView extends PilotViewScene
 		super();
 		this.peek = peek;
 		gear.addRunHandler(run);
+		sceneHandler.draw.add(draw);
 		orderHandlerContainer.set(SceneOrder, order);
 	}
 	
@@ -71,7 +72,7 @@ class Mock1PilotView extends PilotViewScene
 	/**
 	 * 表示の更新
 	 */
-	override public function draw():Void
+	public function draw():Void
 	{
 		countDraw();
 	}

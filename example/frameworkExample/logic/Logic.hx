@@ -60,6 +60,6 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene>
 	 */
 	public function update():Void
 	{
-		state.update();
+		state.sceneHandler.update.execute();
 	}
 }

@@ -8,7 +8,7 @@ package jp.sipo.gipo.core;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.PosWrapper;
 import jp.sipo.gipo.util.TaskList;
-import jp.sipo.gipo.core.config.StackAddBehavior;
+import jp.sipo.gipo.core.config.AddBehaviorPreset;
 import haxe.PosInfos;
 enum GearPhase
 {
@@ -72,9 +72,9 @@ class Gear implements GearOut
 		diffuser = new Diffuser();
 		needTasks = new Array();
 		// HandlerListの初期化
-		diffusibleHandlerList = new TaskList(StackAddBehavior.addTail);
-		runHandlerList = new TaskList(StackAddBehavior.addTail);
-		disposeTaskStack = new TaskList(StackAddBehavior.addHead);
+		diffusibleHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
+		runHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
+		disposeTaskStack = new TaskList(AddBehaviorPreset.addHead, true);
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
 	}
@@ -123,7 +123,7 @@ class Gear implements GearOut
 	public function addDiffusibleHandler(diffusible:GearDiffuseTool -> Void, ?pos:PosInfos):Void
 	{
 		checkPhaseCreate('このメソッドはコンストラクタのみで使用可能です');
-		diffusibleHandlerList.addTask(function (){
+		diffusibleHandlerList.add(function (){
 			var diffuseTool:GearDiffuseTool = new GearDiffuseTool(this);
 			diffusible(diffuseTool);
 			diffuseTool.dispose();
@@ -136,7 +136,7 @@ class Gear implements GearOut
 	public function addRunHandler(run:Void -> Void, ?pos:PosInfos):Void
 	{
 		checkPhaseCreate('このメソッドはコンストラクタのみで使用可能です');
-		runHandlerList.addTask(run, pos);
+		runHandlerList.add(run, pos);
 	}
 	
 	/**
@@ -146,7 +146,7 @@ class Gear implements GearOut
 	{
 		checkPhaseBeforeDispose('既に消去処理が開始されているため、消去時のハンドラを登録できません phase=$phase');
 		// 消去処理リストに保持しておく
-		disposeTaskStack.addTask(func, pos);
+		disposeTaskStack.add(func, pos);
 	}
 	
 	/* ================================================================

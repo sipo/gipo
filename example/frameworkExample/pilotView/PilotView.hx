@@ -74,7 +74,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 */
 	public function inputUpdate():Void
 	{
-		state.inputUpdate();
+		state.sceneHandler.inputUpdate.execute();
 	}
 	
 	/**
@@ -82,7 +82,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 */
 	public function update():Void
 	{
-		state.update();
+		state.sceneHandler.update.execute();
 	}
 	
 	/**
@@ -90,7 +90,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 */
 	public function draw():Void
 	{
-		state.draw();
+		state.sceneHandler.draw.execute();
 	}
 }
 enum PilotViewDiffuseKey

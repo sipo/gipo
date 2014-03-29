@@ -18,6 +18,7 @@ class Mock1 extends LogicScene implements Mock1Peek
 	{
 		super();
 		gear.addRunHandler(run);
+		sceneHandler.update.add(update);
 		// 入力処理の登録
 		viewInputHandlerContainer.set(Mock1Input, viewInput);
 	}
@@ -33,7 +34,7 @@ class Mock1 extends LogicScene implements Mock1Peek
 	/**
 	 * 更新処理
 	 */
-	override public function update():Void
+	public function update():Void
 	{
 		count++;
 	}

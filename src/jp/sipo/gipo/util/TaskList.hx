@@ -8,19 +8,23 @@ import haxe.PosInfos;
  * 
  * @author sipo
  */
-typedef TaskListAddBehavior = Array<Task> -> Task -> Void;
+typedef AddBehavior = Array<Task> -> Task -> Void;
 class TaskList
 {
 	/* 実保存 */
 	private var tasks:Array<Task>;
 	/* 追加時の挙動挙動 */
-	private var addBehavior:TaskListAddBehavior;
+	private var addBehavior:AddBehavior;
 	/* 実行が入れ子にならないようにロックする */
 	private var executeLock:Bool;
+	/* 一度限りで消去するかどうか */
+	private var once:Bool;
 	
-	public function new(addBehavior:TaskListAddBehavior)
+	public function new(addBehavior:AddBehavior, once:Bool)
 	{
 		this.addBehavior = addBehavior;
+		this.once = once;
+		
 		executeLock = false;
 		clear();
 	}
@@ -33,7 +37,7 @@ class TaskList
 	/**
 	 * タスクを追加する
 	 */
-	public function addTask(func:Void -> Void, ?pos:PosInfos):Void
+	public function add(func:Void -> Void, ?pos:PosInfos):Void
 	{
 		var task:Task = new Task(func, pos);
 		addBehavior(tasks, task);
@@ -49,7 +53,7 @@ class TaskList
 		executeLock = true;
 		var tmpTasks = tasks;	// 変数を退避
 		// 先に初期化
-		clear();
+		if (once) clear();
 		// 実行
 		for (i in 0...tmpTasks.length)// 配列の頭から実行
 		{

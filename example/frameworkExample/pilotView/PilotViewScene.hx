@@ -4,6 +4,8 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.config.AddBehaviorPreset;
+import jp.sipo.gipo.util.TaskList;
 import frameworkExample.core.Hook;
 import jp.sipo.gipo.util.EnumKeyHandlerContainer;
 import frameworkExample.pilotView.PilotView.PilotViewDiffuseKey;
@@ -17,11 +19,14 @@ class PilotViewScene extends StateGearHolderImpl
 	/* 共通インスタンス */
 	private var layer:Sprite;
 	private var hook:Hook;
+	/** Sceneの共通ハンドラを切り出しする */
+	public var sceneHandler(default, null):PilotViewSceneHandlerContainer;
 	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
+		sceneHandler = new PilotViewSceneHandlerContainer();
 		gear.addRunHandler(sceneRun);
 	}
 	
@@ -31,30 +36,6 @@ class PilotViewScene extends StateGearHolderImpl
 		// 基礎インスタンスの取得
 		layer = gear.absorbWithEnum(PilotViewDiffuseKey.ViewLayer);
 		hook = gear.absorb(Hook);
-	}
-	
-	/**
-	 * ドラッグなどの入力状態の更新
-	 */
-	public function inputUpdate():Void
-	{
-		// template
-	}
-	
-	/**
-	 * 情報やカウンタの更新
-	 */
-	public function update():Void
-	{
-		// template
-	}
-	
-	/**
-	 * 表示の更新（特に、必須ではない重い処理に使用する）
-	 */
-	public function draw():Void
-	{
-		// template
 	}
 	
 	
@@ -67,4 +48,22 @@ class PilotViewScene extends StateGearHolderImpl
 	}
 	
 	
+}
+class PilotViewSceneHandlerContainer
+{
+	/** ドラッグなどの入力状態の更新 */
+	public var update(default, null):TaskList;
+	/** 情報やカウンタの更新 */
+	public var inputUpdate(default, null):TaskList;
+	/** 表示の更新（特に、必須ではない重い処理に使用する） */
+	public var draw(default, null):TaskList;
+	
+	
+	/** コンストラクタ */
+	public function new() 
+	{
+		update = new TaskList(AddBehaviorPreset.addTail, false);
+		inputUpdate = new TaskList(AddBehaviorPreset.addTail, false);
+		draw = new TaskList(AddBehaviorPreset.addTail, false);
+	}
 }

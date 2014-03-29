@@ -4,6 +4,9 @@ package frameworkExample.logic;
  * 
  * @auther sipo
  */
+import frameworkExample.logic.LogicScene.LogicSceneHandlerContainer;
+import jp.sipo.gipo.core.config.AddBehaviorPreset;
+import jp.sipo.gipo.util.TaskList;
 import jp.sipo.gipo.util.EnumKeyHandlerContainer;
 import frameworkExample.core.View;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
@@ -14,11 +17,14 @@ class LogicScene extends StateGearHolderImpl
 	/* 共通インスタンス */
 	private var view:View;
 	private var logic:Logic;
+	/** Sceneの共通ハンドラを切り出しする */
+	public var sceneHandler(default, null):LogicSceneHandlerContainer;
 	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
+		sceneHandler = new LogicSceneHandlerContainer();
 		gear.addRunHandler(sceneRun);
 	}
 	
@@ -30,19 +36,20 @@ class LogicScene extends StateGearHolderImpl
 	}
 	
 	/**
-	 * 更新処理
-	 */
-	public function update():Void
-	{
-		// template
-		// TODO:templateを全て登録型に書き換えるか検討する。頻出なのでgearのライブラリ化出来るかも（gearの内部の登録系も）
-	}
-	
-	/**
 	 * Viewからの入力
 	 */
 	inline public function sceneViewInput(command:EnumValue):Void
 	{
 		viewInputHandlerContainer.call(command);
+	}
+}
+class LogicSceneHandlerContainer
+{
+	public var update(default, null):TaskList;
+	
+	/** コンストラクタ */
+	public function new() 
+	{
+		update = new TaskList(AddBehaviorPreset.addTail, false);
 	}
 }
