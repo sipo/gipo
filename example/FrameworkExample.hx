@@ -29,7 +29,6 @@ class FrameworkExample
 	/** コンストラクタ */
 	public function new() 
 	{
-		Note.setTags([GearNoteTag.gearSystem], []);
 		top = new Top(Lib.current, new DevConfig());
 		top.getGear().initializeTop(null);
 	}

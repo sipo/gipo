@@ -84,7 +84,7 @@ class Gear implements GearOut
 	 * ===============================================================*/
 	
 	/* Create時チェック */
-	private function checkPhaseCreate(message:String):Void
+	private function checkPhaseCreate(message:String):Void	// FIXME:関数受け取りで処理を軽く出来るはず
 	{
 		switch(phase)
 		{
@@ -412,6 +412,8 @@ class Gear implements GearOut
 		var targetGear:Gear = getGear(target);
 		targetGear.disposeTask(func, pos);
 	}
+	
+	// TODO:toString
 }
 enum GearNeedTask
 {

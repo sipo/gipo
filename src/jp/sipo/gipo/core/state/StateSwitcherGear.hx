@@ -1,4 +1,5 @@
 package jp.sipo.gipo.core.state;
+import haxe.PosInfos;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.ListCall;
 import jp.sipo.gipo.core.config.GearNoteTag;
@@ -43,11 +44,11 @@ class StateSwitcherGear
 	 * contextは予め実行しておく
 	 * // MEMO:Functionを第２引数に持たせてその内部で処理するという手もあるが、とりあえず今は構造をシンプルにしたい
 	 */
-	public function changeState(nextStateHolder:StateGearHolder):Void
+	public function changeState(nextStateHolder:StateGearHolder, ?pos:PosInfos):Void
 	{
 		if (changeLock) throw new SipoError("changeStateが２重に呼び出されました。");
 		// ログ
-		changeNote.log('changeState ${nextStateHolder} switcher=${this} ');	
+		changeNote.log('changeState ${nextStateHolder} switcher=${this} ', pos);	
 		// ２重呼び出しをロック
 		changeLock = true;
 		// １つ前のStateをremove処理

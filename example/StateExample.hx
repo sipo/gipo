@@ -20,7 +20,6 @@ class StateExample
 	 */
 	public static function main():Void
 	{
-		Note.setTags([],[]);	// TODO:この行は未解決問題。
 		_main = new StateExample();
 	}
 	

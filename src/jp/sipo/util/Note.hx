@@ -20,7 +20,7 @@ class Note
 	public static inline var DEBUG_COLOR:Int = 0x663300;
 	
 	// エラー文言
-	public static inline var WAIT_ERROR_MESSAGE:String = "タグ設定の待機中にNoteが呼ばれました。";
+	public static inline var NO_FILTER_WARNING:String = "フィルター設定をする前にNoteが使われています。出力をフィルタリングするには、Note.setTagsを使用してください。";
 	public static inline var HIDE_DEBUG_WARNING:String = "デバッグ表示が残っています。";
 	public static inline var NO_ALLOW_TEMPORAL:String = "staticな一時的表示は現在許可されていません。";
 	
@@ -29,7 +29,7 @@ class Note
 	 */	
 	
 	/* タグがすでに設定されているかどうか */
-	private static var isSetTags:Bool = false;
+	private static var tagState:TagState = TagState.Yet;
 	/* 表示タグ */
 	private static var displayTags:Array<EnumValue>;
 	/* 消去タグ */
@@ -49,10 +49,10 @@ class Note
 	// MEMO:引数がStringでなければならない理由がよく分からなくなっている。判定に関わる？
 	public static function setTags(displayTags:Array<EnumValue>, hideTags:Array<EnumValue>):Void
 	{
-		if (isSetTags) throw new SipoError("タグの設定を変更することは想定されていません");	
+		if (Type.enumEq(tagState, TagState.Ready)) throw new SipoError("タグの設定を変更することは想定されていません");	
 		// MEMO:もし設定を途中で変える仕様にする場合、すでに設定されてしまっているNoteへの通知が必要になる。その場合全てのインスタンスの保持と、disposeが必要
 		// 値の設定
-		isSetTags = true;
+		tagState = TagState.Ready;
 		Note.displayTags = displayTags;
 		Note.hideTags = hideTags;
 		// 待機状態にあったインスタンスのタグチェックを実行する
@@ -105,17 +105,17 @@ class Note
 	{
 		#if flash
 		flash.Lib.trace(message + '  ${posInfos.fileName}:${posInfos.methodName}(${posInfos.lineNumber})');
+		#else
+		trace(message, posInfos);
 		#end
 	}
 	
 	/* ================================================================
 	 * 個別処理
 	 */
-	 
-	/* 待機状態（logを出そうとするとエラー） */
-	private var waitTagsSet:Bool = false;
+	
 	/* 表示状態 */
-	private var display:Bool = false;
+	private var display:Bool = true;
 	/* このインスタンスのタグ状態 */
 	private var localTags:Array<EnumValue>;
 	/* タグの文字列表記 */
@@ -130,9 +130,8 @@ class Note
 	{
 		localTags = tags;
 		tagsString = " <" + tags.join(",") + ">";	// 表示の最後につけるやつ
-		if (!isSetTags){
+		if (!Type.enumEq(tagState, TagState.Ready)){
 			// まだタグ設定がされていない場合、待機リストへ追加
-			waitTagsSet = true;
 			waitInstances.push(this);
 			return;
 		}
@@ -145,14 +144,15 @@ class Note
 	 */
 	private function checkTags():Void
 	{
-		waitTagsSet = false;
 		// タグをチェック。表示タグがゼロの場合すべて表示扱いになる。hideTagでマスクもする
 		display =  (displayTags.length == 0 || isTag(localTags, displayTags)) && !isTag(localTags, hideTags);
 	}
 	/* タグの出現チェック*/
 	private function isTag(target:Array<EnumValue>, checker:Array<EnumValue>):Bool
 	{
-		for (tag in target) if (checker.has(tag)) return true;
+		for (tag in target){
+			if (checker.has(tag)) return true;
+		}
 		return false;
 	}
 	
@@ -161,9 +161,30 @@ class Note
 	 */
 	public function log(message:Dynamic, ?posInfos:PosInfos):Void
 	{
-		if (waitTagsSet) throw new SipoError(WAIT_ERROR_MESSAGE);	// 必要ならエラーを起こさないlogを用意する
 		if (!display) return;
-		logFunction(message + tagsString, posInfos);
+		displayMessage(message, logFunction, posInfos);
+	}
+	inline private function displayMessage(message:Dynamic, func:String -> PosInfos -> Void, posInfos:PosInfos):Void
+	{
+		switch(tagState)
+		{
+			case TagState.Yet : 
+			{
+				func(NO_FILTER_WARNING, posInfos);	// 警告を一度だけ表示
+				tagState = TagState.DisplayWarning;
+			}
+			case TagState.DisplayWarning, TagState.Ready : // 特に何もしない
+		}
+		func(Std.string(message) + tagsString, posInfos);
+	}
+	
+	/**
+	 * 文字列ではなく関数を受け取ってシステム出力（非出力時の負担を軽減）
+	 */
+	public function lazyLog(messageFunc:Void -> String, ?posInfos:PosInfos):Void
+	{
+		if (!display) return;
+		displayMessage(messageFunc(), logFunction, posInfos);
 	}
 	
 	/**
@@ -171,12 +192,11 @@ class Note
 	 */
 	public function debug(message:Dynamic, ?posInfos:PosInfos):Void
 	{
-		if (waitTagsSet) throw new SipoError(WAIT_ERROR_MESSAGE);
 		if (!display){	// デバッグ表示は、非表示時も、初回のみ存在について通知する
 			checkDebugFirst(posInfos);
 			return;
 		}
-		debugFunction(Std.string(message) + tagsString, posInfos);
+		displayMessage(message, debugFunction, posInfos);
 	}
 	
 	
@@ -257,4 +277,10 @@ enum CommonTag
 	common;
 //	notice;
 //	warning;
+}
+private enum TagState
+{
+	Yet;
+	DisplayWarning;
+	Ready;
 }
