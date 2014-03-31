@@ -413,7 +413,13 @@ class Gear implements GearOut
 		targetGear.disposeTask(func, pos);
 	}
 	
-	// TODO:toString
+	/**
+	 * 文字列表現
+	 */
+	public function toString():String
+	{
+		return '[Gear holder=$holder phase=$phase childList=${childGearList.length} needTasks=$needTasks]';
+	}
 }
 enum GearNeedTask
 {
