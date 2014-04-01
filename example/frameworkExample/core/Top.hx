@@ -5,6 +5,7 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
+import frameworkExample.core.Hook.ViewHook;
 import frameworkExample.logic.Logic;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.config.DevConfig;
@@ -24,6 +25,7 @@ class Top extends GearHolderImpl
 	private var logic:Logic;
 	private var hook:Hook;
 	private var view:View;
+	private var viewHook:ViewHook;
 	
 	/* 全体イベントの発行 */
 	private var globalDispatcher:GlobalDispatcher;
@@ -47,7 +49,6 @@ class Top extends GearHolderImpl
 		// hookの用意
 		var hookClass = devConfig.hook;
 		hook = Type.createInstance(hookClass, []);
-		tool.diffuse(hook, Hook);
 		tool.bookChild(hook);
 		// viewの用意
 		var viewClass = devConfig.view;
@@ -60,6 +61,9 @@ class Top extends GearHolderImpl
 		});
 		tool.diffuse(view, View);
 		tool.bookChild(view);
+		// viewHookの用意
+		viewHook = new ViewHook(hook);
+		gear.otherDiffuse(view, viewHook, ViewHook);
 		// logicの用意
 		logic = new Logic();
 		tool.diffuse(logic, Logic);

@@ -25,17 +25,49 @@ import jp.sipo.gipo.core.GearDiffuseTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 interface Hook extends GearHolder
 {
-
 	/**
-	 * Viewからの入力
+	 * 全てのイベント
 	 */
-	public function viewInput(command:ViewLogicInput):Void;
-	
-	/**
-	 * Viewからの準備完了通知
-	 */
-	public function viewReady(command:ViewLogicReady):Void;
+	public function event(command:HookEvent):Void;
 }
+/**
+ * イベント種類全ての定義
+ */
+enum HookEvent
+{
+	/** Viewからの入力 */
+	ViewInput(command:ViewLogicInput);
+	ViewReady(command:ViewLogicReady);
+}
+/**
+ * View向けのHook入力部
+ * EnumでラップしてHookに渡すだけ
+ * イベントのコールのEnumを短くするために用意されているので、排する可能性もあり
+ */
+class ViewHook
+{
+	private var hook:Hook;
+	
+	/** コンストラクタ */
+	public function new(hook:Hook) 
+	{
+		this.hook = hook;
+	}
+	
+	public function viewInput(command:ViewLogicInput):Void
+	{
+		hook.event(HookEvent.ViewInput(command));
+	}
+	
+	public function viewReady(command:ViewLogicReady):Void
+	{
+		hook.event(HookEvent.ViewReady(command));
+	}
+}
+/**
+ * 基本動作
+ * Logicのイベントを叩く
+ */
 class HookBasic extends GearHolderImpl implements Hook
 {
 	/* absorb */
@@ -45,30 +77,20 @@ class HookBasic extends GearHolderImpl implements Hook
 	public function new() 
 	{
 		super();
-		gear.addRunHandler(run);
-	}
-	
-	/* 初期化後処理 */
-	private function run():Void
-	{
-		// インスタンスの取得
-		logic = gear.absorb(Logic);
-	}
-
-	/**
-	 * Viewからの入力
-	 */
-	public function viewInput(command:ViewLogicInput):Void
-	{
-		logic.viewInput(command);
+		gear.addRunHandler(function (){ logic = gear.absorb(Logic); });
 	}
 	
 	/**
-	 * Viewからの準備完了通知
+	 * イベント処理
 	 */
-	public function viewReady(command:ViewLogicReady):Void
+	public function event(hookEvent:HookEvent):Void
 	{
-		logic.viewReady(command);
+		switch(hookEvent)
+		{
+			case HookEvent.ViewInput(command) : logic.viewInput(command);
+			case HookEvent.ViewReady(command) : logic.viewReady(command);
+		}
+		
 	}
 }
 // MEMO:再生時の挙動

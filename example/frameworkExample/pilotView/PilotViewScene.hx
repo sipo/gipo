@@ -18,7 +18,7 @@ class PilotViewScene extends StateGearHolderImpl
 	private var orderHandlerContainer:EnumKeyHandlerContainer = new EnumKeyHandlerContainer();
 	/* 共通インスタンス */
 	private var layer:Sprite;
-	private var hook:Hook;
+	private var hook:ViewHook;
 	/** Sceneの共通ハンドラを切り出しする */
 	public var sceneHandler(default, null):PilotViewSceneHandlerContainer;
 	
@@ -35,7 +35,7 @@ class PilotViewScene extends StateGearHolderImpl
 	{
 		// 基礎インスタンスの取得
 		layer = gear.absorbWithEnum(PilotViewDiffuseKey.ViewLayer);
-		hook = gear.absorb(Hook);
+		hook = gear.absorb(ViewHook);
 	}
 	
 	
