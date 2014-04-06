@@ -19,16 +19,85 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
+import frameworkExample.core.Reproduse.HookToReproduse;
 import frameworkExample.logic.Logic;
-import jp.sipo.gipo.core.GearHolder;
-import jp.sipo.gipo.core.GearDiffuseTool;
 import jp.sipo.gipo.core.GearHolderImpl;
-interface Hook extends GearHolder
+/**
+ * View向けのHook入力部
+ * EnumでラップしてHookに渡すだけ
+ * イベントのコールのEnumを短くするために用意されているので、排する可能性もあり
+ */
+interface ViewToHook
 {
+	/** Viewからの即時発行できる入力イベント */
+	public function viewInput(command:ViewLogicInput):Void;
+	/** Viewからの非同期に発生するイベント */
+	public function viewReady(command:ViewLogicReady):Void;
+}
+/**
+ * 基本動作
+ * Logicのイベントを叩く
+ */
+class Hook extends GearHolderImpl implements ViewToHook
+{
+	/* absorb */
+	private var logic:Logic;
+	private var reproduce:HookToReproduse;
+	
+	/** コンストラクタ */
+	public function new() 
+	{
+		super();
+		gear.addRunHandler(run);
+	}
+	
+	/** 初期処理 */
+	public function run():Void
+	{
+		logic = gear.absorb(Logic);
+		reproduce = gear.absorb(HookToReproduse);
+	}
+	
+	/* ================================================================
+	 * View向けのメソッド
+	 * ===============================================================*/
+	
+	public function viewInput(command:ViewLogicInput):Void
+	{
+		recordAndEvent(HookEvent.ViewInput(command));
+	}
+	
+	public function viewReady(command:ViewLogicReady):Void
+	{
+		recordAndEvent(HookEvent.ViewReady(command));
+	}
+	
+	/* ================================================================
+	 * 内部処理
+	 * ===============================================================*/
+	 
 	/**
-	 * 全てのイベント
+	 * イベントを記録して実行
 	 */
-	public function event(command:HookEvent):Void;
+	private function recordAndEvent(hookEvent:HookEvent):Void
+	{
+		// 発生イベントの登録
+		reproduce.event(hookEvent);
+		// イベントの実行
+		executeEvent(hookEvent);
+	}
+	
+	/**
+	 * イベントの実行のみ
+	 */
+	public function executeEvent(hookEvent:HookEvent):Void
+	{
+		switch(hookEvent)
+		{
+			case HookEvent.ViewInput(command) : logic.viewInput(command);
+			case HookEvent.ViewReady(command) : logic.viewReady(command);
+		}
+	}
 }
 /**
  * イベント種類全ての定義
@@ -37,61 +106,8 @@ enum HookEvent
 {
 	/** Viewからの入力 */
 	ViewInput(command:ViewLogicInput);
+	/** Viewからの準備完了通知 */
 	ViewReady(command:ViewLogicReady);
-}
-/**
- * View向けのHook入力部
- * EnumでラップしてHookに渡すだけ
- * イベントのコールのEnumを短くするために用意されているので、排する可能性もあり
- */
-class ViewHook
-{
-	private var hook:Hook;
-	
-	/** コンストラクタ */
-	public function new(hook:Hook) 
-	{
-		this.hook = hook;
-	}
-	
-	public function viewInput(command:ViewLogicInput):Void
-	{
-		hook.event(HookEvent.ViewInput(command));
-	}
-	
-	public function viewReady(command:ViewLogicReady):Void
-	{
-		hook.event(HookEvent.ViewReady(command));
-	}
-}
-/**
- * 基本動作
- * Logicのイベントを叩く
- */
-class HookBasic extends GearHolderImpl implements Hook
-{
-	/* absorb */
-	private var logic:Logic;
-	
-	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addRunHandler(function (){ logic = gear.absorb(Logic); });
-	}
-	
-	/**
-	 * イベント処理
-	 */
-	public function event(hookEvent:HookEvent):Void
-	{
-		switch(hookEvent)
-		{
-			case HookEvent.ViewInput(command) : logic.viewInput(command);
-			case HookEvent.ViewReady(command) : logic.viewReady(command);
-		}
-		
-	}
 }
 // MEMO:再生時の挙動
 //	イベント予定のフレームが発生（同一フレームに複数ある場合は順序を守る）

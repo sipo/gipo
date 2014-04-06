@@ -5,7 +5,10 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
-import frameworkExample.core.Hook.ViewHook;
+import frameworkExample.core.Reproduse;
+import frameworkExample.config.MetaConfig;
+import frameworkExample.util.GlobalDispatcher;
+import frameworkExample.core.Hook.ViewToHook;
 import frameworkExample.logic.Logic;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.config.DevConfig;
@@ -17,15 +20,14 @@ class Top extends GearHolderImpl
 	private var current:Sprite;
 	/* 開発設定 */
 	private var devConfig:DevConfig;
-	
-	/* ビューのレイヤーとなるSprite。DisplayObjectを使用するLayerのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される */
-	private var viewLayer:Sprite;
+	/* 各セクションを超えた全体状態管理 */
+	private var metaConfig:MetaConfig;
 	
 	/* 基本インスタンス */
 	private var logic:Logic;
 	private var hook:Hook;
+	private var reproduce:Reproduse;
 	private var view:View;
-	private var viewHook:ViewHook;
 	
 	/* 全体イベントの発行 */
 	private var globalDispatcher:GlobalDispatcher;
@@ -36,6 +38,8 @@ class Top extends GearHolderImpl
 		super();
 		this.current = current;
 		this.devConfig = devConfig;
+		// 
+		metaConfig = new MetaConfig();
 		//
 		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
@@ -46,28 +50,35 @@ class Top extends GearHolderImpl
 	{
 		// configの拡散
 		tool.diffuse(devConfig, DevConfig);
+		tool.diffuse(metaConfig, MetaConfig);
+		// reproduceの用意
+		reproduce = new Reproduse();
+		tool.bookChild(reproduce);
 		// hookの用意
-		var hookClass = devConfig.hook;
-		hook = Type.createInstance(hookClass, []);
+		hook = new Hook();
 		tool.bookChild(hook);
 		// viewの用意
 		var viewClass = devConfig.view;
 		view = Type.createInstance(viewClass, []);
-		viewLayer = new Sprite();
+		tool.bookChild(view);
+		// ビューのレイヤーとなるSprite。DisplayObjectを使用するLayerのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される
+		var viewLayer:Sprite = new Sprite();
 		current.addChild(viewLayer);
-		view.setContext(viewLayer);
 		gear.otherEntryDispose(view, function (){	// layerの削除処理
 			current.removeChild(viewLayer);
 		});
-		tool.diffuse(view, View);
-		tool.bookChild(view);
-		// viewHookの用意
-		viewHook = new ViewHook(hook);
-		gear.otherDiffuse(view, viewHook, ViewHook);
 		// logicの用意
 		logic = new Logic();
-		tool.diffuse(logic, Logic);
 		tool.bookChild(logic);
+		// 関係性の追加
+		gear.otherDiffuse(hook, logic, Logic);
+		gear.otherDiffuse(view, hook, ViewToHook);
+		gear.otherDiffuse(logic, view, View);
+		gear.otherDiffuse(hook, reproduce, HookToReproduse);
+		gear.otherDiffuse(logic, reproduce, LogicToReproduse);
+		gear.otherDiffuse(reproduce, logic, Logic);
+		view.setContext(viewLayer);
+		
 		// イベント準備
 		globalDispatcher = new GlobalDispatcher();
 		globalDispatcher.setFlashContext(current);
@@ -86,6 +97,9 @@ class Top extends GearHolderImpl
 	/* フレーム動作 */
 	private function frame():Void
 	{
+		reproduce.inputUpdate();
+		reproduce.update();
+		view.inputUpdate();
 		logic.update();
 		view.update();
 		view.draw();

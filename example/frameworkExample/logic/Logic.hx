@@ -7,6 +7,7 @@ package frameworkExample.logic;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.GearDiffuseTool;
 import jp.sipo.util.SipoError;
 import frameworkExample.core.ViewLogicReady;
 import frameworkExample.core.ViewLogicInput;
@@ -19,6 +20,13 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene>
 	public function new() 
 	{
 		super();
+		gear.addDiffusibleHandler(diffusible);
+	}
+	
+	/* 自身を以下に伝えておく */
+	private function diffusible(tool:GearDiffuseTool):Void
+	{
+		tool.diffuse(this, Logic);
 	}
 	
 	/**

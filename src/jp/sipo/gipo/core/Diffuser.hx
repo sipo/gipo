@@ -93,7 +93,7 @@ class Diffuser
 		var answer:Dynamic = instanceClassDictionary.get(className);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
-			if (parent == null) throw new SipoError('指定されたクラス${className}はDiffuser${this}に登録されていません。');
+			if (parent == null) throw new SipoError('指定されたクラス${className}はDiffuser${this}に登録されていません。');	// TODO:diffuserが何のdiffuserか分かるようにしたい
 			// 親がある場合は親に問い合わせ
 			answer = parent.getWithClassName(className);
 		}

@@ -1,4 +1,4 @@
-package frameworkExample.core;
+package frameworkExample.util;
 /**
  * Flashのグローバルイベントをハンドリングする
  * 今のところフレームだけ、キーやMouseUpなども予定する

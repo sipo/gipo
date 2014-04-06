@@ -7,11 +7,8 @@ package frameworkExample.config;
  * @auther sipo
  */
 import frameworkExample.pilotView.PilotView;
-import frameworkExample.core.Hook.HookBasic;
 class DevConfig
 {
-	/** Hookクラス */
-	public var hook:Class<Dynamic> = HookBasic;
 	/** Viewクラス */
 	public var view:Class<Dynamic> = PilotView;
 	
