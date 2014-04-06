@@ -69,7 +69,7 @@ class Gear implements GearOut
 		// 変数初期化
 		childGearList = new Array();
 		bookChildList = new Array();
-		diffuser = new Diffuser();
+		diffuser = new Diffuser(holder);
 		needTasks = new Array();
 		// HandlerListの初期化
 		diffusibleHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
@@ -234,17 +234,17 @@ class Gear implements GearOut
 	/**
 	 * diffuseインスタンスを取得する
 	 */
-	public function absorb(clazz:Class<Dynamic>):Dynamic
+	public function absorb(clazz:Class<Dynamic>, ?pos:PosInfos):Dynamic
 	{
-		return diffuser.get(clazz);
+		return diffuser.get(clazz, pos);
 	}
 	
 	/**
 	 * diffuseインスタンスをキーで取得する
 	 */
-	public function absorbWithEnum(enumKey:EnumValue):Dynamic
+	public function absorbWithEnum(enumKey:EnumValue, ?pos:PosInfos):Dynamic
 	{
-		return diffuser.getWithEnum(enumKey);
+		return diffuser.getWithEnum(enumKey, pos);
 	}
 	
 	/* --------------------------------

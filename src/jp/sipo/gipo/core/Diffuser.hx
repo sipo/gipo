@@ -5,6 +5,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import haxe.PosInfos;
 import jp.sipo.util.SipoError;
 class Diffuser
 {
@@ -14,12 +15,15 @@ class Diffuser
 	private var instanceClassDictionary:Map<String, Dynamic>;	// MEMO:本来は、Class<Dynamic>などをキーにしたいが、Mapが対応していない
 	/* Enumキーを使った辞書 */
 	private var instanceEnumDictionary:Map<EnumValue, Dynamic>;
+	/* 関連クラス（デバッグ表示のみに使用される） */
+	private var holder:Dynamic;
 	
 	/**
 	 * コンストラクタ
 	 */
-	public function new() 
+	public function new(holder:Dynamic) 
 	{
+		this.holder = holder;
 		// 変数初期化
 		parent = null;
 		instanceClassDictionary = new Map<String, Dynamic>();
@@ -82,20 +86,20 @@ class Diffuser
 	 * Diffuseインスタンスを取得する
 	 * @param clazz 関連付けられたクラス
 	 */
-	public function get(clazz : Class<Dynamic>):Dynamic
+	public function get(clazz : Class<Dynamic>, ?pos:PosInfos):Dynamic
 	{
 		var className:String = Type.getClassName(clazz);
-		return getWithClassName(className);
+		return getWithClassName(className, this, pos);
 	}
 	/* 計算省力化のため、既に文字列になっているキーから取得 */
-	private function getWithClassName(className:String) : Dynamic
+	private function getWithClassName(className:String, startDiffuser:Diffuser, pos:PosInfos) : Dynamic
 	{
 		var answer:Dynamic = instanceClassDictionary.get(className);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
-			if (parent == null) throw new SipoError('指定されたクラス${className}はDiffuser${this}に登録されていません。');	// TODO:diffuserが何のdiffuserか分かるようにしたい
+			if (parent == null) throw new SipoError('指定されたクラス${className}はDiffuser${startDiffuser}に登録されていません。$pos');
 			// 親がある場合は親に問い合わせ
-			answer = parent.getWithClassName(className);
+			answer = parent.getWithClassName(className, startDiffuser, pos);
 		}
 		return answer;
 	}
@@ -103,14 +107,18 @@ class Diffuser
 	/**
 	 * Diffuseインスタンスをキー持ちで取得する
 	 */
-	public function getWithEnum(enumKey:EnumValue):Dynamic
+	public function getWithEnum(enumKey:EnumValue, pos:PosInfos):Dynamic
+	{
+		return getWithEnum_(enumKey, this, pos);
+	}
+	private function getWithEnum_(enumKey:EnumValue, startDiffuser:Diffuser, pos:PosInfos):Dynamic
 	{
 		var answer:Dynamic = instanceEnumDictionary.get(enumKey);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
-			if (parent == null) throw new SipoError('指定されたクラス${enumKey}はDiffuser${this}に登録されていません。');
+			if (parent == null) throw new SipoError('指定されたクラス${enumKey}はDiffuser${startDiffuser}に登録されていません。$pos');
 			// 親がある場合は親に問い合わせ
-			answer = parent.getWithEnum(enumKey);
+			answer = parent.getWithEnum_(enumKey, startDiffuser, pos);
 		}
 		return answer;
 	}
@@ -130,4 +138,12 @@ class Diffuser
 		parent = null;
 	}
 	
+	
+	/**
+	 * 文字列表現
+	 */
+	public function toString():String
+	{
+		return '[Diffuser holder=$holder]';
+	}
 }
