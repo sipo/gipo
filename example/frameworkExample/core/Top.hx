@@ -5,10 +5,11 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
+import frameworkExample.logic.LogicSnapshot;
 import frameworkExample.core.Reproduse;
 import frameworkExample.config.MetaConfig;
 import frameworkExample.util.GlobalDispatcher;
-import frameworkExample.core.Hook.ViewToHook;
+import frameworkExample.core.Hook;
 import frameworkExample.logic.Logic;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.config.DevConfig;
@@ -26,7 +27,7 @@ class Top extends GearHolderImpl
 	/* 基本インスタンス */
 	private var logic:Logic;
 	private var hook:Hook;
-	private var reproduce:Reproduse;
+	private var reproduce:Reproduse<LogicSnapshot, HookEvent>;
 	private var view:View;
 	
 	/* 全体イベントの発行 */
@@ -104,4 +105,5 @@ class Top extends GearHolderImpl
 		view.update();
 		view.draw();
 	}
+	
 }

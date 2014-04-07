@@ -42,7 +42,7 @@ class Hook extends GearHolderImpl implements ViewToHook
 {
 	/* absorb */
 	private var logic:Logic;
-	private var reproduce:HookToReproduse;
+	private var reproduce:HookToReproduse<HookEvent>;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -82,7 +82,7 @@ class Hook extends GearHolderImpl implements ViewToHook
 	private function recordAndEvent(hookEvent:HookEvent):Void
 	{
 		// 発生イベントの登録
-		reproduce.event(hookEvent);
+		reproduce.addEvent(hookEvent);
 		// イベントの実行
 		executeEvent(hookEvent);
 	}
