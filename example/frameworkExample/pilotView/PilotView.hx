@@ -5,23 +5,32 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
+import frameworkExample.operation.OperationPilotView;
+import frameworkExample.operation.Operation;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.mock1.Mock1PilotView;
 import frameworkExample.mock0.Mock0PilotView;
 import frameworkExample.core.View;
-import frameworkExample.logic.LogicViewOrder;
+import frameworkExample.logic.LogicToViewOrder;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
 import flash.display.Sprite;
 class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements View
 {
 	/* 基本レイヤー */
 	private var viewLayer:Sprite;
+	/* ゲーム用レイヤー */
+	private var gameLayer:Sprite;
+	
+	/* メタ表示パーツ */
+	private var operationView:OperationPilotView;
+	private var operationLayer:Sprite;
 	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
 		gear.addDiffusibleHandler(diffusible);
+		gear.addRunHandler(run);
 	}
 	
 	/**
@@ -34,23 +43,39 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	}
 	
 	/**
-	 * 必要設定
-	 * すべてのViewで必要な要素を取得し、使わない場合は無視する
+	 * 必要素材をdiffuse
 	 */
 	public function diffusible(tool:GearDiffuseTool):Void
 	{
-		tool.diffuseWithKey(viewLayer, PilotViewDiffuseKey.ViewLayer);
+		gameLayer = new Sprite();
+		operationLayer = new Sprite();
+		viewLayer.addChild(gameLayer);
+		viewLayer.addChild(operationLayer);
+		gear.disposeTask(function () viewLayer.removeChild(gameLayer));
+		gear.disposeTask(function () viewLayer.removeChild(operationLayer));
+		tool.diffuseWithKey(gameLayer, PilotViewDiffuseKey.GameLayer);
+		tool.diffuseWithKey(operationLayer, PilotViewDiffuseKey.OperationLayer);
+	}
+	
+	/**
+	 * 初期処理
+	 */
+	public function run():Void
+	{
+		operationView = new OperationPilotView();
+		gear.addChild(operationView);
 	}
 	
 	/**
 	 * 表示切り替え依頼
 	 */
-	public function order(command:LogicViewOrder):Void
+	public function order(command:LogicToViewOrder):Void
 	{
 		switch(command)
 		{
-			case LogicViewOrder.ChangeScene(sceneKind): order_ChangeScene(sceneKind);
-			case LogicViewOrder.Scene(sceneCommand): order_Scene(sceneCommand);
+			case LogicToViewOrder.ChangeScene(sceneKind): order_ChangeScene(sceneKind);
+			case LogicToViewOrder.Scene(sceneCommand): order_Scene(sceneCommand);
+			case LogicToViewOrder.Operation(operationCommand) : order_Operation(operationCommand);
 		}
 	}
 	/* シーンの切り替え処理をここに書く */
@@ -67,6 +92,11 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	private function order_Scene(command:EnumValue):Void
 	{
 		state.sceneOrder(command);
+	}
+	/* Operation表示への命令処理 */
+	private function order_Operation(command:OperationToViewOrder):Void
+	{
+		operationView.order(command);
 	}
 	
 	/**
@@ -95,5 +125,6 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 }
 enum PilotViewDiffuseKey
 {
-	ViewLayer;
+	GameLayer;
+	OperationLayer;
 }

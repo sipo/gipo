@@ -5,7 +5,7 @@ package frameworkExample.core;
  * @auther sipo
  */
 import jp.sipo.ds.Point;
-enum ViewLogicInput
+enum ViewToLogicInput
 {
 	Common(value:ViewLogicInputCommon);
 	Scene(value:EnumValue);

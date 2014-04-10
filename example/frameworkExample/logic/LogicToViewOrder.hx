@@ -5,8 +5,9 @@ package frameworkExample.logic;
  * 
  * @auther sipo
  */
+import frameworkExample.operation.Operation.OperationToViewOrder;
 import frameworkExample.mock1.Mock1.Mock1Peek;
-enum LogicViewOrder
+enum LogicToViewOrder
 {
 	/** シーンの変更を依頼する */
 	ChangeScene(sceneKind:ViewChangeScene);
@@ -14,6 +15,8 @@ enum LogicViewOrder
 //	Prepare(prepareKind:LogicViewOrderPrepare);
 	/** シーン固有の描画依頼。主にタイミングを伝えるなど */
 	Scene(command:EnumValue);
+	/** メタ操作に関するオーダー*/
+	Operation(command:OperationToViewOrder);
 }
 enum ViewChangeScene
 {

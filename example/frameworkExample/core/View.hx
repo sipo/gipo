@@ -12,9 +12,8 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
-import frameworkExample.logic.LogicViewOrder;
+import frameworkExample.logic.LogicToViewOrder;
 import flash.display.Sprite;
-import jp.sipo.gipo.core.GearHolderImpl;
 import jp.sipo.gipo.core.GearHolder;
 interface View extends GearHolder
 {
@@ -27,7 +26,7 @@ interface View extends GearHolder
 	/**
 	 * 表示切り替え依頼
 	 */
-	public function order(command:LogicViewOrder):Void;
+	public function order(command:LogicToViewOrder):Void;
 	
 	/**
 	 * ドラッグなどの入力状態の更新

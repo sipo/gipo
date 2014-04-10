@@ -5,6 +5,10 @@ package jp.sipo.wrapper;
  * 
  * @auther sipo
  */
+import haxe.macro.Expr.Case;
+import haxe.Unserializer;
+import haxe.Serializer;
+import haxe.ds.Option;
 import com.bit101.components.Component;
 import com.bit101.components.Label;
 import com.bit101.components.Style;
@@ -45,8 +49,10 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	private var config:Config;
 	/* 表示 */
 	private var view:Sprite;
+	/* 表示エリア。Noneで未定 */
+	private var size:Option<Size> = Option.None;
 	
-	/* 配置位置 */
+	/* 次配置位置 */
 	private var putX:Int = 0;
 	private var putY:Int = 0;
 	
@@ -57,24 +63,46 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 		this.layer = layer;
 		if (config == null) config = getDefaultConfig();
 		this.config = config;
-		gear.addRunHandler(run);
 		Style.embedFonts = false;
 		Style.fontSize = 13;
-	}
-	
-	
-	/* 初期化後処理 */
-	private function run():Void
-	{
+		// 初期配置
+		switch(config.alignH)
+		{
+			case AlignH.Left :
+			{
+				putX = config.padding;
+			}
+			case AlignH.Right : 
+			{
+				var sizeValue:Size = getSize();
+				putX = sizeValue.width - config.padding;
+			}
+		}
+		putY = config.padding;
+		
+		// spriteの配置
 		view = new Sprite();
 		layer.addChild(view);
 		gear.disposeTask(function (){
 			layer.removeChild(view);
 		});
-		
-		putX = config.padding;
-		putY = config.padding;
 	}
+	
+	/* サイズがあれば返し、無ければステージから取得 */
+	private function getSize():Size
+	{
+		switch(size)
+		{
+			case Option.Some(value) : return value;
+			case Option.None : 
+			{
+				var sizeValue:Size = {width:layer.stage.stageWidth, height:layer.stage.stageWidth};
+				size = Option.Some(sizeValue);
+				return sizeValue;
+			}
+		}
+	}
+	
 	
 	/**
 	 * ラベルを追加
@@ -108,6 +136,13 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	/* 要素追加の共通処理 */
 	private function addComponent(component:Component):Void
 	{
+		switch (config.alignH){
+			case AlignH.Right : 
+			{
+				component.x = putX - component.width;
+			}
+			case AlignH.Left:
+		}
 		putY += Math.round(component.height + config.childMargin);
 	}
 }
@@ -115,7 +150,27 @@ class Config
 {
 	public var padding:Int = 10;
 	public var childMargin:Int = 5;
+	/** 表示エリア。Noneで未定 */
+	public var size:Option<{width:Int, height:Int}> = Option.None;
+	/** 左右文字寄せ */
+	public var alignH:AlignH = AlignH.Left;
 	
 	/** コンストラクタ */
 	public function new() { }
+	
+	/** クローン */
+	public function clone():Config
+	{
+		return Unserializer.run(Serializer.run(this));
+	}
+}
+enum AlignH
+{
+	Left;
+	Right;
+}
+private typedef Size =
+{
+	var width:Int;
+	var height:Int;
 }

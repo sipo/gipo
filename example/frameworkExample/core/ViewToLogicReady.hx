@@ -4,7 +4,7 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
-enum ViewLogicReady
+enum ViewToLogicReady
 {
 	Scene(value:EnumValue);
 }

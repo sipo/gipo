@@ -4,7 +4,7 @@ package frameworkExample.mock1;
  * 
  * @auther sipo
  */
-import frameworkExample.core.ViewLogicInput;
+import frameworkExample.core.ViewToLogicInput;
 import frameworkExample.mock1.Mock1;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
@@ -60,7 +60,7 @@ class Mock1PilotView extends PilotViewScene
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInput(ViewLogicInput.Scene(SceneInput.DemoChangeSceneButton));
+		hook.viewInput(ViewToLogicInput.Scene(SceneInput.DemoChangeSceneButton));
 	}
 	
 	/* Logicからの命令 */

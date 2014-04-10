@@ -4,7 +4,7 @@ package jp.sipo.gipo.core.state;
  * 
  * @auther sipo
  */
-class StateSwitcherGearHolderImpl<TState> extends StateSwitcherGearHolderLowLevelImpl
+class StateSwitcherGearHolderImpl<TState/*:StateGearHolder*/> extends StateSwitcherGearHolderLowLevelImpl
 {
 	/** State */
 	public var state(default, null):TState;

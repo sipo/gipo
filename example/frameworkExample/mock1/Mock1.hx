@@ -4,7 +4,7 @@ package frameworkExample.mock1;
  * 
  * @auther sipo
  */
-import frameworkExample.logic.LogicViewOrder;
+import frameworkExample.logic.LogicToViewOrder;
 import frameworkExample.mock0.Mock0;
 import frameworkExample.logic.LogicScene;
 private typedef SceneInput = Mock1Input;
@@ -27,7 +27,7 @@ class Mock1 extends LogicScene implements Mock1Peek
 	private function run():Void
 	{
 		// 表示の依頼
-		view.order(LogicViewOrder.ChangeScene(ViewChangeScene.Mock1(this)));
+		view.order(LogicToViewOrder.ChangeScene(ViewChangeScene.Mock1(this)));
 	}
 	
 	

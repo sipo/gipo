@@ -39,6 +39,8 @@ class Parcel<TSnapshot, TEvent>
 		if (snapshot != null) return ParcelValue.Snapshot(snapshot);
 		return ParcelValue.Event(event);
 	}
+	
+	
 }
 enum ParcelValue<TSnapshot, TEvent>
 {
@@ -46,3 +48,8 @@ enum ParcelValue<TSnapshot, TEvent>
 	Event(value:TEvent);
 }
 // MEMO:マウスガイドの容量が大きくなるなら、個別に配列にまとめてしまう。ただし、最適化の一種なので後でいい
+class ParcelHeader
+{
+	/** バージョン表記 */
+	public var version:String;
+}

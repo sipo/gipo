@@ -5,7 +5,7 @@ package frameworkExample.mock0;
  * @auther sipo
  */
 import frameworkExample.mock0.Mock0;
-import frameworkExample.core.ViewLogicInput;
+import frameworkExample.core.ViewToLogicInput;
 import frameworkExample.core.Hook;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
@@ -52,13 +52,13 @@ class Mock0PilotView extends PilotViewScene
 	/* 反応テスト */
 	private function demoDisplayButton_click():Void
 	{
-		hook.viewInput(ViewLogicInput.Scene(SceneInput.DemoDisplayButton));
+		hook.viewInput(ViewToLogicInput.Scene(SceneInput.DemoDisplayButton));
 	}
 	
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInput(ViewLogicInput.Scene(SceneInput.DemoChangeSceneButton));
+		hook.viewInput(ViewToLogicInput.Scene(SceneInput.DemoChangeSceneButton));
 	}
 	
 	/* Logicからの命令 */

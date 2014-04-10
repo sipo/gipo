@@ -4,7 +4,7 @@ package frameworkExample.logic;
  * 
  * @auther sipo
  */
-import frameworkExample.logic.LogicViewOrder.ViewChangeScene;
+import frameworkExample.logic.LogicToViewOrder.ViewChangeScene;
 import frameworkExample.mock0.Mock0;
 class LogicInitialize extends LogicScene
 {
@@ -19,7 +19,7 @@ class LogicInitialize extends LogicScene
 	private function run():Void
 	{
 		// 画面表示を初期化
-		view.order(LogicViewOrder.ChangeScene(ViewChangeScene.None));
+		view.order(LogicToViewOrder.ChangeScene(ViewChangeScene.None));
 		// すぐにシーン移動
 		logic.changeState(new Mock0());
 	}

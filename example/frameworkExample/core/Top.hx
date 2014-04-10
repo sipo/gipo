@@ -7,7 +7,7 @@ package frameworkExample.core;
  */
 import frameworkExample.logic.LogicSnapshot;
 import frameworkExample.core.Reproduse;
-import frameworkExample.config.MetaConfig;
+import frameworkExample.config.Status;
 import frameworkExample.util.GlobalDispatcher;
 import frameworkExample.core.Hook;
 import frameworkExample.logic.Logic;
@@ -22,7 +22,7 @@ class Top extends GearHolderImpl
 	/* 開発設定 */
 	private var devConfig:DevConfig;
 	/* 各セクションを超えた全体状態管理 */
-	private var metaConfig:MetaConfig;
+	private var metaConfig:Status;
 	
 	/* 基本インスタンス */
 	private var logic:Logic;
@@ -40,7 +40,7 @@ class Top extends GearHolderImpl
 		this.current = current;
 		this.devConfig = devConfig;
 		// 
-		metaConfig = new MetaConfig();
+		metaConfig = new Status();
 		//
 		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
@@ -51,7 +51,7 @@ class Top extends GearHolderImpl
 	{
 		// configの拡散
 		tool.diffuse(devConfig, DevConfig);
-		tool.diffuse(metaConfig, MetaConfig);
+		tool.diffuse(metaConfig, Status);
 		// reproduceの用意
 		reproduce = new Reproduse();
 		tool.bookChild(reproduce);

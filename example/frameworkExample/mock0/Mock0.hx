@@ -5,7 +5,7 @@ package frameworkExample.mock0;
  * @auther sipo
  */
 import frameworkExample.mock1.Mock1;
-import frameworkExample.logic.LogicViewOrder;
+import frameworkExample.logic.LogicToViewOrder;
 import frameworkExample.logic.LogicScene;
 private typedef SceneInput = Mock0Input;
 class Mock0 extends LogicScene
@@ -23,7 +23,7 @@ class Mock0 extends LogicScene
 	private function run():Void
 	{
 		// 表示の依頼
-		view.order(LogicViewOrder.ChangeScene(ViewChangeScene.Mock0));
+		view.order(LogicToViewOrder.ChangeScene(ViewChangeScene.Mock0));
 	}
 	
 	/* Viewからの入力 */
@@ -39,7 +39,7 @@ class Mock0 extends LogicScene
 	/* デモボタンのクリック */
 	private function input_demoTraceButton():Void
 	{
-		view.order(LogicViewOrder.Scene(Mock0Order.DemoDisplay));
+		view.order(LogicToViewOrder.Scene(Mock0Order.DemoDisplay));
 	}
 	
 	/* デモシーン変更ボタンのクリック */

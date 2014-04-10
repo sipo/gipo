@@ -34,7 +34,7 @@ class PilotViewScene extends StateGearHolderImpl
 	inline private function sceneRun():Void
 	{
 		// 基礎インスタンスの取得
-		layer = gear.absorbWithEnum(PilotViewDiffuseKey.ViewLayer);
+		layer = gear.absorbWithEnum(PilotViewDiffuseKey.GameLayer);
 		hook = gear.absorb(ViewToHook);
 	}
 	

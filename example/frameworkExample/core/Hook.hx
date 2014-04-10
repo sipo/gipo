@@ -30,9 +30,9 @@ import jp.sipo.gipo.core.GearHolderImpl;
 interface ViewToHook
 {
 	/** Viewからの即時発行できる入力イベント */
-	public function viewInput(command:ViewLogicInput):Void;
+	public function viewInput(command:ViewToLogicInput):Void;
 	/** Viewからの非同期に発生するイベント */
-	public function viewReady(command:ViewLogicReady):Void;
+	public function viewReady(command:ViewToLogicReady):Void;
 }
 /**
  * 基本動作
@@ -62,12 +62,12 @@ class Hook extends GearHolderImpl implements ViewToHook
 	 * View向けのメソッド
 	 * ===============================================================*/
 	
-	public function viewInput(command:ViewLogicInput):Void
+	public function viewInput(command:ViewToLogicInput):Void
 	{
 		recordAndEvent(HookEvent.ViewInput(command));
 	}
 	
-	public function viewReady(command:ViewLogicReady):Void
+	public function viewReady(command:ViewToLogicReady):Void
 	{
 		recordAndEvent(HookEvent.ViewReady(command));
 	}
@@ -105,9 +105,9 @@ class Hook extends GearHolderImpl implements ViewToHook
 enum HookEvent
 {
 	/** Viewからの入力 */
-	ViewInput(command:ViewLogicInput);
+	ViewInput(command:ViewToLogicInput);
 	/** Viewからの準備完了通知 */
-	ViewReady(command:ViewLogicReady);
+	ViewReady(command:ViewToLogicReady);
 }
 // MEMO:再生時の挙動
 //	イベント予定のフレームが発生（同一フレームに複数ある場合は順序を守る）
