@@ -5,7 +5,7 @@ package frameworkExample.core;
  * @auther sipo
  */
 import jp.sipo.ds.Point;
-enum ViewToLogicInput
+enum ViewToLogicInput	// TODO:クラスのファイル関係を見直せれるか。ViewToLogicは全てまとめたほうがいいのでは。contextパッケージを用意してもいいかも
 {
 	Common(value:ViewLogicInputCommon);
 	Scene(value:EnumValue);
@@ -26,4 +26,15 @@ enum ViewLogicInputCommon
 	 * 最もデータが重くなるので、場合によってはもっと間引く
 	 */
 	MouseGuide(point:Point<Int>);
+}
+enum ViewToLogicOperationInput
+{
+	/** オペレーションメニューを開く */
+	OperationOpen;
+	/** オペレーションメニューを最小化する */
+	OperationMinimize;
+	/** 再現データを保存する */
+	Save;
+	/** 再現データを読み込む */
+	Load;
 }

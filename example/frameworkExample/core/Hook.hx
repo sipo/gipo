@@ -19,7 +19,8 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
-import frameworkExample.core.Reproduse.HookToReproduse;
+import frameworkExample.core.ViewToLogicInput;
+import frameworkExample.core.Reproduce.HookToReproduse;
 import frameworkExample.logic.Logic;
 import jp.sipo.gipo.core.GearHolderImpl;
 /**
@@ -33,6 +34,8 @@ interface ViewToHook
 	public function viewInput(command:ViewToLogicInput):Void;
 	/** Viewからの非同期に発生するイベント */
 	public function viewReady(command:ViewToLogicReady):Void;
+	/** ViewからのOperation周りの入力イベント */
+	public function viewOperationInput(command:ViewToLogicOperationInput):Void;
 }
 /**
  * 基本動作
@@ -72,6 +75,12 @@ class Hook extends GearHolderImpl implements ViewToHook
 		recordAndEvent(HookEvent.ViewReady(command));
 	}
 	
+	public function viewOperationInput(command:ViewToLogicOperationInput):Void
+	{
+		// 記録されない
+		executeEvent(HookEvent.ViewOperationInput(command));
+	}
+	
 	/* ================================================================
 	 * 内部処理
 	 * ===============================================================*/
@@ -96,6 +105,7 @@ class Hook extends GearHolderImpl implements ViewToHook
 		{
 			case HookEvent.ViewInput(command) : logic.viewInput(command);
 			case HookEvent.ViewReady(command) : logic.viewReady(command);
+			case HookEvent.ViewOperationInput(command) : logic.viewOperationInput(command);
 		}
 	}
 }
@@ -108,6 +118,8 @@ enum HookEvent
 	ViewInput(command:ViewToLogicInput);
 	/** Viewからの準備完了通知 */
 	ViewReady(command:ViewToLogicReady);
+	/** ViewからのOperation系の入力通知 */
+	ViewOperationInput(command:ViewToLogicOperationInput);
 }
 // MEMO:再生時の挙動
 //	イベント予定のフレームが発生（同一フレームに複数ある場合は順序を守る）

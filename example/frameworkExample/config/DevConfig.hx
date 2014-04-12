@@ -6,11 +6,15 @@ package frameworkExample.config;
  * 
  * @auther sipo
  */
+import frameworkExample.core.ReproduceIo;
 import frameworkExample.pilotView.PilotView;
 class DevConfig
 {
 	/** Viewクラス */
 	public var view:Class<Dynamic> = PilotView;
+	/** 記録データの保存方法指定 */
+	public var reproduceIo:Class<Dynamic> = ReproduceIo_File;
+	
 	
 	
 	/** コンストラクタ */

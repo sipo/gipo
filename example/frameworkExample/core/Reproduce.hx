@@ -22,7 +22,7 @@ interface HookToReproduse<TEvent>
 	 */
 	public function addEvent(hookEvent:TEvent):Void;
 }
-class Reproduse<TSnapshot, TEvent> extends GearHolderImpl implements LogicToReproduse<TSnapshot> implements HookToReproduse<TEvent>
+class Reproduce<TSnapshot, TEvent> extends GearHolderImpl implements LogicToReproduse<TSnapshot> implements HookToReproduse<TEvent>
 {
 	/* 記録データ */
 	private var parcelList:Array<Parcel<TSnapshot, TEvent>> = [];

@@ -64,10 +64,29 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene>
 		throw new SipoError('未実装');
 	}
 	
+	// TODO:これ、入力関数１個でよくね？
+	
 	/**
 	 * Viewからの準備完了通知
 	 */
 	public function viewReady(command:ViewToLogicReady):Void
+	{
+		throw new SipoError('未実装');
+	}
+	
+	/**
+	 * ViewOperationからの準備完了通知
+	 */
+	public function viewOperationInput(command:ViewToLogicOperationInput):Void
+	{
+		operation.viewOperationInput(command);
+	}
+	
+	
+	/**
+	 * operationServiceからの通知
+	 */
+	public function operationServiceEvent(command:OperationServiceEvent):Void
 	{
 		throw new SipoError('未実装');
 	}

@@ -383,6 +383,7 @@ class Gear implements GearOut
 	inline private function otherDiffuse_(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
 	{
 		checkPhaseCreate(function () return '別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
+		// TODO:インスタンスがクラスの型かどうかチェック
 		diffuser.add(diffuseInstance, clazz);	// 追加処理
 	}
 	

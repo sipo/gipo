@@ -5,6 +5,7 @@ package jp.sipo.wrapper;
  * 
  * @auther sipo
  */
+import flash.geom.Rectangle;
 import haxe.macro.Expr.Case;
 import haxe.Unserializer;
 import haxe.Serializer;
@@ -44,11 +45,13 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	}
 	
 	/* 表示レイヤー */
-	private var layer:Sprite;
+	private var parentLayer:Sprite;
 	/* 設定 */
 	private var config:Config;
-	/* 表示 */
-	private var view:Sprite;
+	/* UI表示 */
+	private var uiLayer:Sprite;
+	/* 背景表示 */
+	private var backgroundLayer:Sprite;
 	/* 表示エリア。Noneで未定 */
 	private var size:Option<Size> = Option.None;
 	
@@ -57,10 +60,10 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	private var putY:Int = 0;
 	
 	/** コンストラクタ */
-	public function new(layer:Sprite, ?config:Config) 
+	public function new(parentLayer:Sprite, ?config:Config) 
 	{
 		super();
-		this.layer = layer;
+		this.parentLayer = parentLayer;
 		if (config == null) config = getDefaultConfig();
 		this.config = config;
 		Style.embedFonts = false;
@@ -81,11 +84,13 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 		putY = config.padding;
 		
 		// spriteの配置
-		view = new Sprite();
-		layer.addChild(view);
-		gear.disposeTask(function (){
-			layer.removeChild(view);
-		});
+		backgroundLayer = new Sprite();
+		parentLayer.addChild(backgroundLayer);
+		gear.disposeTask(function () parentLayer.removeChild(backgroundLayer));
+		uiLayer = new Sprite();
+		parentLayer.addChild(uiLayer);
+		gear.disposeTask(function () parentLayer.removeChild(uiLayer));
+		
 	}
 	
 	/* サイズがあれば返し、無ければステージから取得 */
@@ -96,7 +101,7 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 			case Option.Some(value) : return value;
 			case Option.None : 
 			{
-				var sizeValue:Size = {width:layer.stage.stageWidth, height:layer.stage.stageWidth};
+				var sizeValue:Size = {width:parentLayer.stage.stageWidth, height:parentLayer.stage.stageWidth};
 				size = Option.Some(sizeValue);
 				return sizeValue;
 			}
@@ -109,9 +114,9 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	 */
 	public function addLabel(message:String):Label
 	{
-		var label:Label = new Label(layer, putX, putY, message);
+		var label:Label = new Label(uiLayer, putX, putY, message);
 		gear.disposeTask(function (){
-			layer.removeChild(label);
+			uiLayer.removeChild(label);
 		});
 		addComponent(label);
 		return label;
@@ -125,10 +130,10 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 		var handler = function (event:Event):Void{
 			clickHandler();
 		}
-		var pushButton:PushButton = new PushButton(layer, putX, putY, label, handler);
+		var pushButton:PushButton = new PushButton(uiLayer, putX, putY, label, handler);
 		gear.disposeTask(function (){
 			pushButton.removeEventListener(MouseEvent.CLICK, handler);
-			layer.removeChild(pushButton);
+			uiLayer.removeChild(pushButton);
 		});
 		addComponent(pushButton);
 	}
@@ -144,6 +149,18 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 			case AlignH.Left:
 		}
 		putY += Math.round(component.height + config.childMargin);
+	}
+	
+	/**
+	 * 背景の追加
+	 */
+	public function addBackground(color:Int, alpha:Float):Void
+	{
+		var bounds:Rectangle = uiLayer.getBounds(backgroundLayer);
+		backgroundLayer.graphics.clear();
+		backgroundLayer.graphics.beginFill(color, alpha);
+		var padding:Float = config.padding;
+		backgroundLayer.graphics.drawRect(bounds.x - padding, bounds.y - padding, bounds.width + padding*2, bounds.height + padding*2);
 	}
 }
 class Config

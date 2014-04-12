@@ -6,7 +6,7 @@ package frameworkExample.core;
  * @auther sipo
  */
 import frameworkExample.logic.LogicSnapshot;
-import frameworkExample.core.Reproduse;
+import frameworkExample.core.Reproduce;
 import frameworkExample.config.Status;
 import frameworkExample.util.GlobalDispatcher;
 import frameworkExample.core.Hook;
@@ -27,8 +27,9 @@ class Top extends GearHolderImpl
 	/* 基本インスタンス */
 	private var logic:Logic;
 	private var hook:Hook;
-	private var reproduce:Reproduse<LogicSnapshot, HookEvent>;
+	private var reproduce:Reproduce<LogicSnapshot, HookEvent>;
 	private var view:View;
+	private var reproduceIo:ReproduceIo;
 	
 	/* 全体イベントの発行 */
 	private var globalDispatcher:GlobalDispatcher;
@@ -53,8 +54,12 @@ class Top extends GearHolderImpl
 		tool.diffuse(devConfig, DevConfig);
 		tool.diffuse(metaConfig, Status);
 		// reproduceの用意
-		reproduce = new Reproduse();
+		reproduce = new Reproduce();
 		tool.bookChild(reproduce);
+		// reproduceIoの用意
+		var reproduceIoClass = devConfig.reproduceIo;
+		reproduceIo = Type.createInstance(reproduceIoClass, []);
+		tool.bookChild(reproduceIo);
 		// hookの用意
 		hook = new Hook();
 		tool.bookChild(hook);
@@ -75,6 +80,7 @@ class Top extends GearHolderImpl
 		gear.otherDiffuse(hook, logic, Logic);
 		gear.otherDiffuse(view, hook, ViewToHook);
 		gear.otherDiffuse(logic, view, View);
+		gear.otherDiffuse(logic, reproduceIo, ReproduceIo);
 		gear.otherDiffuse(hook, reproduce, HookToReproduse);
 		gear.otherDiffuse(logic, reproduce, LogicToReproduse);
 		gear.otherDiffuse(reproduce, logic, Logic);
