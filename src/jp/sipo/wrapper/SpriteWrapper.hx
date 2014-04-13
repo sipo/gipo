@@ -1,6 +1,7 @@
 package jp.sipo.wrapper;
 /**
- * Sprite内部への参照を肩代わりする
+ * Sprite内部への参照を肩代わりする。
+ * 下層へのアクセスをドットシンタックスで提供
  * 
  * @auther sipo
  */

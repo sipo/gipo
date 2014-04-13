@@ -1,18 +1,18 @@
-package frameworkExample.core;
+package frameworkExample.context;
 /**
  * 最上位GearHolder
  * 各種セクションの設定などをする
  * 
  * @auther sipo
  */
-import frameworkExample.logic.LogicSnapshot;
-import frameworkExample.core.Reproduce;
-import frameworkExample.config.Status;
-import frameworkExample.util.GlobalDispatcher;
-import frameworkExample.core.Hook;
-import frameworkExample.logic.Logic;
+import frameworkExample.context.Logic.HookToLogic;
+import jp.sipo.util.GlobalDispatcher;
+import frameworkExample.context.Hook.ViewToHook;
 import jp.sipo.gipo.core.GearDiffuseTool;
-import frameworkExample.config.DevConfig;
+import frameworkExample.operation.Reproduce;
+import frameworkExample.operation.OperationView;
+import frameworkExample.operation.OperationHook;
+import frameworkExample.operation.OperationLogic;
 import flash.display.Sprite;
 import jp.sipo.gipo.core.GearHolderImpl;
 class Top extends GearHolderImpl
@@ -22,14 +22,16 @@ class Top extends GearHolderImpl
 	/* 開発設定 */
 	private var devConfig:DevConfig;
 	/* 各セクションを超えた全体状態管理 */
-	private var metaConfig:Status;
+	private var globalStatus:GlobalStatus;
 	
 	/* 基本インスタンス */
 	private var logic:Logic;
 	private var hook:Hook;
-	private var reproduce:Reproduce<LogicSnapshot, HookEvent>;
 	private var view:View;
-	private var reproduceIo:ReproduceIo;
+	private var operationLogic:OperationLogic;
+	private var operationHook:OperationHook;
+	private var operationView:OperationView;
+	private var reproduce:Reproduce;
 	
 	/* 全体イベントの発行 */
 	private var globalDispatcher:GlobalDispatcher;
@@ -41,7 +43,7 @@ class Top extends GearHolderImpl
 		this.current = current;
 		this.devConfig = devConfig;
 		// 
-		metaConfig = new Status();
+		globalStatus = new GlobalStatus();
 		//
 		gear.addDiffusibleHandler(diffusible);
 		gear.addRunHandler(run);
@@ -52,14 +54,17 @@ class Top extends GearHolderImpl
 	{
 		// configの拡散
 		tool.diffuse(devConfig, DevConfig);
-		tool.diffuse(metaConfig, Status);
+		tool.diffuse(globalStatus, GlobalStatus);
+		// operationcの用意
+		operationLogic = new OperationLogic();
+		tool.bookChild(operationLogic);
+		operationView = new OperationView();
+		tool.bookChild(operationView);
+		operationHook = new OperationHook();
+		tool.bookChild(operationHook);
 		// reproduceの用意
 		reproduce = new Reproduce();
 		tool.bookChild(reproduce);
-		// reproduceIoの用意
-		var reproduceIoClass = devConfig.reproduceIo;
-		reproduceIo = Type.createInstance(reproduceIoClass, []);
-		tool.bookChild(reproduceIo);
 		// hookの用意
 		hook = new Hook();
 		tool.bookChild(hook);
@@ -76,14 +81,12 @@ class Top extends GearHolderImpl
 		// logicの用意
 		logic = new Logic();
 		tool.bookChild(logic);
+		
 		// 関係性の追加
-		gear.otherDiffuse(hook, logic, Logic);
+		gear.otherDiffuse(hook, logic, HookToLogic);
+		gear.otherDiffuse(hook, operationLogic, OperationLogic);
 		gear.otherDiffuse(view, hook, ViewToHook);
-		gear.otherDiffuse(logic, view, View);
-		gear.otherDiffuse(logic, reproduceIo, ReproduceIo);
-		gear.otherDiffuse(hook, reproduce, HookToReproduse);
-		gear.otherDiffuse(logic, reproduce, LogicToReproduse);
-		gear.otherDiffuse(reproduce, logic, Logic);
+		gear.otherDiffuse(logic, view, LogicToView);
 		view.setContext(viewLayer);
 		
 		// イベント準備
@@ -111,5 +114,4 @@ class Top extends GearHolderImpl
 		view.update();
 		view.draw();
 	}
-	
 }

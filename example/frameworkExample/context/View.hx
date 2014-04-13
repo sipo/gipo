@@ -1,4 +1,4 @@
-package frameworkExample.core;
+package frameworkExample.context;
 /**
  * Viewセクション
  * MVCのVにあたる。
@@ -12,21 +12,15 @@ package frameworkExample.core;
  * 
  * @auther sipo
  */
-import frameworkExample.logic.LogicToViewOrder;
 import flash.display.Sprite;
 import jp.sipo.gipo.core.GearHolder;
-interface View extends GearHolder
+interface View extends GearHolder extends LogicToView
 {
 	/**
 	 * 必要設定
 	 * すべてのViewで必要な要素を取得し、使わない場合は無視する
 	 */
 	public function setContext(viewLayer:Sprite):Void;
-	
-	/**
-	 * 表示切り替え依頼
-	 */
-	public function order(command:LogicToViewOrder):Void;
 	
 	/**
 	 * ドラッグなどの入力状態の更新

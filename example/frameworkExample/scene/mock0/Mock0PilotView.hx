@@ -1,18 +1,24 @@
-package frameworkExample.mock0;
+package frameworkExample.scene.mock0;
 /**
  * 
  * 
  * @auther sipo
  */
-import frameworkExample.mock0.Mock0;
-import frameworkExample.core.ViewToLogicInput;
-import frameworkExample.core.Hook;
+import frameworkExample.scene.mock0.Mock0;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import frameworkExample.pilotView.PilotViewScene;
-private typedef SceneOrder = Mock0Order;
+/* ================================================================
+ * 設定
+ * ===============================================================*/
+/** 使用する入力定義 */
 private typedef SceneInput = Mock0Input;
-class Mock0PilotView extends PilotViewScene
+/** 使用する依頼定義 */
+private typedef SceneOrder = Mock0ViewOrder;
+/* ================================================================
+ * 動作
+ * ===============================================================*/
+class Mock0PilotView extends PilotViewScene implements SceneOrder
 {
 	/* 表示レイヤー */
 	private var uiLayer:Sprite;
@@ -25,7 +31,6 @@ class Mock0PilotView extends PilotViewScene
 	{
 		super();
 		gear.addRunHandler(run);
-		orderHandlerContainer.set(SceneOrder, order);
 	}
 	
 	/* 初期化後処理 */
@@ -52,21 +57,24 @@ class Mock0PilotView extends PilotViewScene
 	/* 反応テスト */
 	private function demoDisplayButton_click():Void
 	{
-		hook.viewInput(ViewToLogicInput.Scene(SceneInput.DemoDisplayButton));
+		hook.viewInput(SceneInput.DemoDisplayButton);
 	}
 	
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInput(ViewToLogicInput.Scene(SceneInput.DemoChangeSceneButton));
+		hook.viewInput(SceneInput.DemoChangeSceneButton);
 	}
 	
-	/* Logicからの命令 */
-	private function order(command:SceneOrder):Void
+	/* ================================================================
+	 * Logic Order
+	 * ===============================================================*/
+	
+	/**
+	 * デモ用表示命令
+	 */
+	public function demoDisplay():Void
 	{
-		switch(command)
-		{
-			case SceneOrder.DemoDisplay : uiContainer.addLabel("ボタン入力がありました");
-		}
+		uiContainer.addLabel("ボタン入力がありました");
 	}
 }

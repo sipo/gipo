@@ -1,4 +1,4 @@
-package frameworkExample.util;
+package jp.sipo.util;
 /**
  * Flashのグローバルイベントをハンドリングする
  * 今のところフレームだけ、キーやMouseUpなども予定する

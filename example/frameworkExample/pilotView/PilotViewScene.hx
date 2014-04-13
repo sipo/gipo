@@ -1,21 +1,19 @@
 package frameworkExample.pilotView;
 /**
- * 
+ * PilotViewのシーンごとの定義
  * 
  * @auther sipo
  */
+import frameworkExample.context.LogicToView.LogicToViewScene;
+import frameworkExample.pilotView.PilotView.PilotViewDiffuseKey;
+import frameworkExample.context.View;
+import frameworkExample.context.Hook.ViewToHook;
+import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.gipo.core.config.AddBehaviorPreset;
 import jp.sipo.gipo.util.TaskList;
-import frameworkExample.core.Hook;
-import jp.sipo.gipo.util.EnumKeyHandlerContainer;
-import frameworkExample.pilotView.PilotView.PilotViewDiffuseKey;
 import flash.display.Sprite;
-import jp.sipo.util.SipoError;
-import jp.sipo.gipo.core.state.StateGearHolderImpl;
-class PilotViewScene extends StateGearHolderImpl
+class PilotViewScene extends StateGearHolderImpl implements LogicToViewScene
 {
-	/* シーンごとのorderの受け取り処理 */
-	private var orderHandlerContainer:EnumKeyHandlerContainer = new EnumKeyHandlerContainer();
 	/* 共通インスタンス */
 	private var layer:Sprite;
 	private var hook:ViewToHook;
@@ -37,17 +35,6 @@ class PilotViewScene extends StateGearHolderImpl
 		layer = gear.absorbWithEnum(PilotViewDiffuseKey.GameLayer);
 		hook = gear.absorb(ViewToHook);
 	}
-	
-	
-	/**
-	 * 表示依頼（この関数は継承せず、setOrderHandlerで対応する）
-	 */
-	inline public function sceneOrder(command:EnumValue):Void
-	{
-		orderHandlerContainer.call(command);
-	}
-	
-	
 }
 class PilotViewSceneHandlerContainer
 {
@@ -67,3 +54,4 @@ class PilotViewSceneHandlerContainer
 		draw = new TaskList(AddBehaviorPreset.addTail, false);
 	}
 }
+

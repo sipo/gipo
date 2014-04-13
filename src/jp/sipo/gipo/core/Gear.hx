@@ -197,7 +197,7 @@ class Gear implements GearOut
 	/* 予約の履行 */
 	private function fulfill():Void
 	{
-		for (childWrapper in bookChildList) addChild(childWrapper.value);
+		for (childWrapper in bookChildList) addChild(childWrapper.value, childWrapper.pos);
 		bookChildList = null;
 	}
 	
@@ -295,16 +295,16 @@ class Gear implements GearOut
 	 * 
 	 * @gearDispose
 	 */
-	public function addChild(child:GearHolder):Void
+	public function addChild(child:GearHolder, ?pos:PosInfos):Void
 	{
-		addChildGear(getGear(child));
+		addChildGear(getGear(child), pos);
 	}
-	inline private function addChildGear(childGear:Gear):Void
+	inline private function addChildGear(childGear:Gear, pos:PosInfos):Void
 	{
 		switch(phase)
 		{
-			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError("Gearは処理中にしか子を登録することはできません。(" + phase + ")");
-			case GearPhase.Diffusible : throw new SipoError("initialize時のaddChildは、明示的にaddChildDelayを使用してください。(" + phase + ")");
+			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError("Gearは処理中にしか子を登録することはできません。(" + phase + ") $pos");
+			case GearPhase.Diffusible : throw new SipoError("initialize時のaddChildは、明示的にaddChildDelayを使用してください。(" + phase + ") $pos");
 			case GearPhase.Fulfill, GearPhase.Middle : 
 		}
 		// 追加
@@ -383,7 +383,8 @@ class Gear implements GearOut
 	inline private function otherDiffuse_(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
 	{
 		checkPhaseCreate(function () return '別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
-		// TODO:インスタンスがクラスの型かどうかチェック
+		if (diffuseInstance == null) throw 'diffuseされるインスタンスがありません $diffuseInstance';
+		if (!Std.is(diffuseInstance, clazz)) throw '型の違うインスタンスがdiffuseされています $diffuseInstance $clazz';
 		diffuser.add(diffuseInstance, clazz);	// 追加処理
 	}
 	

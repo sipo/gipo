@@ -1,11 +1,11 @@
-package frameworkExample.config;
+package frameworkExample.context;
 /**
- * 再生中に変動しうる
+ * 全体処理変数
  * 
  * @auther sipo
  */
 import haxe.ds.Option;
-class Status
+class GlobalStatus
 {
 	/** 画面基本サイズ */
 	inline public static var stageWidth:Int = 480;

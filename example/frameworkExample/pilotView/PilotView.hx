@@ -5,15 +5,16 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
-import frameworkExample.operation.OperationPilotView;
-import frameworkExample.operation.Operation;
-import jp.sipo.gipo.core.GearDiffuseTool;
-import frameworkExample.mock1.Mock1PilotView;
-import frameworkExample.mock0.Mock0PilotView;
-import frameworkExample.core.View;
-import frameworkExample.logic.LogicToViewOrder;
-import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
+import frameworkExample.scene.mock1.Mock1PilotView;
+import frameworkExample.scene.mock0.Mock0PilotView;
+import frameworkExample.context.LogicToView;
 import flash.display.Sprite;
+import jp.sipo.gipo.core.GearDiffuseTool;
+import flash.display.Sprite;
+import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
+import frameworkExample.scene.mock0.Mock0;
+import frameworkExample.scene.mock1.Mock1;
+import frameworkExample.context.View;
 class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements View
 {
 	/* 基本レイヤー */
@@ -21,16 +22,11 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	/* ゲーム用レイヤー */
 	private var gameLayer:Sprite;
 	
-	/* メタ表示パーツ */
-	private var operationView:OperationPilotView;
-	private var operationLayer:Sprite;
-	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
 		gear.addDiffusibleHandler(diffusible);
-		gear.addRunHandler(run);
 	}
 	
 	/**
@@ -48,56 +44,35 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	public function diffusible(tool:GearDiffuseTool):Void
 	{
 		gameLayer = new Sprite();
-		operationLayer = new Sprite();
 		viewLayer.addChild(gameLayer);
-		viewLayer.addChild(operationLayer);
 		gear.disposeTask(function () viewLayer.removeChild(gameLayer));
-		gear.disposeTask(function () viewLayer.removeChild(operationLayer));
 		tool.diffuseWithKey(gameLayer, PilotViewDiffuseKey.GameLayer);
-		tool.diffuseWithKey(operationLayer, PilotViewDiffuseKey.OperationLayer);
 	}
 	
-	/**
-	 * 初期処理
-	 */
-	public function run():Void
+	/* ================================================================
+	 * Logicからの命令
+	 * ===============================================================*/
+	
+	/** シーンの変更を依頼する */
+	public function changeScene(sceneKind:ViewSceneKind):LogicToViewScene
 	{
-		operationView = new OperationPilotView();
-		gear.addChild(operationView);
+		var scene:PilotViewScene = getScene(sceneKind);
+		stateSwitcherGear.changeState(scene);
+		return scene;
+	}
+	private function getScene(sceneKind:ViewSceneKind):PilotViewScene
+	{
+		switch(sceneKind)
+		{
+			case ViewSceneKind.Mock0 : return new Mock0PilotView();
+			case ViewSceneKind.Mock1(peek) : return new Mock1PilotView(peek);
+			case ViewSceneKind.Blank : return new BlankPilotView();
+		}
 	}
 	
-	/**
-	 * 表示切り替え依頼
-	 */
-	public function order(command:LogicToViewOrder):Void
-	{
-		switch(command)
-		{
-			case LogicToViewOrder.ChangeScene(sceneKind): order_ChangeScene(sceneKind);
-			case LogicToViewOrder.Scene(sceneCommand): order_Scene(sceneCommand);
-			case LogicToViewOrder.Operation(operationCommand) : order_Operation(operationCommand);
-		}
-	}
-	/* シーンの切り替え処理をここに書く */
-	private function order_ChangeScene(command:ViewChangeScene):Void
-	{
-		switch(command)
-		{
-			case ViewChangeScene.None: stateSwitcherGear.changeState(new NonePilotView());
-			case ViewChangeScene.Mock0: stateSwitcherGear.changeState(new Mock0PilotView());
-			case ViewChangeScene.Mock1(peek): stateSwitcherGear.changeState(new Mock1PilotView(peek));
-		}
-	}
-	/* シーンごとの命令処理 */
-	private function order_Scene(command:EnumValue):Void
-	{
-		state.sceneOrder(command);
-	}
-	/* Operation表示への命令処理 */
-	private function order_Operation(command:OperationToViewOrder):Void
-	{
-		operationView.order(command);
-	}
+	/* ================================================================
+	 * Topからの更新指定
+	 * ===============================================================*/
 	
 	/**
 	 * ドラッグなどの入力状態の更新
@@ -123,8 +98,10 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 		state.sceneHandler.draw.execute();
 	}
 }
+/**
+ * PilotViewで使用する、Diffuse用のキー
+ */
 enum PilotViewDiffuseKey
 {
 	GameLayer;
-	OperationLayer;
 }

@@ -5,10 +5,8 @@ package ;
  * @auther sipo
  */
 import flash.events.Event;
-import jp.sipo.gipo.core.config.GearNoteTag;
-import jp.sipo.util.Note;
-import frameworkExample.config.DevConfig;
-import frameworkExample.core.Top;
+import frameworkExample.context.DevConfig;
+import frameworkExample.context.Top;
 import flash.Lib;
 class FrameworkExample
 {

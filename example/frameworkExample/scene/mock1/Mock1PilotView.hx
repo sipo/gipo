@@ -1,18 +1,26 @@
-package frameworkExample.mock1;
+package frameworkExample.scene.mock1;
 /**
  * 
  * 
  * @auther sipo
  */
-import frameworkExample.core.ViewToLogicInput;
-import frameworkExample.mock1.Mock1;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import frameworkExample.pilotView.PilotViewScene;
-private typedef SceneOrder = Mock1Order;
+import frameworkExample.scene.mock1.Mock1;
+/* ================================================================
+ * 設定
+ * ===============================================================*/
+/** 使用する入力定義 */
 private typedef SceneInput = Mock1Input;
-private typedef ScenePeek = Mock1Peek;
-class Mock1PilotView extends PilotViewScene
+/** 使用する依頼定義 */
+private typedef SceneOrder = Mock1ViewOrder;
+/** 参照定義 */
+private typedef ScenePeek = Mock1ViewPeek;
+/* ================================================================
+ * 動作
+ * ===============================================================*/
+class Mock1PilotView extends PilotViewScene implements SceneOrder
 {
 	/* 表示レイヤー */
 	private var uiLayer:Sprite;
@@ -31,7 +39,6 @@ class Mock1PilotView extends PilotViewScene
 		this.peek = peek;
 		gear.addRunHandler(run);
 		sceneHandler.draw.add(draw);
-		orderHandlerContainer.set(SceneOrder, order);
 	}
 	
 	/* 初期化後処理 */
@@ -60,13 +67,7 @@ class Mock1PilotView extends PilotViewScene
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInput(ViewToLogicInput.Scene(SceneInput.DemoChangeSceneButton));
-	}
-	
-	/* Logicからの命令 */
-	private function order(command:SceneOrder):Void
-	{
-		// 特になし
+		hook.viewInput(SceneInput.DemoChangeSceneButton);
 	}
 	
 	/**

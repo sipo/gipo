@@ -1,6 +1,6 @@
 package jp.sipo.gipo.util;
 /**
- * 
+ * 各種ハンドラをEnumで管理して、その後呼び出す仕組み
  * 
  * @auther sipo
  */
