@@ -58,7 +58,8 @@ class Top extends GearHolderImpl
 		// operationcの用意
 		operationLogic = new OperationLogic();
 		tool.bookChild(operationLogic);
-		operationView = new OperationView();
+		var operationViewClass = devConfig.operationView;
+		operationView = Type.createInstance(operationViewClass, []);
 		tool.bookChild(operationView);
 		operationHook = new OperationHook();
 		tool.bookChild(operationHook);
@@ -72,22 +73,34 @@ class Top extends GearHolderImpl
 		var viewClass = devConfig.view;
 		view = Type.createInstance(viewClass, []);
 		tool.bookChild(view);
-		// ビューのレイヤーとなるSprite。DisplayObjectを使用するLayerのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される
-		var viewLayer:Sprite = new Sprite();
-		current.addChild(viewLayer);
-		gear.otherEntryDispose(view, function (){	// layerの削除処理
-			current.removeChild(viewLayer);
-		});
 		// logicの用意
 		logic = new Logic();
 		tool.bookChild(logic);
 		
 		// 関係性の追加
+		// 	Logic周り
 		gear.otherDiffuse(hook, logic, HookToLogic);
-		gear.otherDiffuse(hook, operationLogic, OperationLogic);
 		gear.otherDiffuse(view, hook, ViewToHook);
 		gear.otherDiffuse(logic, view, LogicToView);
+		// 	Operation周り
+		gear.otherDiffuse(hook, operationLogic, OperationLogic);
+		gear.otherDiffuse(operationHook, operationLogic, OperationLogic);
+		gear.otherDiffuse(operationView, operationHook, OperationHook);
+		gear.otherDiffuse(operationLogic, operationView, OperationView);
+		
+		// ビューのレイヤーとなるSprite。DisplayObjectを使用するLayerのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される
+		var viewLayer:Sprite = new Sprite();
+		current.addChild(viewLayer);
 		view.setContext(viewLayer);
+		gear.otherEntryDispose(view, function (){	// layerの削除処理をViewに連動させる
+			current.removeChild(viewLayer);
+		});
+		var operationViewLayer:Sprite = new Sprite();
+		current.addChild(operationViewLayer);
+		operationView.setContext(operationViewLayer);
+		gear.otherEntryDispose(view, function (){	// layerの削除処理をViewに連動させる
+			current.removeChild(operationViewLayer);
+		});
 		
 		// イベント準備
 		globalDispatcher = new GlobalDispatcher();

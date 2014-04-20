@@ -6,11 +6,14 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import frameworkExample.operation.OperationOverView;
 import frameworkExample.pilotView.PilotView;
 class DevConfig
 {
 	/** Viewクラス */
 	public var view:Class<Dynamic> = PilotView;
+	/** Viewクラス */
+	public var operationView:Class<Dynamic> = OperationOverView;
 	
 	/** コンストラクタ */
 	public function new() 

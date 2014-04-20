@@ -5,8 +5,13 @@ package frameworkExample.operation;
  * 
  * @auther sipo
  */
+import frameworkExample.operation.OperationHook.OperationHookEvent;
 import frameworkExample.context.Hook.HookEvent;
 import jp.sipo.gipo.core.GearHolderImpl;
+interface OperationPeek
+{
+	
+}
 class OperationLogic extends GearHolderImpl
 {
 	/** コンストラクタ */
@@ -20,14 +25,16 @@ class OperationLogic extends GearHolderImpl
 	 */
 	public function record(event:HookEvent):Void
 	{
+		trace('stb OperationLogic record($event)');
 		// TODO:stb
 	}
 	
 	/**
 	 * OperationLogicそのものに対するイベント発生
 	 */
-	public function noticeEvent(event:HookEvent):Void
+	public function noticeEvent(event:OperationHookEvent):Void
 	{
+		trace('stb OperationLogic noticeEvent($event)');
 		// TODO:stb
 	}
 }

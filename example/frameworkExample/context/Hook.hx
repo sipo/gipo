@@ -94,8 +94,6 @@ class Hook extends GearHolderImpl implements ViewToHook
 				operation.record(hookEvent);
 				// イベントの実行
 				logic.noticeEvent(hookEvent);
-			case LogWay.Operation : 
-				operation.noticeEvent(hookEvent);
 		}
 	}
 }
@@ -125,8 +123,6 @@ enum LogWay
 	Input;
 	/** 保存され、対象タイミングで準備が整うまで全体を待たせる（処理時間が不明瞭な動作） */
 	Ready;
-	/** 保存されないOperation用のイベント */
-	Operation;
 }
 
 
