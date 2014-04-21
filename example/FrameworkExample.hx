@@ -19,7 +19,7 @@ class FrameworkExample
 	 */
 	public static function main():Void
 	{
-		var test = Lib.current;
+		// stageに追加されるのを待つ処理。一部のバグの回避のために行なう
 		if (Lib.current.stage != null) afterAddToStage();
 		else Lib.current.addEventListener(Event.ADDED_TO_STAGE, function (event:Event) afterAddToStage());
 	}
@@ -36,6 +36,7 @@ class FrameworkExample
 	/** コンストラクタ */
 	public function new() 
 	{
+		// ここから本処理の開始
 		top = new Top(Lib.current, new DevConfig());
 		top.getGear().initializeTop(null);
 	}
