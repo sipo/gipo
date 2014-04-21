@@ -84,9 +84,6 @@ class Top extends GearHolderImpl
 		gear.otherDiffuse(logic, view, LogicToView);
 		// 	Operation周り
 		gear.otherDiffuse(hook, operationLogic, OperationLogic);
-		hook.getGear().otherDiffuse(operationLogic, OperationLogic)
-		
-		
 		gear.otherDiffuse(operationHook, operationLogic, OperationLogic);
 		gear.otherDiffuse(operationView, operationHook, OperationHook);
 		gear.otherDiffuse(operationLogic, operationView, OperationView);
