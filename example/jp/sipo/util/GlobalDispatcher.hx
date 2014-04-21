@@ -1,6 +1,6 @@
 package jp.sipo.util;
 /**
- * Flashのグローバルイベントをハンドリングする
+ * FlashのenterFrameなど、全体に関わるイベント処理をまとめたもの。
  * 今のところフレームだけ、キーやMouseUpなども予定する
  * 
  * @auther sipo

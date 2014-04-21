@@ -35,7 +35,7 @@ class Mock0 extends LogicScene<ViewSceneOrder>
 	{
 		super(ViewSceneKind.Mock0);
 		// 入力処理の登録
-		viewInputHandlerContainer.set(Mock0Input, viewInput);
+		viewInputHandlerContainer.set(SceneInput, viewInput);
 	}
 	
 	/* Viewからの入力 */

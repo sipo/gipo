@@ -1,4 +1,4 @@
-﻿/.idea
 /*.iml
-/bin/swf
+/bin/swf/*.swf
 /out
+/.idea

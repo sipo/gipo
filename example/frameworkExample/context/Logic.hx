@@ -20,7 +20,6 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene<Dynamic>> implements 
 	{
 		super();
 		gear.addDiffusibleHandler(diffusible);
-		// runを使用せずにstartで起動する
 	}
 	
 	/* 自身を以下に伝えておく */

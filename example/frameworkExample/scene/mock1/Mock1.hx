@@ -42,7 +42,7 @@ class Mock1 extends LogicScene<ViewSceneOrder> implements ScenePeek
 		super(ViewSceneKind.Mock1(this));
 		sceneGear.updateTaskList.add(update);
 		// 入力処理の登録
-		viewInputHandlerContainer.set(Mock1Input, viewInput);
+		viewInputHandlerContainer.set(SceneInput, viewInput);
 	}
 	
 	/**

@@ -84,11 +84,14 @@ class Top extends GearHolderImpl
 		gear.otherDiffuse(logic, view, LogicToView);
 		// 	Operation周り
 		gear.otherDiffuse(hook, operationLogic, OperationLogic);
+		hook.getGear().otherDiffuse(operationLogic, OperationLogic)
+		
+		
 		gear.otherDiffuse(operationHook, operationLogic, OperationLogic);
 		gear.otherDiffuse(operationView, operationHook, OperationHook);
 		gear.otherDiffuse(operationLogic, operationView, OperationView);
 		
-		// ビューのレイヤーとなるSprite。DisplayObjectを使用するLayerのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される
+		// ビューのレイヤーとなるSprite。DisplayObjectを使用するViewのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される
 		var viewLayer:Sprite = new Sprite();
 		current.addChild(viewLayer);
 		view.setContext(viewLayer);
@@ -107,7 +110,7 @@ class Top extends GearHolderImpl
 		globalDispatcher.setFlashContext(current);
 		tool.diffuse(globalDispatcher, GlobalDispatcher);
 		tool.bookChild(globalDispatcher);
-		globalDispatcher.addFrameHandler(frame);
+		globalDispatcher.addFrameHandler(frame);	// フレームイベント
 	}
 	
 	/* 初期化後処理 */
