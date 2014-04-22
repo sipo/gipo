@@ -5,7 +5,7 @@ package jp.sipo.gipo.core;
  * @auther sipo
  */
 import haxe.PosInfos;
-interface GearOut
+interface GearOutside
 {
 	/**
 	 * 親がなくとも動作するGearHolderとして設定する
@@ -23,6 +23,18 @@ interface GearOut
 	 * 消去処理の追加。実行は追加の逆順で行われる
 	 */
 	public function disposeTask(func:Void -> Void, ?pos:PosInfos):Void;
+	
+	/**
+	 * 外部からDiffuseを行なう
+	 * @gearDispose
+	 */
+	public function otherDiffuse(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void;
+	
+	/**
+	 * 外部からキーによるDiffuseを行なう
+	 * @gearDispose
+	 */
+	public function otherDiffuseWithEnum(diffuseInstance:Dynamic, key:EnumValue):Void;
 	
 	/**
 	 * Gearの実態を取得する。

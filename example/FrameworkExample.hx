@@ -38,6 +38,6 @@ class FrameworkExample
 	{
 		// ここから本処理の開始
 		top = new Top(Lib.current, new DevConfig());
-		top.getGear().initializeTop(null);
+		top.gearOutside().initializeTop(null);
 	}
 }

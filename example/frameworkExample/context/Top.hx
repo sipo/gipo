@@ -79,28 +79,24 @@ class Top extends GearHolderImpl
 		
 		// 関係性の追加
 		// 	Logic周り
-		gear.otherDiffuse(hook, logic, HookToLogic);
-		gear.otherDiffuse(view, hook, ViewToHook);
-		gear.otherDiffuse(logic, view, LogicToView);
+		hook.gearOutside().otherDiffuse(logic, HookToLogic);
+		view.gearOutside().otherDiffuse(hook, ViewToHook);
+		logic.gearOutside().otherDiffuse(view, LogicToView);
 		// 	Operation周り
-		gear.otherDiffuse(hook, operationLogic, OperationLogic);
-		gear.otherDiffuse(operationHook, operationLogic, OperationLogic);
-		gear.otherDiffuse(operationView, operationHook, OperationHook);
-		gear.otherDiffuse(operationLogic, operationView, OperationView);
+		hook.gear.otherDiffuse(operationLogic, OperationLogic);
+		operationHook.gearOutside().otherDiffuse(operationLogic, OperationLogic);
+		operationView.gearOutside().otherDiffuse(operationHook, OperationHook);
+		operationLogic.gearOutside().otherDiffuse(operationView, OperationView);
 		
 		// ビューのレイヤーとなるSprite。DisplayObjectを使用するViewのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される
 		var viewLayer:Sprite = new Sprite();
 		current.addChild(viewLayer);
 		view.setContext(viewLayer);
-		gear.otherEntryDispose(view, function (){	// layerの削除処理をViewに連動させる
-			current.removeChild(viewLayer);
-		});
+		view.gearOutside().disposeTask(function () current.removeChild(viewLayer));	// layerの削除処理をViewに連動させる
 		var operationViewLayer:Sprite = new Sprite();
 		current.addChild(operationViewLayer);
 		operationView.setContext(operationViewLayer);
-		gear.otherEntryDispose(view, function (){	// layerの削除処理をViewに連動させる
-			current.removeChild(operationViewLayer);
-		});
+		view.gearOutside().disposeTask(function () current.removeChild(operationViewLayer));	// layerの削除処理をViewに連動させる
 		
 		// イベント準備
 		globalDispatcher = new GlobalDispatcher();

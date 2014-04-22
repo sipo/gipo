@@ -5,7 +5,7 @@ package jp.sipo.gipo.util;
  * 
  * @author sipo
  */
-import jp.sipo.gipo.core.GearOut;
+import jp.sipo.gipo.core.GearOutside;
 import flash.events.ProgressEvent;
 import flash.display.LoaderInfo;
 import jp.sipo.gipo.core.GearHolder;
@@ -28,7 +28,7 @@ class EventManager
 	 */
 	static inline public function addLoaderEvent(gearHolder:GearHolder, loader:Loader, handlerContext:LoaderHandlerContext, ?pos:PosInfos):Void
 	{
-		var gear:GearOut = gearHolder.getGear();
+		var gear:GearOutside = gearHolder.gearOutside();
 		var contentLoaderInfo:LoaderInfo = loader.contentLoaderInfo;
 		// 
 		if (handlerContext.completeHandler != null){
@@ -80,7 +80,7 @@ class EventManager
 	{
 		dispatcher.addEventListener(kind, handler);
 		// 消去登録
-		var gear:GearOut = gearHolder.getGear();
+		var gear:GearOutside = gearHolder.gearOutside();
 		gear.disposeTask(function (){
 			dispatcher.removeEventListener(kind, handler);
 		}, pos);

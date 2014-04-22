@@ -43,7 +43,7 @@ class GearExample
 		top = new Top();
 		// 一番上は最初に、initializeTopを呼び出すことで動き出す。
 		// 引数は基本的にはnull
-		top.getGear().initializeTop(null);
+		top.gearOutside().initializeTop(null);
 	}
 }
 /**
