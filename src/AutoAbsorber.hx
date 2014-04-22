@@ -54,7 +54,7 @@ class Absorber {
 			}
 		}
 		
-		var absorber = Context.parse('gear.addRunHandler(function () {})', Context.currentPos());
+		var absorber = Context.parse('gear.addAutoAbsorbHandler(function () {})', Context.currentPos());
 		/* absorberの構築 */
 		switch (absorber) {
 			case { expr : ExprDef.ECall(_, [ { expr : ExprDef.EFunction(_, { expr : { expr : ExprDef.EBlock(efbexpr)  } } ) } ]) } :
