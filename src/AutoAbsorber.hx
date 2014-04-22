@@ -29,18 +29,19 @@ class Absorber {
 					for (meta in field_meta) {
 						switch (meta) {
 							// 対象のメタデータが '@:absorbKey' ならば
-							case { name : _ => ":absorbKey" } :
-								// FIXME : メタデータのパラメータは必ず1つであるから走査する必要がない
-								// メタデータのすべてのパラメータを走査して
-								for (param in meta.params) {
-									switch (param) {
-										// パラメータの構文解析 : <meta_param_cident_name:Enum>.<meta_param_field:EnumValue>
-										case { expr : ExprDef.EField( { expr : ExprDef.EConst(Constant.CIdent(meta_param_cident_name)) }, meta_param_field) } :
-											/* trace(meta_param_cident_name, meta_param_field, var_tpath_name, field_name); */
-											absorbKeyList.add( { mpcn : meta_param_cident_name, mpf : meta_param_field, fn : field_name });
-										case _ : 
-											Context.warning("#", Context.currentPos());
-									}
+							case { name : _ => ":absorbKey", pos: pos_infos } :
+								// メタデータのすべてのパラメータが
+								switch (meta.params) {
+									// パラメータの構文解析 : <meta_param_cident_name:Enum>.<meta_param_field:EnumValue>
+									case [ { expr : ExprDef.EField( { expr : ExprDef.EConst(Constant.CIdent(meta_param_cident_name)) }, meta_param_field) } ] :
+										absorbKeyList.add( { mpcn : meta_param_cident_name, mpf : meta_param_field, fn : field_name } );
+									// パラメータに値が渡されていない
+									case [] :
+										// FIXME : 文字化けが起きる
+										Context.error("キーが必要です。", pos_infos);
+									case _ :
+										// FIXME : 文字化けが起きる
+										Context.error("複数のキーを指定することはできません。", pos_infos);
 								}
 							// 対象のメタデータが '@:absorb' ならば
 							case { name : _ => ":absorb" } :
