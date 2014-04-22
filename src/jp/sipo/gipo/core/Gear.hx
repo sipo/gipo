@@ -45,6 +45,7 @@ class Gear implements GearOutside
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
+	private var autoAbsorbHandlerList:TaskList;
 	private var diffusibleHandlerList:TaskList;
 	private var runHandlerList:TaskList;
 	private var disposeTaskStack:TaskList;
@@ -72,6 +73,7 @@ class Gear implements GearOutside
 		diffuser = new Diffuser(holder);
 		needTasks = new Array();
 		// HandlerListの初期化
+		autoAbsorbHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
 		diffusibleHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
 		runHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
 		disposeTaskStack = new TaskList(AddBehaviorPreset.addHead, true);
@@ -116,6 +118,15 @@ class Gear implements GearOutside
 	/* ================================================================
 	 * ハンドラ登録
 	 * ===============================================================*/
+	
+	/**
+	 * AutoAbsorbで使用される関数
+	 */
+	public function addAutoAbsorbHandler(run:Void -> Void, ?pos:PosInfos):Void
+	{
+		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
+		autoAbsorbHandlerList.add(run, pos);
+	}
 	
 	/**
 	 * 追加された直後の初期化の動作を登録
@@ -184,7 +195,10 @@ class Gear implements GearOutside
 		if (parentDiffuser != null) diffuser.setParent(parentDiffuser);
 		// 初期動作を呼び出し
 		phase = GearPhase.Diffusible;	// 初期化状態
-		// 登録された初期化関数の呼び出し
+		// 自動化されたAbsorbの呼び出し
+		autoAbsorbHandlerList.execute();
+		autoAbsorbHandlerList = null;
+		// 登録されたdiffusible関数の呼び出し
 		diffusibleHandlerList.execute();
 		diffusibleHandlerList = null;
 		// 予約履行フェーズ
