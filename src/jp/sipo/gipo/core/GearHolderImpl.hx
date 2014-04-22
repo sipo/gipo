@@ -18,9 +18,9 @@ class GearHolderImpl implements GearHolder
 	}
 	
 	/**
-	 * ギアを返す
+	 * 外部からのGear機能の呼び出し
 	 */
-	public function getGear():GearOut
+	public function gearOutside():GearOutside
 	{
 		return gear;
 	}

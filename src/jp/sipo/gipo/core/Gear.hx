@@ -27,7 +27,7 @@ enum GearPhase
 	
 }
 @:final
-class Gear implements GearOut
+class Gear implements GearOutside
 {
 	/* 保持クラス */
 	private var holder:GearHolder;
@@ -332,7 +332,7 @@ class Gear implements GearOut
 	/* Gear内部専用の特殊処理。IGearOutをGearに戻す */
 	inline private function getGear(gearHolder:GearHolder):Gear
 	{
-		return gearHolder.getGear().getImplement();
+		return gearHolder.gearOutside().getImplement();
 	}
 	/* 実装を返す */
 	private function getImplement():Gear
@@ -394,7 +394,7 @@ class Gear implements GearOut
 	 */
 	public function otherDiffuseWithEnum(target:GearHolder, diffuseInstance:Dynamic, key:EnumValue):Void
 	{
-		target.getGear().getImplement();
+		target.gearOutside().getImplement();
 		var targetGear:Gear = getGear(target);
 		targetGear.otherDiffusWitEnum_(diffuseInstance, key);
 	}

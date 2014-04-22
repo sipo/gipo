@@ -1,5 +1,13 @@
 package jp.sipo.gipo.core;
+/**
+ * GearHolderとして機能するための要件設定
+ * 
+ * @author sipo
+ */
 interface GearHolder 
 {
-	function getGear():GearOut;	// MEMO:外部から簡単にgearが取得でき、gearの機能が使えていいものだろうか。心配し過ぎか。
+	/**
+	 * 外部からのGear機能の呼び出し
+	 */
+	public function gearOutside():GearOutside;
 }

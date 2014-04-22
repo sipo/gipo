@@ -5,7 +5,7 @@ package jp.sipo.gipo.core;
  * @auther sipo
  */
 import haxe.PosInfos;
-interface GearOut
+interface GearOutside
 {
 	/**
 	 * 親がなくとも動作するGearHolderとして設定する
