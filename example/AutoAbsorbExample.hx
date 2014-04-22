@@ -11,7 +11,7 @@ class AutoAbsorbExample {
 	
 	public function new() {
 		var top = new Top();
-		top.getGear().initializeTop(null);
+		top.gearOutside().initializeTop(null);
 	}
 	
 }
