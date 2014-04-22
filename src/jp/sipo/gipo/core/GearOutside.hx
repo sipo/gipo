@@ -25,6 +25,18 @@ interface GearOutside
 	public function disposeTask(func:Void -> Void, ?pos:PosInfos):Void;
 	
 	/**
+	 * 外部からDiffuseを行なう
+	 * @gearDispose
+	 */
+	public function otherDiffuse(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void;
+	
+	/**
+	 * 外部からキーによるDiffuseを行なう
+	 * @gearDispose
+	 */
+	public function otherDiffuseWithEnum(diffuseInstance:Dynamic, key:EnumValue):Void;
+	
+	/**
 	 * Gearの実態を取得する。
 	 * Gear内部での処理にしか使わない
 	 */

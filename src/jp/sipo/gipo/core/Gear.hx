@@ -258,8 +258,20 @@ class Gear implements GearOutside
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
 	private function diffuse(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
 	{
-		checkPhaseDiffusible(function () return "処理の順序が間違っています。diffuseは、initializeメソッドの中で追加されなければいけません");
+		diffuserAdd(diffuseInstance, clazz, false);	// 追加処理
+	}
+	/* 内部処理 */
+	inline private function diffuserAdd(diffuseInstance:Dynamic, clazz:Class<Dynamic>, fromOther:Bool):Void
+	{
+		diffuseBeforeCheck(diffuseInstance, fromOther);
+		if (!Std.is(diffuseInstance, clazz)) throw '型の違うインスタンスがdiffuseされています $diffuseInstance $clazz';
 		diffuser.add(diffuseInstance, clazz);	// 追加処理
+	}
+	inline private function diffuseBeforeCheck(diffuseInstance:Dynamic, fromOther:Bool):Void
+	{
+		if (fromOther) checkPhaseCreate(function () return '別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
+		else checkPhaseDiffusible(function () return '処理の順序が間違っています。diffuseは、diffusibleメソッドの中で追加されなければいけません');
+		if (diffuseInstance == null) throw 'diffuseされるインスタンスがありません $diffuseInstance';
 	}
 	
 	/**
@@ -269,7 +281,12 @@ class Gear implements GearOutside
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
 	private function diffuseWithEnum(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
-		checkPhaseDiffusible(function () return "処理の順序が間違っています。diffuseは、initializeメソッドの中で追加されなければいけません");
+		diffuserAddWithEnum(diffuseInstance, enumKey, false);	// 追加処理
+	}
+	/* 内部処理 */
+	inline private function diffuserAddWithEnum(diffuseInstance:Dynamic, enumKey:EnumValue, fromOther:Bool):Void
+	{
+		diffuseBeforeCheck(diffuseInstance, fromOther);
 		diffuser.addWithEnum(diffuseInstance, enumKey);	// 追加処理
 	}
 	
@@ -371,48 +388,21 @@ class Gear implements GearOutside
 	 * ===============================================================*/
 	
 	/**
-	 * 対象Gearに限定してdiffuseを行う
+	 * 外部からDiffuseを行なう
 	 * @gearDispose
 	 */
-	public function otherDiffuse(target:GearHolder, diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
+	public function otherDiffuse(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
 	{
-		var targetGear:Gear = getGear(target);
-		targetGear.otherDiffuse_(diffuseInstance, clazz);
-	}
-	/* 内部処理 */
-	inline private function otherDiffuse_(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
-	{
-		checkPhaseCreate(function () return '別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
-		if (diffuseInstance == null) throw 'diffuseされるインスタンスがありません $diffuseInstance';
-		if (!Std.is(diffuseInstance, clazz)) throw '型の違うインスタンスがdiffuseされています $diffuseInstance $clazz';
-		diffuser.add(diffuseInstance, clazz);	// 追加処理
+		diffuserAdd(diffuseInstance, clazz, true);	// 追加処理
 	}
 	
 	/**
-	 * 対象Gearに限定してキーによるdiffuseを行う
+	 * 外部からキーによるDiffuseを行なう
 	 * @gearDispose
 	 */
-	public function otherDiffuseWithEnum(target:GearHolder, diffuseInstance:Dynamic, key:EnumValue):Void
+	public function otherDiffuseWithEnum(diffuseInstance:Dynamic, key:EnumValue):Void
 	{
-		target.gearOutside().getImplement();
-		var targetGear:Gear = getGear(target);
-		targetGear.otherDiffusWitEnum_(diffuseInstance, key);
-	}
-	/* 内部処理 */
-	inline private function otherDiffusWitEnum_(diffuseInstance:Dynamic, key:EnumValue):Void
-	{
-		checkPhaseCreate(function () return '別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
-		diffuser.addWithEnum(diffuseInstance, key);	// 追加処理
-	}
-	
-	/**
-	 * 対象GearのDisposeタイミングに関数の登録を行う
-	 * @gearDispose
-	 */
-	public function otherEntryDispose(target:GearHolder, func:Void -> Void, ?pos:PosInfos):Void
-	{
-		var targetGear:Gear = getGear(target);
-		targetGear.disposeTask(func, pos);
+		diffuserAddWithEnum(diffuseInstance, key, true);	// 追加処理
 	}
 	
 	/**
