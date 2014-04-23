@@ -234,7 +234,6 @@ class Gear implements GearOutside
 				if (enumKeyTypeData != null)
 				{
 					if (classKeyTypeData != null) throw '$holder の $name に２重にabsorbメタデータが存在します。';
-					// TODO:enumArgs
 					var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(enumKeyTypeData[0]), enumKeyTypeData[1]);
 					Reflect.setField(holder, name, absorbWithEnum(enumKey));
 				}
