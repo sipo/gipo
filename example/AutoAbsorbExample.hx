@@ -44,20 +44,23 @@ private class ImportantClass {
 
 private class ChildExample extends GearHolderImpl implements AutoAbsorber {
 	
-	@:absorbKey(Key.Foo)
+	@absorbKey(Key.Foo)
 	private var foo:String;
 	
-	@:absorb
+	@absorb
 	private var importInstance:ImportantClass;
 	
 	public function new() {
 		super();
-		gear.addRunHandler(run);
+		trace(haxe.rtti.Meta.getFields(ChildExample));
+		/* gear.addRunHandler(run); */
 		/* Timer.delay(function () { trace(importInstance.name); }, 1000); */
 	}
 	
 	private function run():Void {
+		/*
 		trace(this.foo);
 		trace(importInstance.name);
+		*/
 	}
 }
