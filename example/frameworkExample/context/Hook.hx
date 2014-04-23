@@ -20,6 +20,7 @@ package frameworkExample.context;
  * @auther sipo
  */
 
+import frameworkExample.etc.Snapshot;
 import frameworkExample.context.Logic.HookToLogic;
 import frameworkExample.context.Hook.HookEvent;
 import frameworkExample.operation.OperationLogic;
@@ -33,6 +34,11 @@ interface ViewToHook
 	public function viewInput(command:EnumValue):Void;
 	/** Viewからの非同期に発生するイベント */
 	public function viewReady(command:EnumValue):Void;
+}
+interface LogicToHook
+{
+	/** Logicからのデータの構成の状態 */
+	public function logicSnapshot(snapshot:Snapshot):Void;
 }
 /* ================================================================
  * 実装
@@ -63,12 +69,21 @@ class Hook extends GearHolderImpl implements ViewToHook
 	
 	public function viewInput(command:EnumValue):Void
 	{
-		executeEvent(LogWay.Input, command);
+		executeEvent(HookEventLogway.Input(command));
 	}
 	
 	public function viewReady(command:EnumValue):Void
 	{
-		executeEvent(LogWay.Ready, command);
+		executeEvent(HookEventLogway.Ready(command));
+	}
+	
+	/* ================================================================
+	 * Logic向けのメソッド
+	 * ===============================================================*/
+	
+	public function logicSnapshot(snapshot:Snapshot):Void
+	{
+		executeEvent(HookEventLogway.Snapshot(snapshot));
 	}
 	
 	/* ================================================================
@@ -78,22 +93,27 @@ class Hook extends GearHolderImpl implements ViewToHook
 	/**
 	 * イベントの実行を処理
 	 */
-	private function executeEvent(logway:LogWay, command:EnumValue):Void
+	private function executeEvent(logway:HookEventLogway):Void
 	{
-		var hookEvent:HookEvent = new HookEvent(logway, command);
+		var hookEvent:HookEvent = new HookEvent(logway);
 		switch (hookEvent.logWay)
 		{
-			case LogWay.Input :
+			case HookEventLogway.Input(command) :
 				// 発生イベントの登録
 				operation.record(hookEvent);
 				// イベントの実行
-				logic.noticeEvent(hookEvent);
-			case LogWay.Ready : 
+				logic.noticeEvent(command);
+			case HookEventLogway.Ready(command) : 
 				// TODO:readyを待つ処理
 				// 発生イベントの登録
 				operation.record(hookEvent);
 				// イベントの実行
-				logic.noticeEvent(hookEvent);
+				logic.noticeEvent(command);
+			case HookEventLogway.Snapshot(value) :
+				// 発生イベントの登録
+				operation.record(hookEvent); 
+				// イベントの実行
+				logic.setSnapshot(value);
 		}
 	}
 }
@@ -103,26 +123,26 @@ class Hook extends GearHolderImpl implements ViewToHook
  */
 class HookEvent
 {
-	public var logWay:LogWay;
+	public var logWay:HookEventLogway;
 //	public var frame:Int;// 発生フレーム
-	public var command:EnumValue;/* 各LogicのLogicEvent定義になる */
 	
 	/** コンストラクタ */
-	public function new(logWay:LogWay, command:EnumValue) 
+	public function new(logWay:HookEventLogway) 
 	{
 		this.logWay = logWay;
-		this.command = command;
 	}
 }
 /**
  * Logの記録と再生方法の種類
  */
-enum LogWay
+enum HookEventLogway
 {
-	/** 保存され、対象タイミングで実行 */
-	Input;
-	/** 保存され、対象タイミングで準備が整うまで全体を待たせる（処理時間が不明瞭な動作） */
-	Ready;
+	/** 対象タイミングで実行 */
+	Input(command:EnumValue);
+	/** 対象タイミングで準備が整うまで全体を待たせる（処理時間が不明瞭な動作） */
+	Ready(command:EnumValue);
+	/** Logicを生成するのに必要。再生の最初のほか、途中再開にも使用できる */
+	Snapshot(value:Snapshot);
 }
 
 

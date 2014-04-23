@@ -37,6 +37,6 @@ class OperationHook extends GearHolderImpl
  */
 enum OperationHookEvent
 {
-	Save;
+	LocalSave;
 	LocalLoad;
 }
