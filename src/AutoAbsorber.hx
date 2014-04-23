@@ -27,8 +27,8 @@ class Absorber {
 					// メンバ変数のメタデータすべてを走査して
 					for (meta in field_meta) {
 						switch (meta) {
-							// 対象のメタデータが '@absorbKey' ならば
-							case { name : _ => "absorbKey", pos: pos_infos } :
+							// 対象のメタデータが '@:absorbKey' ならば
+							case { name : _ => ":absorbKey", pos: pos_infos } :
 								// メタデータのすべてのパラメータが
 								switch (meta.params) {
 									case
@@ -40,6 +40,7 @@ class Absorber {
 											case _ :
 												Context.error("#4", Context.currentPos());
 										};
+										meta.name = "absorbKey";
 										meta.params = [
 											{ expr : ExprDef.EConst(Constant.CString(vxk)), pos: Context.currentPos() },
 											{ expr : ExprDef.EConst(Constant.CString(meta_param_field_enum_value)), pos: Context.currentPos() }
@@ -52,8 +53,9 @@ class Absorber {
 										// FIXME : 文字化けが起きる
 										Context.error("#2", pos_infos);
 								}
-							// 対象のメタデータが '@absorb' ならば
-							case { name : _ => "absorb" } :
+							// 対象のメタデータが '@:absorb' ならば
+							case { name : _ => ":absorb" } :
+								meta.name = "absorb";
 								meta.params = [];
 								var tpath_name_v_i = switch (Context.getType(var_tpath_name)) {
 									case Type.TInst(tRef, _) :

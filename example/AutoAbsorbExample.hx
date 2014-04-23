@@ -44,10 +44,10 @@ private class ImportantClass {
 
 private class ChildExample extends GearHolderImpl implements AutoAbsorber {
 	
-	@absorbKey(Key.Foo)
+	@:absorbKey(Key.Foo)
 	private var foo:String;
 	
-	@absorb
+	@:absorb
 	private var importInstance:ImportantClass;
 	
 	public function new() {
