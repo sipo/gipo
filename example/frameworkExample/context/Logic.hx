@@ -7,9 +7,9 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import frameworkExample.etc.Snapshot;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.etc.LogicInitialize;
-import frameworkExample.context.Hook.HookEvent;
 import jp.sipo.ds.Point;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
 class Logic extends StateSwitcherGearHolderImpl<LogicScene<Dynamic>> implements HookToLogic
@@ -46,16 +46,22 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene<Dynamic>> implements 
 		state.sceneUpdate();
 	}
 	
-	/**
-	 * イベントの発生
-	 */
-	public function noticeEvent(event:HookEvent):Void
+	/* ================================================================
+	 * hookに対する定義
+	 * ===============================================================*/
+	
+	public function noticeEvent(command:EnumValue):Void
 	{
-		if (Std.is(event.command, LogicCommonEvent)){
-			throw "未設定";
+		if (Std.is(command, LogicCommonEvent)){
+			throw "未設定";	// TODO:stb
 		}else{
-			state.noticeEvent(event);
+			state.noticeEvent(command);
 		}
+	}
+	
+	public function setSnapshot(snapshot:Snapshot):Void
+	{
+		// TODO:stb
 	}
 }
 /**
@@ -64,7 +70,9 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene<Dynamic>> implements 
 interface HookToLogic
 {
 	/** イベントの発生 */
-	public function noticeEvent(event:HookEvent):Void;
+	public function noticeEvent(command:EnumValue):Void;
+	/** スナップショットの適用 */
+	public function setSnapshot(snapshot:Snapshot):Void;
 }
 /**
  * 全体で共通のViewの入力種類

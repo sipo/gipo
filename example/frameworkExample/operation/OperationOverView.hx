@@ -94,7 +94,7 @@ class OperationOverView extends GearHolderImpl implements OperationView
 	/* 保存ボタンをクリック */
 	private function saveLogButton_click():Void
 	{
-		hook.input(OperationHookEvent.Save);
+		hook.input(OperationHookEvent.LocalSave);
 	}
 	/* 読み込みボタンをクリック */
 	private function loadLogButton_click():Void

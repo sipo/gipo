@@ -45,9 +45,9 @@ class LogicScene<TypeViewSceneOrder> extends StateGearHolderImpl
 	/**
 	 * 入力
 	 */
-	inline public function noticeEvent(event:HookEvent):Void
+	inline public function noticeEvent(command:EnumValue):Void
 	{
-		viewInputHandlerContainer.call(event.command);
+		viewInputHandlerContainer.call(command);
 	}
 	
 	/**

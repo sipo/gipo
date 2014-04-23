@@ -35,6 +35,10 @@ class OperationLogic extends GearHolderImpl
 	public function noticeEvent(event:OperationHookEvent):Void
 	{
 		trace('stb OperationLogic noticeEvent($event)');
-		// TODO:stb
+		switch (event)
+		{
+			case OperationHookEvent.LocalSave : // TODO:ローカル保存処理
+			case OperationHookEvent.LocalLoad :  // TODO:ローカル読み込み処理
+		}
 	}
 }

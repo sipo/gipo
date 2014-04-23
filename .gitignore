@@ -1,5 +1,5 @@
-/*.iml
+﻿
+*.iml
 /bin/swf/*.swf
-/out
-/.idea
-/*.hxproj
+.idea
+*.hxproj
