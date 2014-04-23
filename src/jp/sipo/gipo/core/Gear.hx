@@ -5,6 +5,10 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import Type;
+import AutoAbsorber.Absorber;
+import Reflect;
+import haxe.rtti.Meta;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.PosWrapper;
 import jp.sipo.gipo.util.TaskList;
@@ -195,8 +199,10 @@ class Gear implements GearOutside
 		if (parentDiffuser != null) diffuser.setParent(parentDiffuser);
 		// 初期動作を呼び出し
 		phase = GearPhase.Diffusible;	// 初期化状態
+		// Absorbの自動化
+		autoAbsorb();
 		// 自動化されたAbsorbの呼び出し
-		autoAbsorbHandlerList.execute();
+		autoAbsorbHandlerList.execute();	// FIXME:不必要になったら消去
 		autoAbsorbHandlerList = null;
 		// 登録されたdiffusible関数の呼び出し
 		diffusibleHandlerList.execute();
@@ -207,6 +213,34 @@ class Gear implements GearOutside
 		// 処理中フェーズ
 		phase = GearPhase.Middle;
 		endNeedTask(GearNeedTask.Core);
+	}
+	/* Absorbの自動化 */
+	private function autoAbsorb():Void
+	{
+		if (!Std.is(holder, AutoAbsorber)) return;	// autoAbsorberの時だけ対応する
+		var holderClass:Class<Dynamic> = Type.getClass(holder);
+		while(holderClass != null)
+		{
+			var metaData = Meta.getFields(holderClass);
+			for (name in Reflect.fields(metaData))
+			{
+				var metaTags = Reflect.field(metaData, name);
+				var classKeyTypeData = Reflect.field(metaTags, Absorber.ABSORB_TAG);
+				if (classKeyTypeData != null)
+				{
+					Reflect.setField(holder, name, absorb(Type.resolveClass(classKeyTypeData[0])));	// ２重変換になっているが、意味的に仕方ない
+				}
+				var enumKeyTypeData = Reflect.field(metaTags, Absorber.ABSORB_KEY_TAG);
+				if (enumKeyTypeData != null)
+				{
+					if (classKeyTypeData != null) throw '$holder の $name に２重にabsorbメタデータが存在します。';
+					// TODO:enumArgs
+					var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(enumKeyTypeData[0]), enumKeyTypeData[1]);
+					Reflect.setField(holder, name, absorbWithEnum(enumKey));
+				}
+			}
+			holderClass = Type.getSuperClass(holderClass);	// 継承元もチェック
+		}
 	}
 	/* 予約の履行 */
 	private function fulfill():Void

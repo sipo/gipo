@@ -4,7 +4,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
-interface GearHolder 
+interface GearHolder
 {
 	/**
 	 * 外部からのGear機能の呼び出し

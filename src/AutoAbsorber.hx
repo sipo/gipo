@@ -15,6 +15,9 @@ interface AutoAbsorber{ }
 
 class Absorber {
 	
+	public static inline var ABSORB_TAG:String = "absorb";
+	public static inline var ABSORB_KEY_TAG:String = "absorbKey";
+	
 	macro private static function build():Array<Field> {
 		/* AST */
 		var fields = Context.getBuildFields();

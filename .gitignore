@@ -3,3 +3,4 @@
 /bin/swf/*.swf
 .idea
 *.hxproj
+/out
