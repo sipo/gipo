@@ -12,7 +12,7 @@ import jp.sipo.gipo.core.GearHolder;
 class OperationOverView extends GearHolderImpl implements OperationView
 {
 	
-	/* absorb */
+	@absorb
 	private var hook:OperationHook;
 	/* 表示Sprite */
 	private var minimalizeUiLayer:Sprite;
@@ -45,8 +45,6 @@ class OperationOverView extends GearHolderImpl implements OperationView
 	/* 初期化 */
 	private function run():Void
 	{
-		hook = gear.absorb(OperationHook);
-		
 		var uiContainerConfig:Config = MinimalcompsGipoContainer.getDefaultConfig().clone();
 		uiContainerConfig.alignH = AlignH.Right;
 		minimalizeUiContainer = new MinimalcompsGipoContainer(minimalizeUiLayer, uiContainerConfig);

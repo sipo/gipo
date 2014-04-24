@@ -45,22 +45,15 @@ interface LogicToHook
  * ===============================================================*/
 class Hook extends GearHolderImpl implements ViewToHook
 {
-	/* absorb */
+	@absorb
 	private var logic:HookToLogic;
+	@absorb
 	private var operation:OperationLogic;
 	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
-		gear.addRunHandler(run);
-	}
-	
-	/** 初期処理 */
-	public function run():Void
-	{
-		logic = gear.absorb(HookToLogic);
-		operation = gear.absorb(OperationLogic);
 	}
 	
 	/* ================================================================

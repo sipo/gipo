@@ -14,10 +14,12 @@ import jp.sipo.gipo.util.EnumKeyHandlerContainer;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 class LogicScene<TypeViewSceneOrder> extends StateGearHolderImpl
 {
+	@absorb
+	private var logic:Logic;
+	@absorb
+	private var view:LogicToView;
 	/* シーンごとのviewInputの受け取り処理 */
 	private var viewInputHandlerContainer:EnumKeyHandlerContainer = new EnumKeyHandlerContainer();
-	/* absorb */
-	private var logic:Logic;
 	/* Sceneのハンドラを登録可能にする */
 	private var sceneGear(default, null):LogicSceneGear;
 	/* viewSceneへの参照 */
@@ -36,9 +38,6 @@ class LogicScene<TypeViewSceneOrder> extends StateGearHolderImpl
 	/* 初期動作 */
 	inline private function sceneRun():Void
 	{
-		logic = gear.absorb(Logic);
-		// 
-		var view:LogicToView = gear.absorb(LogicToView);
 		viewScene = cast(view.changeScene(sceneGear.getViewKind()));
 	}
 	

@@ -14,27 +14,19 @@ import jp.sipo.gipo.util.TaskList;
 import flash.display.Sprite;
 class PilotViewScene extends StateGearHolderImpl implements LogicToViewScene
 {
-	/* 共通インスタンス */
+	@absorb
 	private var layer:Sprite;
+	@absorb
 	private var hook:ViewToHook;
 	/** Sceneの共通ハンドラを切り出しする */
-	public var sceneHandler(default, null):PilotViewSceneHandlerContainer;
+	public var sceneHandler(default, null):PilotViewSceneHandlerContainer = new PilotViewSceneHandlerContainer();
 	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
-		sceneHandler = new PilotViewSceneHandlerContainer();
-		gear.addRunHandler(sceneRun);
 	}
 	
-	/* 初期動作 */
-	inline private function sceneRun():Void
-	{
-		// 基礎インスタンスの取得
-		layer = gear.absorbWithEnum(PilotViewDiffuseKey.GameLayer);
-		hook = gear.absorb(ViewToHook);
-	}
 }
 class PilotViewSceneHandlerContainer
 {
