@@ -7,7 +7,7 @@ package frameworkExample.operation;
 import jp.sipo.gipo.core.GearHolderImpl;
 class OperationHook extends GearHolderImpl
 {	
-	@absorb
+	@:absorb
 	private var logic:OperationLogic;
 	
 	/** コンストラクタ */

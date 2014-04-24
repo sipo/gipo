@@ -146,7 +146,7 @@ class ImportantClass
 class ChildExample extends GearHolderImpl
 {
 	/* システム全体で使う重要なインスタンス（という想定） */
-	@absorb
+	@:absorb
 	private var importInstance:ImportantClass;
 	
 	/**
@@ -179,7 +179,7 @@ class ChildExample extends GearHolderImpl
 		// 色々処理を登録する
 		trace("ChildExampleの処理が開始");
 		// 重要クラスを取得
-//		importInstance = gear.absorb(ImportantClass);	// @absorbメタデータを使用せずに取得する場合はこのようにする
+//		importInstance = gear.absorb(ImportantClass);	// @:absorbメタデータを使用せずに取得する場合はこのようにする
 		trace('importInstance = $importInstance');	// 対象のクラスをキーにして取得する。
 	}
 }

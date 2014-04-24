@@ -45,9 +45,9 @@ interface LogicToHook
  * ===============================================================*/
 class Hook extends GearHolderImpl implements ViewToHook
 {
-	@absorb
+	@:absorb
 	private var logic:HookToLogic;
-	@absorb
+	@:absorb
 	private var operation:OperationLogic;
 	
 	/** コンストラクタ */
