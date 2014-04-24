@@ -14,7 +14,7 @@ import jp.sipo.gipo.util.TaskList;
 import flash.display.Sprite;
 class PilotViewScene extends StateGearHolderImpl implements LogicToViewScene
 {
-	@:absorbKey(PilotViewDiffuseKey.GameLayer)
+	@:absorbWithKey(PilotViewDiffuseKey.GameLayer)
 	private var layer:Sprite;
 	@:absorb
 	private var hook:ViewToHook;

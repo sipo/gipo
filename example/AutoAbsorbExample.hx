@@ -48,7 +48,7 @@ private class ImportantClass {
 
 private class ChildExample extends GearHolderImpl {
 	
-	@:absorbKey(Key.Foo)
+	@:absorbWithKey(Key.Foo)
 	private var foo:String;
 	
 	@:absorb
@@ -70,7 +70,7 @@ private class ChildExample extends GearHolderImpl {
 
 private class ChildExample2 extends ChildExample 
 {
-	@:absorbKey(Key.Bar)
+	@:absorbWithKey(Key.Bar)
 	private var bar:String;
 	
 	@:absorb

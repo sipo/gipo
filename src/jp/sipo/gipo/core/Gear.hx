@@ -216,7 +216,7 @@ class Gear implements GearOutside
 				{
 					Reflect.setField(holder, name, absorb(Type.resolveClass(classKeyTypeData[0])));	// ２重変換になっているが、意味的に仕方ない
 				}
-				var enumKeyTypeData = Reflect.field(metaTags, Absorber.ABSORB_KEY_TAG);
+				var enumKeyTypeData = Reflect.field(metaTags, Absorber.ABSORB_WITH_KEY_TAG);
 				if (enumKeyTypeData != null)
 				{
 					if (classKeyTypeData != null) throw '$holder の $name に２重にabsorbメタデータが存在します。';

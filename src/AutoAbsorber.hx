@@ -16,7 +16,7 @@ interface AutoAbsorber{ }
 class Absorber {
 	
 	public static inline var ABSORB_TAG:String = "absorb";
-	public static inline var ABSORB_KEY_TAG:String = "absorbKey";
+	public static inline var ABSORB_WITH_KEY_TAG:String = "absorbWithKey";
 	
 	macro private static function build():Array<Field> {
 		/* AST */
@@ -30,8 +30,8 @@ class Absorber {
 					// メンバ変数のメタデータすべてを走査して
 					for (meta in field_meta) {
 						switch (meta) {
-							// 対象のメタデータが '@:absorbKey' ならば
-							case { name : _ => ":absorbKey", pos: pos_infos } :
+							// 対象のメタデータが '@:absorbWithKey' ならば
+							case { name : _ => ":absorbWithKey", pos: pos_infos } :
 								// メタデータのすべてのパラメータが
 								switch (meta.params) {
 									case
@@ -43,7 +43,7 @@ class Absorber {
 											case _ :
 												Context.error("#4", Context.currentPos());
 										};
-										meta.name = "absorbKey";
+										meta.name = "absorbWithKey";
 										meta.params = [
 											{ expr : ExprDef.EConst(Constant.CString(vxk)), pos: Context.currentPos() },
 											{ expr : ExprDef.EConst(Constant.CString(meta_param_field_enum_value)), pos: Context.currentPos() }
