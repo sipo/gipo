@@ -1,72 +1,69 @@
 package ;
 
+#if macro
 import haxe.macro.Context;
-import haxe.macro.Expr;
 import haxe.macro.Expr.ComplexType;
 import haxe.macro.Expr.Constant;
 import haxe.macro.Expr.ExprDef;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.FieldType;
-import haxe.macro.Type;
-import haxe.Serializer;
 
-@:autoBuild(AutoAbsorber.Absorber.build())
-interface AutoAbsorber{ }
+using haxe.macro.TypeTools;
+#end
 
-class Absorber {
-	
+@:autoBuild(_AutoAbsorber.Impl.build())
+interface AutoAbsorber { }
+
+class Tag {
 	public static inline var ABSORB_TAG:String = "absorb";
 	public static inline var ABSORB_WITH_KEY_TAG:String = "absorbWithKey";
 	
+	public static inline var ABSORB_TAG_HOOK:String = ":" + ABSORB_TAG;
+	public static inline var ABSORB_WITH_KEY_TAG_HOOK:String = ":" + ABSORB_WITH_KEY_TAG;
+}
+
+private class Impl {
+	
 	macro private static function build():Array<Field> {
-		/* AST */
 		var fields = Context.getBuildFields();
 		
 		// すべてのフィールドを走査して
 		for (field in fields) {
 			switch (field) {
 				// kind が 'FieldType.FVar' のフィールドに関して
-				case { kind : FieldType.FVar(ComplexType.TPath( { name: var_tpath_name, pack: var_tpath_packs } ), _), meta : field_meta, name: field_name } : 
+				case { kind: FieldType.FVar(ComplexType.TPath({ name: tpath_name }), _), meta: field_meta } : 
 					// メンバ変数のメタデータすべてを走査して
 					for (meta in field_meta) {
 						switch (meta) {
-							// 対象のメタデータが '@:absorbWithKey' ならば
-							case { name : _ => ":absorbWithKey", pos: pos_infos } :
-								// メタデータのすべてのパラメータが
+							// 対象のメタデータが ABSORB_WITH_KEY_TAG_HOOK('@:absorbWithKey') ならば
+							case { name : _ => Tag.ABSORB_WITH_KEY_TAG_HOOK, pos: position } :
+								// メタデータのパラメータ全てについて
 								switch (meta.params) {
 									case
-										[ { expr: ExprDef.EField( { expr: ExprDef.EField(_, meta_param_field_enum) }, meta_param_field_enum_value) } ]
-									|	[ { expr: ExprDef.EField( { expr: ExprDef.EConst(Constant.CIdent(meta_param_field_enum)) }, meta_param_field_enum_value) } ] :
-										var vxk = switch (Context.getType('${meta_param_field_enum}')) {
-											case Type.TEnum(eRef, _) :
-												eRef.toString();
-											case _ :
-												Context.error("#4", Context.currentPos());
-										};
-										meta.name = "absorbWithKey";
+										// パラメータが (foo.bar.baz.Hoge.Fuga) のとき
+										[ { expr: ExprDef.EField({ expr: ExprDef.EField(_, key_enum) }, key_enum_value)} ]
+										// パラメータが (Hoge.Fuga) のとき
+									|	[ { expr: ExprDef.EField({ expr: ExprDef.EConst(Constant.CIdent(key_enum)) }, key_enum_value)} ] :
+										// メタデータの名前を '@absorbWithKey' に書き換え
+										meta.name = Tag.ABSORB_WITH_KEY_TAG;
 										meta.params = [
-											{ expr : ExprDef.EConst(Constant.CString(vxk)), pos: Context.currentPos() },
-											{ expr : ExprDef.EConst(Constant.CString(meta_param_field_enum_value)), pos: Context.currentPos() }
+											// キーの列挙（Enum)の完全修飾名
+											{ expr : ExprDef.EConst(Constant.CString(Context.getType(key_enum).toString())), pos: Context.currentPos() },
+											// キー（EnumValue）の完全修飾名
+											{ expr : ExprDef.EConst(Constant.CString(key_enum_value)), pos: Context.currentPos() }
 										];
 									// パラメータに値が渡されていない
 									case [] :
-										// FIXME : 文字化けが起きる
-										Context.error("#1", pos_infos);
+										Context.error("#1 : メタデータ '@:absorbWithKey' には、1つのパラメータが必要です。", position);
 									case _ :
-										// FIXME : 文字化けが起きる
-										Context.error("#2", pos_infos);
+										Context.error("#2 : メタデータ '@:absorbWithKey' に対して複数のキーが指定されました。", position);
 								}
-							// 対象のメタデータが '@:absorb' ならば
-							case { name : _ => ":absorb" } :
-								meta.name = "absorb";
-								meta.params = [];
-								var tpath_name_v_i = switch (Context.getType(var_tpath_name)) {
-									case Type.TInst(tRef, _) :
-										tRef.toString();
-									case _ :
-										Context.error("#3", Context.currentPos());
-								}
-								meta.params.push( { expr : ExprDef.EConst(Constant.CString(tpath_name_v_i)), pos: Context.currentPos() } );
+							// 対象のメタデータが ABSORB_TAG_HOOK('@:absorb') ならば
+							case { name: _ => Tag.ABSORB_TAG_HOOK } :
+								meta.name = Tag.ABSORB_TAG;
+								meta.params = [
+									{ expr: ExprDef.EConst(Constant.CString(Context.getType(tpath_name).toString())), pos: Context.currentPos() }
+								];
 						}
 					}
 				case _ :
@@ -74,7 +71,7 @@ class Absorber {
 			}
 		}
 		
-		
 		return fields;
 	}
+	
 }
