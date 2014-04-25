@@ -18,27 +18,28 @@ class LogicScene<TypeViewSceneOrder> extends StateGearHolderImpl
 	private var logic:Logic;
 	@:absorb
 	private var view:LogicToView;
+	/* シーンの種類を示すenum */
+	private var viewSceneKind:ViewSceneKind;
 	/* シーンごとのviewInputの受け取り処理 */
 	private var viewInputHandlerContainer:EnumKeyHandlerContainer = new EnumKeyHandlerContainer();
-	/* Sceneのハンドラを登録可能にする */
-	private var sceneGear(default, null):LogicSceneGear;
 	/* viewSceneへの参照 */
 	private var viewScene:TypeViewSceneOrder;
+	/** updateイベント受け取り */
+	public var updateHandlerList(default, null):TaskList = new TaskList(AddBehaviorPreset.addTail, false);
 	
 	/** コンストラクタ */
-	public function new(sceneKind:ViewSceneKind) 
+	public function new(viewSceneKind:ViewSceneKind) 
 	{
 		super();
-		sceneGear = new LogicSceneGear();
 		gear.addRunHandler(sceneRun);
 		// 表示ViewSceneの設定
-		sceneGear.setGetViewKindHandler(sceneKind);
+		this.viewSceneKind = viewSceneKind;
 	}
 	
 	/* 初期動作 */
 	inline private function sceneRun():Void
 	{
-		viewScene = cast(view.changeScene(sceneGear.getViewKind()));
+		viewScene = cast(view.changeScene(viewSceneKind));
 	}
 	
 	/**
@@ -54,59 +55,6 @@ class LogicScene<TypeViewSceneOrder> extends StateGearHolderImpl
 	 */
 	public function sceneUpdate():Void
 	{
-		sceneGear.updateTaskList.execute();
+		updateHandlerList.execute();
 	}
-}
-/**
- * Sceneの共通処理の管理
- * 
- * @auther sipo
- */
-class LogicSceneGear
-{
-	/* --------------------------------
-	 * イベントの登録受付
-	 * -------------------------------*/
-	
-	/** updateイベント受け取り */
-	public var updateTaskList(default, null):TaskList = new TaskList(AddBehaviorPreset.addTail, false);
-	
-	/* --------------------------------
-	 * Sceneへ値を渡す関数
-	 * -------------------------------*/
-	
-	/** 使用するViewSceneの指定 */
-	private var sceneKind:Once<ViewSceneKind> = Once.Before;
-	
-	/** コンストラクタ */
-	public function new() 
-	{
-	}
-	
-	/**
-	 * 使用するViewSceneの指定
-	 */
-	public function setGetViewKindHandler(sceneKind:ViewSceneKind):Void
-	{
-		this.sceneKind = Once.Some(sceneKind);
-	}
-	
-	/**
-	 * ViewSceneの受け取り
-	 */
-	public function getViewKind():ViewSceneKind
-	{
-		switch (sceneKind)
-		{
-			case Once.Before : 
-				throw 'ViewKindが設定されていません';
-			case Once.Some(value) : 
-				sceneKind = Once.After;
-				return value; 
-			case Once.After : 
-				throw 'ViewKindが既に使用されています。';
-		}
-	}
-	
-	
 }
