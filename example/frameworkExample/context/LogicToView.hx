@@ -13,7 +13,7 @@ interface LogicToView
 	 * 速度上の問題などで表示を引き継ぐ場合は、View側で意図的にキャッシュ処理をすること
 	 * （特に頻出するロード表示などは、常にGPUメモリ上に確保するなどする）
 	 */
-	public function changeScene(kind:ViewSceneKind):LogicToViewScene;
+	public function changeScene(kind:ViewSceneKind):ViewSceneOrder;
 //	/** データの準備を依頼する。準備終了はViewLogicNoticeで通知される */
 //	Prepare(prepareKind:LogicViewOrderPrepare);
 }
@@ -21,7 +21,7 @@ interface LogicToView
  * logicに対するScene定義
  * （個別Sceneの定義はLogicSceneのほうに）
  */
-interface LogicToViewScene
+interface ViewSceneOrder
 {}
 /** シーン変更命令 */
 enum ViewSceneKind

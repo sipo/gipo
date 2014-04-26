@@ -27,7 +27,7 @@ class GearHolderTemplate extends GearHolderImpl
 		});
 	}
 	
-	/* 初期化後処理 */
+	/* 開始処理 */
 	private function run():Void
 	{
 		

@@ -31,18 +31,27 @@ interface Mock1ViewPeek
 /* ================================================================
  * 動作
  * ===============================================================*/
-class Mock1 extends LogicScene<ViewSceneOrder> implements ScenePeek
+class Mock1 extends LogicScene implements ScenePeek
 {
 	/** 毎フレーム変化する値の例としてカウントアップ変数 */
 	public var count:Int = 0;
+	/* Viewの対応シーンへの命令を行なうための参照 */
+	private var viewScene:ViewSceneOrder;
 	
 	/** コンストラクタ */
 	public function new() 
 	{
-		super(ViewSceneKind.Mock1(this));
+		super();
+		gear.addRunHandler(run);
 		updateHandlerList.add(update);
 		// 入力処理の登録
 		viewInputHandlerContainer.set(SceneInput, viewInput);
+	}
+	
+	/* 開始処理 */
+	private function run():Void
+	{
+		viewScene = cast(changeViewScene(ViewSceneKind.Mock1(this)), ViewSceneOrder);
 	}
 	
 	/**

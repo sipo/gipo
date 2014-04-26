@@ -12,7 +12,7 @@ import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.etc.LogicInitialize;
 import jp.sipo.ds.Point;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
-class Logic extends StateSwitcherGearHolderImpl<LogicScene<Dynamic>> implements HookToLogic
+class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLogic
 {
 	
 	/** コンストラクタ */

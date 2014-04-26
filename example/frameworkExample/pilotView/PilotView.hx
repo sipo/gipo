@@ -54,7 +54,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 * ===============================================================*/
 	
 	/** シーンの変更を依頼する */
-	public function changeScene(sceneKind:ViewSceneKind):LogicToViewScene
+	public function changeScene(sceneKind:ViewSceneKind):ViewSceneOrder
 	{
 		var scene:PilotViewScene = getScene(sceneKind);
 		stateSwitcherGear.changeState(scene);

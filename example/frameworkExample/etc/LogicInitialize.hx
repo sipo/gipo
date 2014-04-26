@@ -17,18 +17,19 @@ private typedef ViewSceneOrder = Void;	// 特になし
 /* ================================================================
  * 動作
  * ===============================================================*/
-class LogicInitialize extends LogicScene<ViewSceneOrder>
+class LogicInitialize extends LogicScene
 {
 	/** コンストラクタ */
 	public function new() 
 	{
-		super(ViewSceneKind.Blank);
+		super();
 		gear.addRunHandler(run);
 	}
 	
 	/* 初期化後処理 */
 	private function run():Void
 	{
+		changeViewScene(ViewSceneKind.Blank);
 		// すぐにシーン移動
 		logic.changeState(new Mock0());
 	}

@@ -28,14 +28,24 @@ interface Mock0ViewOrder
 /* ================================================================
  * 動作
  * ===============================================================*/
-class Mock0 extends LogicScene<ViewSceneOrder>
+class Mock0 extends LogicScene
 {
+	/* Viewの対応シーンへの命令を行なうための参照 */
+	private var viewScene:ViewSceneOrder;
+	
 	/** コンストラクタ */
 	public function new() 
 	{
-		super(ViewSceneKind.Mock0);
+		super();
+		gear.addRunHandler(run);
 		// 入力処理の登録
 		viewInputHandlerContainer.set(SceneInput, viewInput);
+	}
+	
+	/* 開始処理 */
+	private function run():Void
+	{
+		viewScene = cast(changeViewScene(ViewSceneKind.Mock0), ViewSceneOrder);
 	}
 	
 	/* Viewからの入力 */
