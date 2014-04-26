@@ -5,9 +5,9 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
-import frameworkExample.context.Logic.HookToLogic;
+import frameworkExample.context.Logic;
 import jp.sipo.util.GlobalDispatcher;
-import frameworkExample.context.Hook.ViewToHook;
+import frameworkExample.context.Hook;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.operation.Reproduce;
 import frameworkExample.operation.OperationView;
@@ -82,6 +82,7 @@ class Top extends GearHolderImpl
 		hook.gearOutside().otherDiffuse(logic, HookToLogic);
 		view.gearOutside().otherDiffuse(hook, ViewToHook);
 		logic.gearOutside().otherDiffuse(view, LogicToView);
+		logic.gearOutside().otherDiffuse(hook, LogicToHook);
 		// 	Operation周り
 		hook.gear.otherDiffuse(operationLogic, OperationLogic);
 		operationHook.gearOutside().otherDiffuse(operationLogic, OperationLogic);

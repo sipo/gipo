@@ -4,6 +4,7 @@ package frameworkExample.scene.mock1;
  * 
  * @auther sipo
  */
+import frameworkExample.context.LogicStatus;
 import frameworkExample.context.LogicToView;
 import frameworkExample.context.LogicScene;
 import frameworkExample.scene.mock0.Mock0;
@@ -27,14 +28,19 @@ private typedef ScenePeek = Mock1ViewPeek;
 interface Mock1ViewPeek
 {
 	public var count(default, null):Int;
+	public var mock1Count(default, null):Int;
 }
 /* ================================================================
  * 動作
  * ===============================================================*/
 class Mock1 extends LogicScene implements ScenePeek
 {
+	@:absorb
+	private var logicStatus:LogicStatus;
 	/** 毎フレーム変化する値の例としてカウントアップ変数 */
 	public var count:Int = 0;
+	/** Mock1が表示された回数の表示 */
+	public var mock1Count:Int = 0;
 	/* Viewの対応シーンへの命令を行なうための参照 */
 	private var viewSceneOrder:ViewSceneOrder;
 	
@@ -51,6 +57,9 @@ class Mock1 extends LogicScene implements ScenePeek
 	/* 開始処理 */
 	private function run():Void
 	{
+		// 表示回数のカウントアップ
+		logicStatus.mock1Count++;
+		mock1Count = logicStatus.mock1Count;
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
 		viewSceneOrder = cast(changeViewScene(ViewSceneKind.Mock1(this)), ViewSceneOrder);
 	}

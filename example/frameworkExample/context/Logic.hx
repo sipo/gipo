@@ -7,6 +7,8 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import frameworkExample.scene.mock1.Mock1;
+import frameworkExample.context.Hook.LogicToHook;
 import frameworkExample.etc.Snapshot;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import frameworkExample.etc.LogicInitialize;
@@ -14,6 +16,11 @@ import jp.sipo.ds.Point;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
 class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLogic
 {
+	@:absorb
+	private var hook:LogicToHook;
+	
+	/* Logic内部の全体データ */
+	private var logicStatus:LogicStatus;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -22,10 +29,13 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLog
 		gear.addDiffusibleHandler(diffusible);
 	}
 	
-	/* 自身を以下に伝えておく */
+	/* diffuseを行なう */
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
+		logicStatus = new LogicStatus();
+		
 		tool.diffuse(this, Logic);
+		tool.diffuse(logicStatus, LogicStatus);
 	}
 	
 	/**
@@ -33,8 +43,8 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLog
 	 */
 	public function start():Void
 	{
-		// 初期シーン
-		stateSwitcherGear.changeState(new LogicInitialize());
+		// hookに初期化用のsnapshotを渡す
+		hook.logicSnapshot(new Snapshot(SnapshotKind.Initialize, logicStatus));
 	}
 
 	
@@ -61,7 +71,13 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLog
 	
 	public function setSnapshot(snapshot:Snapshot):Void
 	{
-		// TODO:stb
+		// TODO:Snapshotの解釈
+		switch(snapshot.kind){
+			// 初期シーン
+			case SnapshotKind.Initialize : stateSwitcherGear.changeState(new LogicInitialize());
+			case SnapshotKind.Mock1 :  stateSwitcherGear.changeState(new Mock1());
+		}
+		
 	}
 }
 /**

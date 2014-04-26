@@ -60,6 +60,9 @@ class Mock1PilotView extends PilotViewScene implements SceneOrder
 		uiContainer.addPushButton("遷移テスト", demoChangeSceneButton_click);
 		// カウンターの表示
 		countLabel = uiContainer.addLabel("count");
+		// 表示カウンターの表示
+		uiContainer.addLabel('この画面は${peek.mock1Count}回表示されました');
+		// 初回描画
 		countDraw();
 	}
 	
