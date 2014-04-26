@@ -36,7 +36,7 @@ class Mock1 extends LogicScene implements ScenePeek
 	/** 毎フレーム変化する値の例としてカウントアップ変数 */
 	public var count:Int = 0;
 	/* Viewの対応シーンへの命令を行なうための参照 */
-	private var viewScene:ViewSceneOrder;
+	private var viewSceneOrder:ViewSceneOrder;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -51,7 +51,8 @@ class Mock1 extends LogicScene implements ScenePeek
 	/* 開始処理 */
 	private function run():Void
 	{
-		viewScene = cast(changeViewScene(ViewSceneKind.Mock1(this)), ViewSceneOrder);
+		// Viewの表示を切り替え、そこに対する命令の参照を得る
+		viewSceneOrder = cast(changeViewScene(ViewSceneKind.Mock1(this)), ViewSceneOrder);
 	}
 	
 	/**
@@ -59,6 +60,7 @@ class Mock1 extends LogicScene implements ScenePeek
 	 */
 	public function update():Void
 	{
+		// テストのために適当な変数をカウントアップする
 		count++;
 	}
 	

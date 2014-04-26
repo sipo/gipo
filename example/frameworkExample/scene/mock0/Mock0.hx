@@ -31,7 +31,7 @@ interface Mock0ViewOrder
 class Mock0 extends LogicScene
 {
 	/* Viewの対応シーンへの命令を行なうための参照 */
-	private var viewScene:ViewSceneOrder;
+	private var viewSceneOrder:ViewSceneOrder;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -45,7 +45,8 @@ class Mock0 extends LogicScene
 	/* 開始処理 */
 	private function run():Void
 	{
-		viewScene = cast(changeViewScene(ViewSceneKind.Mock0), ViewSceneOrder);
+		// Viewの表示を切り替え、そこに対する命令の参照を得る
+		viewSceneOrder = cast(changeViewScene(ViewSceneKind.Mock0), ViewSceneOrder);
 	}
 	
 	/* Viewからの入力 */
@@ -61,7 +62,7 @@ class Mock0 extends LogicScene
 	/* デモボタンのクリック */
 	private function input_demoTraceButton():Void
 	{
-		viewScene.demoDisplay();
+		viewSceneOrder.demoDisplay();
 	}
 	
 	/* デモシーン変更ボタンのクリック */
