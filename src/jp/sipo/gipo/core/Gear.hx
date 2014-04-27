@@ -51,6 +51,7 @@ class Gear implements GearOutside
 	/* 各種実行関数の登録 */
 	private var diffusibleHandlerList:TaskList;
 	private var runHandlerList:TaskList;
+	private var bubbleHandlerList:TaskList;
 	private var disposeTaskStack:TaskList;
 	/* 子の追加処理の遅延保持 */
 	private var bookChildList:Array<PosWrapper<GearHolder>>;
@@ -78,6 +79,7 @@ class Gear implements GearOutside
 		// HandlerListの初期化
 		diffusibleHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
 		runHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
+		bubbleHandlerList = new TaskList(AddBehaviorPreset.addHead, true);
 		disposeTaskStack = new TaskList(AddBehaviorPreset.addHead, true);
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
@@ -141,6 +143,15 @@ class Gear implements GearOutside
 	{
 		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
 		runHandlerList.add(run, pos);
+	}
+	
+	/**
+	 * 初期動作が全て終わった場合の動作かつ、逆順に実行される動作を登録
+	 */
+	public function addBubbleHandler(run:Void -> Void, ?pos:PosInfos):Void
+	{
+		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
+		bubbleHandlerList.add(run, pos);
 	}
 	
 	/**
@@ -254,10 +265,12 @@ class Gear implements GearOutside
 	public function endNeedTask(key:EnumValue, ?pos:PosInfos):Void
 	{
 		needTasks.remove(key);
-		if (needTasks.length == 0){	// タスクが無くなったら、runへ進む
-			runHandlerList.execute();
-			runHandlerList = null;
-		}
+		if (needTasks.length != 0) return;	
+		// タスクが無くなったら、runへ進む
+		runHandlerList.execute();
+		runHandlerList = null;
+		bubbleHandlerList.execute();
+		bubbleHandlerList = null;
 	}
 	
 	/* --------------------------------
