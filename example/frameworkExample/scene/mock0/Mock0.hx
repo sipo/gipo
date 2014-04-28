@@ -46,7 +46,7 @@ class Mock0 extends LogicScene
 	private function run():Void
 	{
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
-		viewSceneOrder = cast(changeViewScene(ViewSceneKind.Mock0), ViewSceneOrder);
+		viewSceneOrder = changeViewScene(ViewSceneKind.Mock0, ViewSceneOrder);
 	}
 	
 	/* Viewからの入力 */
