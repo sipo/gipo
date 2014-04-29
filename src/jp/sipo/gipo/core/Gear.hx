@@ -367,7 +367,7 @@ class Gear implements GearOutside
 		switch(phase)
 		{
 			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError("Gearは処理中にしか子を登録することはできません。(" + phase + ") $pos");
-			case GearPhase.Diffusible : throw new SipoError("initialize時のaddChildは、明示的にaddChildDelayを使用してください。(" + phase + ") $pos");
+			case GearPhase.Diffusible : throw new SipoError("phase=${phase}の時のaddChildは、明示的にaddChildDelayを使用してください。(" + phase + ") $pos");
 			case GearPhase.Fulfill, GearPhase.Middle : 
 		}
 		// 追加
@@ -410,6 +410,8 @@ class Gear implements GearOutside
 	/* 消去された時の動作 */
 	private function enterRemove():Void
 	{
+		if (phase == GearPhase.Dispose) throw '既に削除されているGear（${this}）をさらに削除しようとしました。Gearは上位層のGearが削除されると自動的に削除されるため、手動での消去には気をつけてください';
+		phase = GearPhase.Dispose;
 		// 必要な消去処理を実行
 		disposeTaskStack.execute();// 逆順で実行する
 		disposeTaskStack = null;

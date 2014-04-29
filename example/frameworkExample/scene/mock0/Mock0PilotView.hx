@@ -67,7 +67,7 @@ class Mock0PilotView extends PilotViewScene implements SceneOrder
 	}
 	
 	/* ================================================================
-	 * Logic Order
+	 * Order by Logic 
 	 * ===============================================================*/
 	
 	/**
