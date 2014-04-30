@@ -25,7 +25,7 @@ class Snapshot
 }
 enum SnapshotKind
 {
-	/** 最初の初期化 */
+	/** 初期化 */
 	Initialize;
 	/** Mock1表示直前 */
 	Mock1;

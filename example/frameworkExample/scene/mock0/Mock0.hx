@@ -4,6 +4,9 @@ package frameworkExample.scene.mock0;
  * 
  * @auther sipo
  */
+import frameworkExample.context.LogicStatus;
+import frameworkExample.etc.Snapshot;
+import frameworkExample.context.Hook.LogicToHook;
 import frameworkExample.context.LogicScene;
 import frameworkExample.context.LogicToView;
 import frameworkExample.scene.mock1.Mock1;
@@ -30,6 +33,8 @@ interface Mock0ViewOrder
  * ===============================================================*/
 class Mock0 extends LogicScene
 {
+	@:absorb
+	private var hook:LogicToHook;
 	/* Viewの対応シーンへの命令を行なうための参照 */
 	private var viewSceneOrder:ViewSceneOrder;
 	
@@ -68,6 +73,7 @@ class Mock0 extends LogicScene
 	/* デモシーン変更ボタンのクリック */
 	private function input_demoChangeSceneButton():Void
 	{
-		logic.changeState(new Mock1());
+		var logicStatus:LogicStatus = gear.absorb(LogicStatus);
+		hook.logicSnapshot(new Snapshot(SnapshotKind.Mock1, logicStatus));	// TODO:呼び出しの共通化が必要か
 	}
 }

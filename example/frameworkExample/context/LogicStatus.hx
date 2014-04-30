@@ -14,4 +14,12 @@ class LogicStatus
 	{
 		
 	}
+	
+	/**
+	 * 他のインスタンスからデータを反映する
+	 */
+	public function setAll(target:LogicStatus):Void
+	{
+		mock1Count = target.mock1Count;
+	}
 }

@@ -88,7 +88,7 @@ class Hook extends GearHolderImpl implements ViewToHook implements LogicToHook
 	 */
 	private function executeEvent(logway:HookEventLogway):Void
 	{
-		var hookEvent:HookEvent = new HookEvent(logway);
+		var hookEvent:HookEvent = new HookEvent(logway, 0);	// TODO:frame
 		switch (hookEvent.logWay)
 		{
 			case HookEventLogway.Input(command) :
@@ -117,10 +117,10 @@ class Hook extends GearHolderImpl implements ViewToHook implements LogicToHook
 class HookEvent
 {
 	public var logWay:HookEventLogway;
-//	public var frame:Int;// 発生フレーム
+	public var frame:Int;// 発生フレーム
 	
 	/** コンストラクタ */
-	public function new(logWay:HookEventLogway) 
+	public function new(logWay:HookEventLogway, frame:Int) 
 	{
 		this.logWay = logWay;
 	}
