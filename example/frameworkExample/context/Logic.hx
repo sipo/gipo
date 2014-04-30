@@ -44,10 +44,8 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLog
 	public function start():Void
 	{
 		// hookに初期化用のsnapshotを渡す
-		hook.logicSnapshot(new Snapshot(SnapshotKind.Initialize, logicStatus));
+		snapshotEvent(SnapshotKind.Initialize);
 	}
-	
-	
 	
 	/**
 	 * 更新処理
@@ -55,6 +53,15 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLog
 	public function update():Void
 	{
 		state.sceneUpdate();
+	}
+	
+	/**
+	 * スナップショットを使用するイベントを起動する
+	 * Stateの切り替わりがある場合、このsnapshotEventで自動的に発動する
+	 */
+	public function snapshotEvent(kind:SnapshotKind):Void
+	{
+		hook.logicSnapshot(new Snapshot(kind, logicStatus));
 	}
 	
 	/* ================================================================

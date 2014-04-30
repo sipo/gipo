@@ -33,8 +33,6 @@ interface Mock0ViewOrder
  * ===============================================================*/
 class Mock0 extends LogicScene
 {
-	@:absorb
-	private var hook:LogicToHook;
 	/* Viewの対応シーンへの命令を行なうための参照 */
 	private var viewSceneOrder:ViewSceneOrder;
 	
@@ -73,7 +71,7 @@ class Mock0 extends LogicScene
 	/* デモシーン変更ボタンのクリック */
 	private function input_demoChangeSceneButton():Void
 	{
-		var logicStatus:LogicStatus = gear.absorb(LogicStatus);
-		hook.logicSnapshot(new Snapshot(SnapshotKind.Mock1, logicStatus));	// TODO:呼び出しの共通化が必要か
+		// スナップショットを取りつつ移動
+		logic.snapshotEvent(SnapshotKind.Mock1);
 	}
 }
