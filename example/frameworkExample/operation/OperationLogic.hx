@@ -5,6 +5,7 @@ package frameworkExample.operation;
  * 
  * @auther sipo
  */
+import jp.sipo.util.Copy;
 import frameworkExample.operation.OperationHook.OperationHookEvent;
 import frameworkExample.context.Hook.HookEvent;
 import jp.sipo.gipo.core.GearHolderImpl;
@@ -14,6 +15,9 @@ interface OperationPeek
 }
 class OperationLogic extends GearHolderImpl
 {
+	/* 再生ログ */
+	private var reproduceLog:Array<HookEvent> = new Array<HookEvent>();
+	
 	/** コンストラクタ */
 	public function new() 
 	{
@@ -25,8 +29,7 @@ class OperationLogic extends GearHolderImpl
 	 */
 	public function record(event:HookEvent):Void
 	{
-		trace('stb OperationLogic record($event)');
-		// TODO:stb
+		reproduceLog.push(Copy.deep(event));	// 速度を上げるためには場合分けしてもいい
 	}
 	
 	/**

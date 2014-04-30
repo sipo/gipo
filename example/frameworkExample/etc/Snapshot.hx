@@ -4,6 +4,7 @@ package frameworkExample.etc;
  * 
  * @auther sipo
  */
+import jp.sipo.util.Copy;
 import frameworkExample.context.LogicStatus;
 class Snapshot
 {
@@ -26,10 +27,7 @@ class Snapshot
 	 */
 	public function clone():Snapshot
 	{
-		var ans:Snapshot = new Snapshot();
-		ans.kind = kind;
-		ans.logicStatus = logicStatus;
-		return ans;
+		return new Snapshot(kind, Copy.deep(logicStatus));
 	}
 }
 enum SnapshotKind
