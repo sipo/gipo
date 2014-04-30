@@ -20,6 +20,17 @@ class Snapshot
 		this.kind = kind;
 		this.logicStatus = logicStatus;
 	}
+	
+	/**
+	 * クローン
+	 */
+	public function clone():Snapshot
+	{
+		var ans:Snapshot = new Snapshot();
+		ans.kind = kind;
+		ans.logicStatus = logicStatus;
+		return ans;
+	}
 }
 enum SnapshotKind
 {
