@@ -36,15 +36,6 @@ class StateGear
 		gear.endNeedTask(GearStateNeedTask.Core);
 	}
 	
-	/**
-	 * Stateの切り替えをswitcherに渡す
-	 */
-	public inline function changeState(nextStateHolder:StateGearHolder):Void
-	{
-		if (changeStateLock) throw new SipoError("changeStateがロックされています。run以降でなければなりません。");
-		changeStateLock = true;
-		switcher.changeState(nextStateHolder);
-	}
 	
 }
 enum GearStateNeedTask
