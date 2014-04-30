@@ -61,6 +61,7 @@ class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>	// 子をGener
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		trace("TopGearの初期化処理");
+		tool.diffuse(this, TopSwitcher);	// この階層以下で、このインスタンスを取得できるようにする
 	}
 	
 	/* 初期化後処理 */
@@ -78,6 +79,9 @@ class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>	// 子をGener
  */
 class ChildState extends StateGearHolderImpl
 {
+	@:absorb	// 自動的にTopSwitcherを取得する（diffusibleの直前）
+	private var switcher:TopSwitcher;
+	
 	/** コンストラクタ */
 	public function new() 
 	{
@@ -99,6 +103,7 @@ class ChildState extends StateGearHolderImpl
  */
 class ChildStateA extends ChildState
 {
+	
 	/** コンストラクタ */
 	public function new() 
 	{
@@ -118,7 +123,7 @@ class ChildStateA extends ChildState
 	private function changeState():Void
 	{
 		// 次のStateに切り替え
-		stateGear.changeState(new ChildStateB());	// 基本的にはStateは毎回作りなおされる
+		switcher.changeState(new ChildStateB());	// 基本的にはStateは毎回作りなおされる
 		// Stateを毎回破棄したくない場合は、stateSwitcherGear.setHandlerLastStateTreatmentを使用して、破棄処理を上書きする
 		// ただし、どちらにせよ一度stateに使ったものは、２度使うことは出来ない。
 	}
@@ -148,6 +153,6 @@ class ChildStateB extends ChildState
 	private function changeState():Void
 	{
 		// 次のStateに切り替え
-		stateGear.changeState(new ChildStateA());
+		switcher.changeState(new ChildStateA());
 	}
 }
