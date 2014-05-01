@@ -7,6 +7,7 @@ import haxe.macro.Expr.Constant;
 import haxe.macro.Expr.ExprDef;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.FieldType;
+import haxe.macro.Type;
 
 using haxe.macro.TypeTools;
 #end
@@ -43,7 +44,8 @@ private class Impl {
 										// パラメータが (foo.bar.baz.Hoge.Fuga) のとき
 										[ { expr: ExprDef.EField({ expr: ExprDef.EField(_, key_enum) }, key_enum_value)} ]
 										// パラメータが (Hoge.Fuga) のとき
-									|	[ { expr: ExprDef.EField({ expr: ExprDef.EConst(Constant.CIdent(key_enum)) }, key_enum_value)} ] :
+									|	[ { expr: ExprDef.EField({ expr: ExprDef.EConst(Constant.CIdent(key_enum)) }, key_enum_value)} ]
+										if (Context.getType(key_enum).match(Type.TEnum)) :
 										// メタデータの名前を '@absorbWithKey' に書き換え
 										meta.name = Tag.ABSORB_WITH_KEY_TAG;
 										meta.params = [
@@ -53,10 +55,12 @@ private class Impl {
 											{ expr : ExprDef.EConst(Constant.CString(key_enum_value)), pos: Context.currentPos() }
 										];
 									// パラメータに値が渡されていない
-									case [] :
+									case params if (params.length == 0) :
 										Context.error("#1 : メタデータ '@:absorbWithKey' には、1つのパラメータが必要です。", position);
-									case _ :
+									case params if (params.length >= 2) :
 										Context.error("#2 : メタデータ '@:absorbWithKey' に対して複数のキーが指定されました。", position);
+									case _ :
+										Context.error("#3 : メタデータのパラメータが対応していない形式です。", position);
 								}
 							// 対象のメタデータが ABSORB_TAG_HOOK('@:absorb') ならば
 							case { name: _ => Tag.ABSORB_TAG_HOOK } :
