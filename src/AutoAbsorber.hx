@@ -63,11 +63,16 @@ private class Impl {
 										Context.error("#3 : メタデータのパラメータが対応していない形式です。", position);
 								}
 							// 対象のメタデータが ABSORB_TAG_HOOK('@:absorb') ならば
-							case { name: _ => Tag.ABSORB_TAG_HOOK } :
-								meta.name = Tag.ABSORB_TAG;
-								meta.params = [
-									{ expr: ExprDef.EConst(Constant.CString(Context.getType(tpath_name).toString())), pos: Context.currentPos() }
-								];
+							case { name: _ => Tag.ABSORB_TAG_HOOK, pos: position } :
+								switch (meta.params) {
+									case [] :
+										meta.name = Tag.ABSORB_TAG;
+										meta.params = [
+											{ expr: ExprDef.EConst(Constant.CString(Context.getType(tpath_name).toString())), pos: Context.currentPos() }
+										];
+									case _ :
+										Context.error("#4 : メタデータ '@:absorb' にパラメータが指定されました。", position);
+								}
 						}
 					}
 				case _ :
