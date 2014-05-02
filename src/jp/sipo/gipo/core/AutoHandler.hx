@@ -73,7 +73,9 @@ private class Impl {
 								meta.name = AutoHandlerTag.RED_TAPE_HANDLER_TAG;
 								
 								var arg = switch (field) {
-									case { kind: FieldType.FFun( { args: [{ type: ComplexType.TPath(tpath) }] } ) } :
+									case
+										{ kind: FieldType.FFun({ args: [{ type: ComplexType.TPath(tpath) }] }) }
+										if (Context.getType(tpath.name).match(MacroType.TEnum)) :
 										Context.getType(tpath.name).toString();
 									case _ :
 										Context.error("#5", meta.pos);
