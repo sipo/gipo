@@ -62,10 +62,11 @@ class OperationOverView extends GearHolderImpl implements OperationView
 		minimalizeUiContainer.addPushButton("Operation", operationButton_click);
 		
 		openUiContainer.addPushButton("-", minimizeButton_click);
+		logCounter = openUiContainer.addLabel("none");
 		openUiContainer.addPushButton("SaveLog", saveLogButton_click);
 		openUiContainer.addPushButton("LoadLog", loadLogButton_click);
 		comboBox = openUiContainer.addComboBox([], comboBox_select);
-		openUiContainer.addBackground(0x000000, 0.5);
+		openUiContainer.addBackground(0x888888, 0.5);
 		// 初期モード
 		changeMode(Mode.Minimize);
 	}
@@ -82,6 +83,13 @@ class OperationOverView extends GearHolderImpl implements OperationView
 				minimalizeUiLayer.visible = false;
 				openUiLayer.visible = true;
 		}
+	}
+	
+	
+	/** 再現ログの更新 */
+	public function updateLog(logcount:Int):Void
+	{
+		logCounter.text = Std.string(logcount);
 	}
 	
 	/* 最小化ボタンをクリック */

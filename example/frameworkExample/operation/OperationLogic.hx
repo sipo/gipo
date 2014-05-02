@@ -15,8 +15,12 @@ interface OperationPeek
 }
 class OperationLogic extends GearHolderImpl
 {
+	@:absorb
+	private var operationView:OperationView;
+	
 	/* 再生ログ */
 	private var reproduceLog:Array<HookEvent> = new Array<HookEvent>();
+	
 	
 	/** コンストラクタ */
 	public function new() 
@@ -30,6 +34,7 @@ class OperationLogic extends GearHolderImpl
 	public function record(event:HookEvent):Void
 	{
 		reproduceLog.push(Copy.deep(event));	// 速度を上げるためには場合分けしてもいい
+		operationView.updateLog(reproduceLog.length);
 	}
 	
 	/**

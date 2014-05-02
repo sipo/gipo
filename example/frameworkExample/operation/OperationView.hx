@@ -13,5 +13,5 @@ interface OperationView extends GearHolder
 	public function setContext(operationViewLayer:Sprite):Void;
 	
 	/** 再現ログの更新 */
-//	public function updateLog();	// TODO:あとで、ログのデータを持たせる
+	public function updateLog(logcount:Int):Void;
 }
