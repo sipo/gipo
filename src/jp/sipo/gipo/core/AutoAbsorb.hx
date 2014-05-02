@@ -12,8 +12,8 @@ import haxe.macro.Type;
 using haxe.macro.TypeTools;
 #end
 
-@:autoBuild(jp.sipo.gipo.core._AutoAbsorber.Impl.build())
-interface AutoAbsorber { }
+@:autoBuild(jp.sipo.gipo.core._AutoAbsorb.Impl.build())
+interface AutoAbsorb { }
 
 class Tag {
 	public static inline var ABSORB_TAG:String = "absorb";
