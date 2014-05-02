@@ -16,10 +16,10 @@ interface AutoHandler { }
 
 class AutoHandlerTag {
 	public static inline var HANDLER_TAG:String = "handler";
-	public static inline var RED_TAPE_HANDLER:String = "redTapeHandler";
+	public static inline var RED_TAPE_HANDLER_TAG:String = "redTapeHandler";
 	
 	public static inline var HANDLER_TAG_HOOK:String = ":" + HANDLER_TAG;
-	public static inline var RED_TAPE_HANDLER_HOOK:String = ":" + RED_TAPE_HANDLER;
+	public static inline var RED_TAPE_HANDLER_TAG_HOOK:String = ":" + RED_TAPE_HANDLER_TAG;
 }
 
 private class Impl {
@@ -43,7 +43,7 @@ private class Impl {
 							// または RED_TAPE_HANDLER_HOOK('@:redTapeHandler')ならば
 							case
 								AutoHandlerTag.HANDLER_TAG_HOOK
-							|	AutoHandlerTag.RED_TAPE_HANDLER_HOOK :
+							|	AutoHandlerTag.RED_TAPE_HANDLER_TAG_HOOK :
 								switch (meta.params) {
 									case
 										// パラメータが (foo.bar.baz.Hoge.Fuga) のとき
@@ -68,9 +68,9 @@ private class Impl {
 								// メタデータの名前を '@handler' に書き換え
 								meta.name = AutoHandlerTag.HANDLER_TAG;
 								
-							case AutoHandlerTag.RED_TAPE_HANDLER_HOOK :
+							case AutoHandlerTag.RED_TAPE_HANDLER_TAG_HOOK :
 								// メタデータの名前を '@redTapeHandler' に書き換え
-								meta.name = AutoHandlerTag.RED_TAPE_HANDLER;
+								meta.name = AutoHandlerTag.RED_TAPE_HANDLER_TAG;
 								
 								var arg = switch (field) {
 									case { kind: FieldType.FFun( { args: [{ type: ComplexType.TPath(tpath) }] } ) } :
