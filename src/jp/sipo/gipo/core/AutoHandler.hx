@@ -26,20 +26,24 @@ private class Impl {
 	macro private static function build():Array<Field> {
 		var fields = Context.getBuildFields();
 		
+		// 変換規則
+		// @:handler(GearHandler.Run)
+		// 	=> @handler([GearHandler, Run])
+		// @:redTapeHandler(LogicSceneHandler.ViewInput)
+		// 	=> @redTapeHandler([LogicSceneHandler, ViewInput, SceneInput])
+		
 		// すべてのフィールドを走査して
 		for (field in fields) {
 			switch (field) {
 				// kind が 'FieldType.FFun' のフィールドに関して
 				case { kind: FieldType.FFun(_), meta: fun_meta } :
 					for (meta in fun_meta) {
-						// @:handler(GearHandler.Run)
-						// => @handler([GearHandler, Run])
-						
-						// @:redTapeHandler(LogicSceneHandler.ViewInput)
-						// => @redTapeHandler([LogicSceneHandler, ViewInput, SceneInput])
 						switch (meta.name) {
-							// 対象のメタデータが HANDLER_TAG_HOOK(':handler')ならば
-							case AutoHandlerTag.HANDLER_TAG_HOOK :
+							// 対象のメタデータが HANDLER_TAG_HOOK(':handler')、
+							// または RED_TAPE_HANDLER_HOOK('@:redTapeHandler')ならば
+							case
+								AutoHandlerTag.HANDLER_TAG_HOOK
+							|	AutoHandlerTag.RED_TAPE_HANDLER_HOOK :
 								switch (meta.params) {
 									case
 										// パラメータが (foo.bar.baz.Hoge.Fuga) のとき
@@ -47,8 +51,7 @@ private class Impl {
 										// パラメータが (Hoge.Fuga) のとき
 									|	[ { expr: ExprDef.EField({ expr: ExprDef.EConst(Constant.CIdent(key_enum)) }, key_enum_value)} ]
 										if (Context.getType(key_enum).match(MacroType.TEnum)) :
-										// メタデータの名前を '@handler' に書き換え
-										meta.name = AutoHandlerTag.HANDLER_TAG;
+										
 										meta.params = [
 											// キーの列挙（Enum)の完全修飾名
 											{ expr : ExprDef.EConst(Constant.CString(Context.getType(key_enum).toString())), pos: Context.currentPos() },
@@ -58,34 +61,24 @@ private class Impl {
 									case _ :
 										
 								}
-							// 対象のメタデータが RED_TAPE_HANDLER_HOOK(':redTapeHandler')ならば
+						}
+						
+						switch (meta.name) {
+							case AutoHandlerTag.HANDLER_TAG_HOOK :
+								// メタデータの名前を '@handler' に書き換え
+								meta.name = AutoHandlerTag.HANDLER_TAG;
+								
 							case AutoHandlerTag.RED_TAPE_HANDLER_HOOK :
-								switch (meta.params) {
-									case
-										// パラメータが (foo.bar.baz.Hoge.Fuga) のとき
-										[ { expr: ExprDef.EField({ expr: ExprDef.EField(_, key_enum) }, key_enum_value)} ]
-										// パラメータが (Hoge.Fuga) のとき
-									|	[ { expr: ExprDef.EField({ expr: ExprDef.EConst(Constant.CIdent(key_enum)) }, key_enum_value)} ]
-										if (Context.getType(key_enum).match(MacroType.TEnum)) :
-										// メタデータの名前を '@redTapeHandler' に書き換え
-										meta.name = AutoHandlerTag.RED_TAPE_HANDLER;
-										meta.params = [
-											// キーの列挙（Enum)の完全修飾名
-											{ expr : ExprDef.EConst(Constant.CString(Context.getType(key_enum).toString())), pos: Context.currentPos() },
-											// キー（EnumValue）の完全修飾名
-											{ expr : ExprDef.EConst(Constant.CString(key_enum_value)), pos: Context.currentPos() },
-											{ expr : ExprDef.EConst(Constant.CString(
-												switch (field) {
-													case { kind: FieldType.FFun( { args: [{ type: ComplexType.TPath(tpath) }] } ) } :
-														Context.getType(tpath.name).toString();
-													case _ :
-														Context.error("#5", meta.pos);
-												}
-											)), pos: Context.currentPos() },
-										];
+								// メタデータの名前を '@redTapeHandler' に書き換え
+								meta.name = AutoHandlerTag.RED_TAPE_HANDLER;
+								
+								var arg = switch (field) {
+									case { kind: FieldType.FFun( { args: [{ type: ComplexType.TPath(tpath) }] } ) } :
+										Context.getType(tpath.name).toString();
 									case _ :
-										
-								}
+										Context.error("#5", meta.pos);
+								};
+								meta.params.push({ expr : ExprDef.EConst(Constant.CString(arg)), pos: Context.currentPos() });
 						}
 					}
 				case _ :
