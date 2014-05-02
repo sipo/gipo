@@ -1,4 +1,4 @@
-package ;
+package jp.sipo.gipo.core;
 
 #if macro
 import haxe.macro.Context;
@@ -12,7 +12,7 @@ import haxe.macro.Type;
 using haxe.macro.TypeTools;
 #end
 
-@:autoBuild(_AutoAbsorber.Impl.build())
+@:autoBuild(jp.sipo.gipo.core._AutoAbsorber.Impl.build())
 interface AutoAbsorber { }
 
 class Tag {
