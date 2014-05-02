@@ -7,9 +7,10 @@ import haxe.macro.Expr.Constant;
 import haxe.macro.Expr.ExprDef;
 import haxe.macro.Expr.Field;
 import haxe.macro.Expr.FieldType;
-import haxe.macro.Type;
 
 using haxe.macro.TypeTools;
+
+typedef MacroType = haxe.macro.Type;
 #end
 
 @:autoBuild(jp.sipo.gipo.core._AutoAbsorb.Impl.build())
@@ -35,9 +36,9 @@ private class Impl {
 				case { kind: FieldType.FVar(ComplexType.TPath({ name: tpath_name }), _), meta: field_meta } : 
 					// メンバ変数のメタデータすべてを走査して
 					for (meta in field_meta) {
-						switch (meta) {
+						switch (meta.name) {
 							// 対象のメタデータが ABSORB_WITH_KEY_TAG_HOOK('@:absorbWithKey') ならば
-							case { name : _ => AutoAbsorbTag.ABSORB_WITH_KEY_TAG_HOOK, pos: position } :
+							case AutoAbsorbTag.ABSORB_WITH_KEY_TAG_HOOK :
 								// メタデータのパラメータ全てについて
 								switch (meta.params) {
 									case
@@ -45,7 +46,7 @@ private class Impl {
 										[ { expr: ExprDef.EField({ expr: ExprDef.EField(_, key_enum) }, key_enum_value)} ]
 										// パラメータが (Hoge.Fuga) のとき
 									|	[ { expr: ExprDef.EField({ expr: ExprDef.EConst(Constant.CIdent(key_enum)) }, key_enum_value)} ]
-										if (Context.getType(key_enum).match(Type.TEnum)) :
+										if (Context.getType(key_enum).match(MacroType.TEnum)) :
 										// メタデータの名前を '@absorbWithKey' に書き換え
 										meta.name = AutoAbsorbTag.ABSORB_WITH_KEY_TAG;
 										meta.params = [
@@ -56,14 +57,14 @@ private class Impl {
 										];
 									// パラメータに値が渡されていない
 									case params if (params.length == 0) :
-										Context.error("#1 : メタデータ '@:absorbWithKey' には、1つのパラメータが必要です。", position);
+										Context.error("#1 : メタデータ '@:absorbWithKey' には、1つのパラメータが必要です。", meta.pos);
 									case params if (params.length >= 2) :
-										Context.error("#2 : メタデータ '@:absorbWithKey' に対して複数のキーが指定されました。", position);
+										Context.error("#2 : メタデータ '@:absorbWithKey' に対して複数のキーが指定されました。", meta.pos);
 									case _ :
-										Context.error("#3 : メタデータのパラメータが対応していない形式です。", position);
+										Context.error("#3 : メタデータのパラメータが対応していない形式です。", meta.pos);
 								}
 							// 対象のメタデータが ABSORB_TAG_HOOK('@:absorb') ならば
-							case { name: _ => AutoAbsorbTag.ABSORB_TAG_HOOK, pos: position } :
+							case AutoAbsorbTag.ABSORB_TAG_HOOK :
 								switch (meta.params) {
 									case [] :
 										meta.name = AutoAbsorbTag.ABSORB_TAG;
@@ -71,7 +72,7 @@ private class Impl {
 											{ expr: ExprDef.EConst(Constant.CString(Context.getType(tpath_name).toString())), pos: Context.currentPos() }
 										];
 									case _ :
-										Context.error("#4 : メタデータ '@:absorb' にパラメータが指定されました。", position);
+										Context.error("#4 : メタデータ '@:absorb' にパラメータが指定されました。", meta.pos);
 								}
 						}
 					}
