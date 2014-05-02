@@ -5,6 +5,7 @@ package jp.sipo.wrapper;
  * 
  * @auther sipo
  */
+import com.bit101.components.ComboBox;
 import flash.geom.Rectangle;
 import haxe.macro.Expr.Case;
 import haxe.Unserializer;
@@ -125,7 +126,7 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	/**
 	 * pushButtonを追加
 	 */
-	public function addPushButton(label:String, clickHandler:Void -> Void):Void
+	public function addPushButton(label:String, clickHandler:Void -> Void):PushButton
 	{
 		var handler = function (event:Event):Void{
 			clickHandler();
@@ -136,6 +137,26 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 			uiLayer.removeChild(pushButton);
 		});
 		addComponent(pushButton);
+		return pushButton;
+	}
+	
+	/**
+	 * プルダウンメニューを追加
+	 */
+	public function addComboBox(labelList:Array<String>, selectHandler:Int -> Void):ComboBox
+	{
+		var comboBox:ComboBox = new ComboBox(uiLayer, putX, putY, if (labelList.length == 0) null else labelList[0], labelList);
+		var handler = function (event:Event):Void
+		{
+			selectHandler(comboBox.selectedIndex);
+		}
+		comboBox.addEventListener(Event.SELECT, handler);
+		gear.disposeTask(function (){
+			comboBox.removeEventListener(MouseEvent.CLICK, handler);
+			uiLayer.removeChild(comboBox);
+		});
+		addComponent(comboBox);
+		return comboBox;
 	}
 	
 	/* 要素追加の共通処理 */

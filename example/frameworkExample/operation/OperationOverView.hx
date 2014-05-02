@@ -4,6 +4,8 @@ package frameworkExample.operation;
  * 
  * @auther sipo
  */
+import com.bit101.components.Label;
+import com.bit101.components.ComboBox;
 import frameworkExample.operation.OperationHook.OperationHookEvent;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
@@ -20,6 +22,10 @@ class OperationOverView extends GearHolderImpl implements OperationView
 	/* UI表示 */
 	private var minimalizeUiContainer:MinimalcompsGipoContainer;
 	private var openUiContainer:MinimalcompsGipoContainer;
+	/* 記録数表示 */
+	private var logCounter:Label;
+	/* 再生位置指定 */
+	private var comboBox:ComboBox;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -58,6 +64,7 @@ class OperationOverView extends GearHolderImpl implements OperationView
 		openUiContainer.addPushButton("-", minimizeButton_click);
 		openUiContainer.addPushButton("SaveLog", saveLogButton_click);
 		openUiContainer.addPushButton("LoadLog", loadLogButton_click);
+		comboBox = openUiContainer.addComboBox([], comboBox_select);
 		openUiContainer.addBackground(0x000000, 0.5);
 		// 初期モード
 		changeMode(Mode.Minimize);
@@ -98,6 +105,11 @@ class OperationOverView extends GearHolderImpl implements OperationView
 	private function loadLogButton_click():Void
 	{
 		hook.input(OperationHookEvent.LocalLoad);
+	}
+	/* 読み込みファイルを選択 */
+	private function comboBox_select(index:Int):Void
+	{
+		trace(index);
 	}
 }
 private enum Mode
