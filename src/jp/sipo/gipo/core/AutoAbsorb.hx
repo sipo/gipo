@@ -15,7 +15,7 @@ using haxe.macro.TypeTools;
 @:autoBuild(jp.sipo.gipo.core._AutoAbsorb.Impl.build())
 interface AutoAbsorb { }
 
-class Tag {
+class AutoAbsorbTag {
 	public static inline var ABSORB_TAG:String = "absorb";
 	public static inline var ABSORB_WITH_KEY_TAG:String = "absorbWithKey";
 	
@@ -37,7 +37,7 @@ private class Impl {
 					for (meta in field_meta) {
 						switch (meta) {
 							// 対象のメタデータが ABSORB_WITH_KEY_TAG_HOOK('@:absorbWithKey') ならば
-							case { name : _ => Tag.ABSORB_WITH_KEY_TAG_HOOK, pos: position } :
+							case { name : _ => AutoAbsorbTag.ABSORB_WITH_KEY_TAG_HOOK, pos: position } :
 								// メタデータのパラメータ全てについて
 								switch (meta.params) {
 									case
@@ -47,7 +47,7 @@ private class Impl {
 									|	[ { expr: ExprDef.EField({ expr: ExprDef.EConst(Constant.CIdent(key_enum)) }, key_enum_value)} ]
 										if (Context.getType(key_enum).match(Type.TEnum)) :
 										// メタデータの名前を '@absorbWithKey' に書き換え
-										meta.name = Tag.ABSORB_WITH_KEY_TAG;
+										meta.name = AutoAbsorbTag.ABSORB_WITH_KEY_TAG;
 										meta.params = [
 											// キーの列挙（Enum)の完全修飾名
 											{ expr : ExprDef.EConst(Constant.CString(Context.getType(key_enum).toString())), pos: Context.currentPos() },
@@ -63,10 +63,10 @@ private class Impl {
 										Context.error("#3 : メタデータのパラメータが対応していない形式です。", position);
 								}
 							// 対象のメタデータが ABSORB_TAG_HOOK('@:absorb') ならば
-							case { name: _ => Tag.ABSORB_TAG_HOOK, pos: position } :
+							case { name: _ => AutoAbsorbTag.ABSORB_TAG_HOOK, pos: position } :
 								switch (meta.params) {
 									case [] :
-										meta.name = Tag.ABSORB_TAG;
+										meta.name = AutoAbsorbTag.ABSORB_TAG;
 										meta.params = [
 											{ expr: ExprDef.EConst(Constant.CString(Context.getType(tpath_name).toString())), pos: Context.currentPos() }
 										];
