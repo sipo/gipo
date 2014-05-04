@@ -32,6 +32,9 @@ private class Impl {
 		// すべてのフィールドを走査して
 		for (field in fields) {
 			switch (field) {
+				// 型指定のないメンバ変数
+				case { kind: FieldType.FVar(null, _) } :
+					Context.warning("#5", field.pos);
 				// kind が 'FieldType.FVar' のフィールドに関して
 				case { kind: FieldType.FVar(ComplexType.TPath({ name: tpath_name }), _), meta: field_meta } : 
 					// メンバ変数のメタデータすべてを走査して
