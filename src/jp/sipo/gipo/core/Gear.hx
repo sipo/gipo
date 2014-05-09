@@ -198,8 +198,8 @@ class Gear implements GearOutside
 		if (parentDiffuser != null) diffuser.setParent(parentDiffuser);
 		// 初期動作を呼び出し
 		phase = GearPhase.Diffusible;	// 初期化状態
-		// Absorbの自動化
-		autoAbsorb();
+		// 初期登録のの自動化
+		autoInitialize();
 		// 登録されたdiffusible関数の呼び出し
 		diffusibleHandlerList.execute();
 		diffusibleHandlerList = null;
@@ -210,28 +210,63 @@ class Gear implements GearOutside
 		phase = GearPhase.Middle;
 		endNeedTask(GearNeedTask.Core);
 	}
-	/* Absorbの自動化 */
-	private function autoAbsorb():Void
+	/* Absorbとハンドラの自動化 */
+	private function autoInitialize():Void
 	{
-		if (!Std.is(holder, AutoAbsorb)) return;	// autoAbsorbの時だけ対応する
+		// 各フラグ用インターフェースを実装しているかチェックする
+		var isAutoAbsorb:Bool = Std.is(holder, AutoAbsorb);
+		var isAutoHandler:Bool = Std.is(holder, AutoHandler);
+		// どちらもなければ対応しない
+		if (!isAutoAbsorb && !isAutoHandler) return;
+		// 設定の開始
 		var holderClass:Class<Dynamic> = Type.getClass(holder);
-		while(holderClass != null)
+		while(holderClass != null)	// 継承元もチェックするためループが必要
 		{
 			var metaData = Meta.getFields(holderClass);
-			for (name in Reflect.fields(metaData))
+			for (name in Reflect.fields(metaData))	// 全フィールドをチェック
 			{
 				var metaTags = Reflect.field(metaData, name);
-				var classKeyTypeData = Reflect.field(metaTags, AutoAbsorb.AutoAbsorbTag.ABSORB_TAG);
-				if (classKeyTypeData != null)
+				// メタデータの取り出し共通処理
+				var lastGearTag:String = null;
+				var trim = function (tag:String, chew:Array<Dynamic> -> Void):Void
 				{
-					Reflect.setField(holder, name, absorb(Type.resolveClass(classKeyTypeData[0])));	// ２重変換になっているが、意味的に仕方ない
+					// キーを取り出し
+					var keyArguments:Array<Dynamic> = Reflect.field(metaTags, tag);
+					if (keyArguments != null)
+					{	// キーがあるなら
+						// ２重に無いかチェック
+						if (lastGearTag != null) throw '$holder の $name に２重にGearメタデータタグが存在します。 [${lastGearTag}, ${tag}]';
+						lastGearTag = tag;
+						// 下に記載されている個別チェックを起動する
+						chew(keyArguments);
+					}
+				};
+				// Absorbのチェック
+				if (isAutoAbsorb){
+					// @:absorbへの対応
+					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_TAG, function (keyArguments:Array<Dynamic>)
+					{
+						Reflect.setField(holder, name, absorb(Type.resolveClass(keyArguments[0])));	// ２重変換になっているが、意味的に仕方ない
+					});
+					// @:absorbWithKeyへの対応
+					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG, function (keyArguments:Array<Dynamic>)
+					{
+						var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(keyArguments[0]), keyArguments[1]);
+						Reflect.setField(holder, name, absorbWithEnum(enumKey));
+					});
 				}
-				var enumKeyTypeData = Reflect.field(metaTags, AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG);
-				if (enumKeyTypeData != null)
-				{
-					if (classKeyTypeData != null) throw '$holder の $name に２重にabsorbメタデータが存在します。';
-					var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(enumKeyTypeData[0]), enumKeyTypeData[1]);
-					Reflect.setField(holder, name, absorbWithEnum(enumKey));
+				// Handlerのチェック
+				if (isAutoHandler){
+					// @:absorbへの対応
+					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, function (keyArguments:Array<Dynamic>)
+					{
+						trace(keyArguments);// TODO:std
+					});
+					// @:absorbWithKeyへの対応
+					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, function (keyArguments:Array<Dynamic>)
+					{
+						trace(keyArguments);// TODO:std
+					});
 				}
 			}
 			holderClass = Type.getSuperClass(holderClass);	// 継承元もチェック
@@ -463,4 +498,9 @@ class Gear implements GearOutside
 enum GearNeedTask
 {
 	Core;
+}
+enum GearHandler
+{
+	Run;
+	Diffusible;
 }

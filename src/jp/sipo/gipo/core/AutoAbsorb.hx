@@ -10,7 +10,7 @@ import haxe.macro.Expr.FieldType;
 
 using haxe.macro.TypeTools;
 
-typedef MacroType = haxe.macro.Type;
+private typedef MacroType = haxe.macro.Type;
 #end
 
 @:autoBuild(jp.sipo.gipo.core._AutoAbsorb.Impl.build())
