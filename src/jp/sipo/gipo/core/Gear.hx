@@ -6,7 +6,6 @@ package jp.sipo.gipo.core;
  * @author sipo
  */
 import Type;
-import AutoAbsorber.Absorber;
 import Reflect;
 import haxe.rtti.Meta;
 import jp.sipo.util.SipoError;
@@ -214,7 +213,7 @@ class Gear implements GearOutside
 	/* Absorbの自動化 */
 	private function autoAbsorb():Void
 	{
-		if (!Std.is(holder, AutoAbsorber)) return;	// autoAbsorberの時だけ対応する
+		if (!Std.is(holder, AutoAbsorb)) return;	// autoAbsorbの時だけ対応する
 		var holderClass:Class<Dynamic> = Type.getClass(holder);
 		while(holderClass != null)
 		{
@@ -222,12 +221,12 @@ class Gear implements GearOutside
 			for (name in Reflect.fields(metaData))
 			{
 				var metaTags = Reflect.field(metaData, name);
-				var classKeyTypeData = Reflect.field(metaTags, Absorber.ABSORB_TAG);
+				var classKeyTypeData = Reflect.field(metaTags, AutoAbsorb.AutoAbsorbTag.ABSORB_TAG);
 				if (classKeyTypeData != null)
 				{
 					Reflect.setField(holder, name, absorb(Type.resolveClass(classKeyTypeData[0])));	// ２重変換になっているが、意味的に仕方ない
 				}
-				var enumKeyTypeData = Reflect.field(metaTags, Absorber.ABSORB_WITH_KEY_TAG);
+				var enumKeyTypeData = Reflect.field(metaTags, AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG);
 				if (enumKeyTypeData != null)
 				{
 					if (classKeyTypeData != null) throw '$holder の $name に２重にabsorbメタデータが存在します。';

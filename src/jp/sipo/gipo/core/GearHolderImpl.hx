@@ -6,7 +6,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
-class GearHolderImpl implements GearHolder implements AutoAbsorber
+class GearHolderImpl implements GearHolder implements AutoAbsorb
 {
 	/* ギア。構造制御インスタンス */
 	private var gear:Gear;
