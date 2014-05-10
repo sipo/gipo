@@ -10,7 +10,7 @@ import frameworkExample.context.View;
 import frameworkExample.context.Hook.ViewToHook;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.gipo.core.config.AddBehaviorPreset;
-import jp.sipo.gipo.util.TaskList;
+import jp.sipo.gipo.core.handler.HandlerList;
 import flash.display.Sprite;
 class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 {
@@ -31,19 +31,19 @@ class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 class PilotViewSceneHandlerContainer
 {
 	/** ドラッグなどの入力状態の更新 */
-	public var update(default, null):TaskList;
+	public var update(default, null):HandlerList;
 	/** 情報やカウンタの更新 */
-	public var inputUpdate(default, null):TaskList;
+	public var inputUpdate(default, null):HandlerList;
 	/** 表示の更新（特に、必須ではない重い処理に使用する） */
-	public var draw(default, null):TaskList;
+	public var draw(default, null):HandlerList;
 	
 	
 	/** コンストラクタ */
 	public function new() 
 	{
-		update = new TaskList(AddBehaviorPreset.addTail, false);
-		inputUpdate = new TaskList(AddBehaviorPreset.addTail, false);
-		draw = new TaskList(AddBehaviorPreset.addTail, false);
+		update = new HandlerList(AddBehaviorPreset.addTail, false);
+		inputUpdate = new HandlerList(AddBehaviorPreset.addTail, false);
+		draw = new HandlerList(AddBehaviorPreset.addTail, false);
 	}
 }
 

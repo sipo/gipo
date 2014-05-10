@@ -1,4 +1,4 @@
-package jp.sipo.gipo.util;
+package jp.sipo.gipo.core.handler;
 import jp.sipo.util.SipoError;
 import haxe.PosInfos;
 /**
@@ -9,7 +9,7 @@ import haxe.PosInfos;
  * @author sipo
  */
 typedef AddBehavior = Array<Task> -> Task -> Void;
-class TaskList
+class HandlerList
 {
 	/* 実保存 */
 	private var tasks:Array<Task>;

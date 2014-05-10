@@ -5,12 +5,13 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import jp.sipo.gipo.core.handler.HandlerListWrapper;
 import Type;
 import Reflect;
 import haxe.rtti.Meta;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.PosWrapper;
-import jp.sipo.gipo.util.TaskList;
+import jp.sipo.gipo.core.handler.HandlerList;
 import jp.sipo.gipo.core.config.AddBehaviorPreset;
 import haxe.PosInfos;
 enum GearPhase
@@ -48,10 +49,13 @@ class Gear implements GearOutside
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
-	private var diffusibleHandlerList:TaskList;
-	private var runHandlerList:TaskList;
-	private var bubbleHandlerList:TaskList;
-	private var disposeTaskStack:TaskList;
+	private var diffusibleHandlerList:HandlerListWrapper<GearDiffuseTool->Void>;
+	private var runHandlerList:HandlerList;
+	private var bubbleHandlerList:HandlerList;
+	private var disposeTaskStack:HandlerList;
+	
+	
+	
 	/* 子の追加処理の遅延保持 */
 	private var bookChildList:Array<PosWrapper<GearHolder>>;
 	
@@ -76,12 +80,19 @@ class Gear implements GearOutside
 		diffuser = new Diffuser(holder);
 		needTasks = new Array();
 		// HandlerListの初期化
-		diffusibleHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
-		runHandlerList = new TaskList(AddBehaviorPreset.addTail, true);
-		bubbleHandlerList = new TaskList(AddBehaviorPreset.addHead, true);
-		disposeTaskStack = new TaskList(AddBehaviorPreset.addHead, true);
+		diffusibleHandlerList = new HandlerListWrapper<GearDiffuseTool->Void>(AddBehaviorPreset.addTail, true, diffusibleHandlerWrapper);
+		runHandlerList = new HandlerList(AddBehaviorPreset.addTail, true);
+		bubbleHandlerList = new HandlerList(AddBehaviorPreset.addHead, true);
+		disposeTaskStack = new HandlerList(AddBehaviorPreset.addHead, true);
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
+	}
+	/** diffusibleのハンドラ登録時の引数用意 */
+	private function diffusibleHandlerWrapper(diffusible:GearDiffuseTool -> Void):Void
+	{
+		var diffuseTool:GearDiffuseTool = new GearDiffuseTool(this);
+		diffusible(diffuseTool);
+		diffuseTool.dispose();
 	}
 	
 	/* ================================================================
@@ -128,11 +139,7 @@ class Gear implements GearOutside
 	public function addDiffusibleHandler(diffusible:GearDiffuseTool -> Void, ?pos:PosInfos):Void
 	{
 		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
-		diffusibleHandlerList.add(function (){
-			var diffuseTool:GearDiffuseTool = new GearDiffuseTool(this);
-			diffusible(diffuseTool);
-			diffuseTool.dispose();
-		}, pos);
+		diffusibleHandlerList.addWithArguments(diffusible, pos);
 	}
 	
 	/**
@@ -232,8 +239,7 @@ class Gear implements GearOutside
 				{
 					// キーを取り出し
 					var keyArguments:Array<Dynamic> = Reflect.field(metaTags, tag);
-					if (keyArguments != null)
-					{	// キーがあるなら
+					if (keyArguments != null){	// キーがあるなら
 						// ２重に無いかチェック
 						if (lastGearTag != null) throw '$holder の $name に２重にGearメタデータタグが存在します。 [${lastGearTag}, ${tag}]';
 						lastGearTag = tag;
@@ -257,12 +263,12 @@ class Gear implements GearOutside
 				}
 				// Handlerのチェック
 				if (isAutoHandler){
-					// @:absorbへの対応
+					// @:handlerへの対応
 					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, function (keyArguments:Array<Dynamic>)
 					{
 						trace(keyArguments);// TODO:std
 					});
-					// @:absorbWithKeyへの対応
+					// @:redTapeHandlerへの対応
 					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, function (keyArguments:Array<Dynamic>)
 					{
 						trace(keyArguments);// TODO:std
