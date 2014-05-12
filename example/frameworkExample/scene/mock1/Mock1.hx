@@ -5,7 +5,6 @@ package frameworkExample.scene.mock1;
  * @auther sipo
  */
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
-import jp.sipo.gipo.core.handler.GearDispatcher;
 import frameworkExample.context.LogicStatus;
 import frameworkExample.context.LogicToView;
 import frameworkExample.context.LogicScene;
@@ -50,7 +49,6 @@ class Mock1 extends LogicScene implements ScenePeek
 	public function new() 
 	{
 		super();
-		updateHandlerList.add(update);
 		// 入力処理の登録
 		viewInputHandlerContainer.set(SceneInput, viewInput);
 	}
@@ -68,6 +66,7 @@ class Mock1 extends LogicScene implements ScenePeek
 	/**
 	 * 更新処理
 	 */
+	@:handler(LogicSceneDispatcherKind.Update)
 	public function update():Void
 	{
 		// テストのために適当な変数をカウントアップする

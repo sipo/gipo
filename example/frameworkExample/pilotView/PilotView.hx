@@ -77,7 +77,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 */
 	public function inputUpdate():Void
 	{
-		state.sceneHandler.inputUpdate.execute();
+		state.inputUpdateDispatcher.execute();
 	}
 	
 	/**
@@ -85,7 +85,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 */
 	public function update():Void
 	{
-		state.sceneHandler.update.execute();
+		state.updateDispatcher.execute();
 	}
 	
 	/**
@@ -93,7 +93,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 */
 	public function draw():Void
 	{
-		state.sceneHandler.draw.execute();
+		state.drawDispatcher.execute();
 	}
 }
 /**

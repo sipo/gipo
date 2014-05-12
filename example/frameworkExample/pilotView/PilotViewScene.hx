@@ -18,32 +18,29 @@ class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 	private var layer:Sprite;
 	@:absorb
 	private var hook:ViewToHook;
-	/** Sceneの共通ハンドラを切り出しする */
-	public var sceneHandler(default, null):PilotViewSceneHandlerContainer = new PilotViewSceneHandlerContainer();
+	/** ドラッグなどの入力状態の更新 */
+	public var updateDispatcher(default, null):GearDispatcher;
+	/** 情報やカウンタの更新 */
+	public var inputUpdateDispatcher(default, null):GearDispatcher;
+	/** 表示の更新（特に、必須ではない重い処理に使用する） */
+	public var drawDispatcher(default, null):GearDispatcher;
 	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
+		updateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, PilotViewSceneDispatcherKind.Update);
+		inputUpdateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, PilotViewSceneDispatcherKind.InputUpdate);
+		drawDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, PilotViewSceneDispatcherKind.Draw);
 	}
 	
 }
-class PilotViewSceneHandlerContainer
+enum PilotViewSceneDispatcherKind
 {
 	/** ドラッグなどの入力状態の更新 */
-	public var update(default, null):GearDispatcherImpl;
+	Update;
 	/** 情報やカウンタの更新 */
-	public var inputUpdate(default, null):GearDispatcherImpl;
+	InputUpdate;
 	/** 表示の更新（特に、必須ではない重い処理に使用する） */
-	public var draw(default, null):GearDispatcherImpl;
-	
-	
-	/** コンストラクタ */
-	public function new() 
-	{
-		update = new GearDispatcherImpl(AddBehaviorPreset.addTail, false);
-		inputUpdate = new GearDispatcherImpl(AddBehaviorPreset.addTail, false);
-		draw = new GearDispatcherImpl(AddBehaviorPreset.addTail, false);
-	}
+	Draw;
 }
-

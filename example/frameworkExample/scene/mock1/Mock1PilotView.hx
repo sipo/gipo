@@ -38,7 +38,6 @@ class Mock1PilotView extends PilotViewScene implements SceneOrder
 	{
 		super();
 		this.peek = peek;
-		sceneHandler.draw.add(draw);
 	}
 	
 	@:handler(GearDispatcherKind.Run)
@@ -76,6 +75,7 @@ class Mock1PilotView extends PilotViewScene implements SceneOrder
 	/**
 	 * 表示の更新
 	 */
+	@:handler(PilotViewSceneDispatcherKind.Draw)
 	public function draw():Void
 	{
 		countDraw();

@@ -4,8 +4,8 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.handler.GearDispatcher;
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
-import jp.sipo.gipo.core.handler.GearDispatcher.GearDispatcherImpl;
 import frameworkExample.context.LogicToView;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import jp.sipo.gipo.util.EnumKeyHandlerContainer;
@@ -16,13 +16,17 @@ class LogicScene extends StateGearHolderImpl
 	private var logic:Logic;
 	/* シーンごとのviewInputの受け取り処理 */
 	private var viewInputHandlerContainer:EnumKeyHandlerContainer = new EnumKeyHandlerContainer();
-	/** updateイベント受け取り */
-	public var updateHandlerList(default, null):GearDispatcherImpl = new GearDispatcherImpl(AddBehaviorPreset.addTail, false);
+	/* updateイベント受け取り */
+	private var updateDispatcher:GearDispatcher;
 	/* ViewSceneが切り替えられたかどうか */
 	private var isChangeViewScene:Bool = false;
 	
 	/** コンストラクタ */
-	public function new() { super();}
+	public function new() 
+	{
+		super();
+		updateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, LogicSceneDispatcherKind.Update);
+	}
 	
 	/* 表示ViewSceneを変更をする。返ってきた値は、ViewSceneであり、各ScenOrderにcastして使う */
 	private function changeViewScene(viewSceneKind:ViewSceneKind, type:Class<Dynamic>):Dynamic
@@ -57,6 +61,11 @@ class LogicScene extends StateGearHolderImpl
 	 */
 	public function sceneUpdate():Void
 	{
-		updateHandlerList.execute();
+		updateDispatcher.execute();
 	}
+}
+enum LogicSceneDispatcherKind
+{
+	/** 更新処理 */
+	Update;
 }
