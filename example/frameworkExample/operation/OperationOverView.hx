@@ -4,7 +4,7 @@ package frameworkExample.operation;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import com.bit101.components.Label;
 import com.bit101.components.ComboBox;
 import frameworkExample.operation.OperationHook.OperationHookEvent;
@@ -48,7 +48,7 @@ class OperationOverView extends GearHolderImpl implements OperationView
 		return sprite;
 	}
 	
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
 		var uiContainerConfig:Config = MinimalcompsGipoContainer.getDefaultConfig().clone();

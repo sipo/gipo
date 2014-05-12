@@ -18,7 +18,7 @@ package ;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.GearHolderImpl;
 import haxe.Timer;
 import GearExample.ChildExample;
@@ -85,7 +85,7 @@ class Top extends GearHolderImpl
 	 * 消去処理はGearHolderが階層構造から外れる際に自動的に、登録の逆順で呼び出される。
 	 * 
 	 */
-	@:handler(GearHandlerKind.Diffusible)
+	@:handler(GearDispatcherKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		trace("TopGearの初期化処理");
@@ -102,7 +102,7 @@ class Top extends GearHolderImpl
 	}
 	
 	/* 初期化後処理 */
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
 		trace("TopGearの処理が開始");
@@ -165,14 +165,14 @@ class ChildExample extends GearHolderImpl
 	 * 
 	 * absorb（diffuseしたインスタンスの取得）は、initialize関数、run関数のどちらでも取得可能
 	 */
-	@:handler(GearHandlerKind.Diffusible)
+	@:handler(GearDispatcherKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		trace("ChildExampleの初期化処理");
 	}
 	
 	/* 初期化後処理 */
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
 		// 色々処理を登録する

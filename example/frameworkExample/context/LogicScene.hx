@@ -4,7 +4,7 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.handler.GearDispatcher.GearDispatcherImpl;
 import frameworkExample.context.LogicToView;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
@@ -35,7 +35,7 @@ class LogicScene extends StateGearHolderImpl
 	}
 	
 	/* run後チェック処理 */
-	@:handler(GearHandlerKind.Bubble)
+	@:handler(GearDispatcherKind.Bubble)
 	private function bubble():Void
 	{
 		// runのあと、ちゃんとchangeViewSceneが実行されているかチェックする

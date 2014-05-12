@@ -4,7 +4,8 @@ package frameworkExample.scene.mock1;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
+import jp.sipo.gipo.core.handler.GearDispatcher;
 import frameworkExample.context.LogicStatus;
 import frameworkExample.context.LogicToView;
 import frameworkExample.context.LogicScene;
@@ -54,7 +55,7 @@ class Mock1 extends LogicScene implements ScenePeek
 		viewInputHandlerContainer.set(SceneInput, viewInput);
 	}
 	
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
 		// 表示回数のカウントアップ

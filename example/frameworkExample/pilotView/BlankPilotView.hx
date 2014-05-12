@@ -4,7 +4,7 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import flash.display.Sprite;
 import frameworkExample.pilotView.PilotViewScene;
 /* ================================================================
@@ -18,7 +18,7 @@ class BlankPilotView extends PilotViewScene implements BlankViewOrder
 	/** コンストラクタ */
 	public function new() { super(); }
 	
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
 		// UIの配置準備

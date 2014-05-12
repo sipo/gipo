@@ -82,9 +82,9 @@ class Gear implements GearOutside
 		diffuser = new Diffuser(holder);
 		needTasks = new Array();
 		// HandlerListの初期化
-		diffusibleHandlerList = flexibleDispatcher(AddBehaviorPreset.addTail, true, GearHandlerKind.Diffusible, diffusibleHandlerWrapper);
-		runHandlerList = dispatcher(AddBehaviorPreset.addTail, true, GearHandlerKind.Run);
-		bubbleHandlerList = dispatcher(AddBehaviorPreset.addHead, true, GearHandlerKind.Bubble);
+		diffusibleHandlerList = flexibleDispatcher(AddBehaviorPreset.addTail, true, GearDispatcherKind.Diffusible, diffusibleHandlerWrapper);
+		runHandlerList = dispatcher(AddBehaviorPreset.addTail, true, GearDispatcherKind.Run);
+		bubbleHandlerList = dispatcher(AddBehaviorPreset.addHead, true, GearDispatcherKind.Bubble);
 		disposeTaskStack = new GearDispatcherImpl(AddBehaviorPreset.addHead, true);
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
@@ -532,7 +532,7 @@ enum GearNeedTask
 {
 	Core;
 }
-enum GearHandlerKind
+enum GearDispatcherKind
 {
 	Run;
 	Diffusible;

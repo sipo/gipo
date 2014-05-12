@@ -1,6 +1,6 @@
 package ;
 
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import haxe.rtti.Meta;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import jp.sipo.gipo.core.GearHolderImpl;
@@ -24,7 +24,7 @@ private class Top extends GearHolderImpl {
 		super();
 	}
 	
-	@:handler(GearHandlerKind.Diffusible)
+	@:handler(GearDispatcherKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void {
 		tool.diffuseWithKey("FOO", Key.Foo);
 		tool.diffuseWithKey("BAR", Key.Bar);
@@ -60,7 +60,7 @@ private class ChildExample extends GearHolderImpl {
 		// この段階ではabsorb変数は使用できない
 	}
 	
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void 
 	{
 		// 親にaddChildされた後、diffusibleもしくはrun関数以降で使用可能
@@ -83,7 +83,7 @@ private class ChildExample2 extends ChildExample
 		super();
 	}
 	
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run2():Void 
 	{
 		trace(this.foo);

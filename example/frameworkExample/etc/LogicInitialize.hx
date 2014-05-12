@@ -4,7 +4,7 @@ package frameworkExample.etc;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import frameworkExample.context.LogicToView;
 import frameworkExample.context.LogicScene;
 import frameworkExample.scene.mock0.Mock0;
@@ -20,7 +20,7 @@ class LogicInitialize extends LogicScene
 	/** コンストラクタ */
 	public function new() { super(); }
 	
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
 		changeViewScene(ViewSceneKind.Blank, ViewSceneOrder);

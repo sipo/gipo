@@ -4,7 +4,7 @@ package frameworkExample.scene.mock0;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearHandlerKind;
+import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import frameworkExample.context.LogicStatus;
 import frameworkExample.etc.Snapshot;
 import frameworkExample.context.Hook.LogicToHook;
@@ -46,7 +46,7 @@ class Mock0 extends LogicScene
 	}
 	
 	/* 開始処理 */
-	@:handler(GearHandlerKind.Run)
+	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
