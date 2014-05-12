@@ -4,9 +4,9 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.handler.GearDispatcher.GearDispatcherImpl;
 import frameworkExample.context.LogicToView;
-import jp.sipo.gipo.core.config.AddBehaviorPreset;
-import jp.sipo.gipo.core.handler.HandlerList;
+import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import jp.sipo.gipo.util.EnumKeyHandlerContainer;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 class LogicScene extends StateGearHolderImpl
@@ -16,7 +16,7 @@ class LogicScene extends StateGearHolderImpl
 	/* シーンごとのviewInputの受け取り処理 */
 	private var viewInputHandlerContainer:EnumKeyHandlerContainer = new EnumKeyHandlerContainer();
 	/** updateイベント受け取り */
-	public var updateHandlerList(default, null):HandlerList = new HandlerList(AddBehaviorPreset.addTail, false);
+	public var updateHandlerList(default, null):GearDispatcherImpl = new GearDispatcherImpl(AddBehaviorPreset.addTail, false);
 	/* ViewSceneが切り替えられたかどうか */
 	private var isChangeViewScene:Bool = false;
 	

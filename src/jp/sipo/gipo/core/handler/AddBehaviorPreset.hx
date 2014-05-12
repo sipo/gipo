@@ -1,4 +1,4 @@
-package jp.sipo.gipo.core.config;
+package jp.sipo.gipo.core.handler;
 /**
  * OrderStackやTaskStackで、追加時の動作を決定するメソッド群
  * これを使わず、独自で実装してももちろんいい

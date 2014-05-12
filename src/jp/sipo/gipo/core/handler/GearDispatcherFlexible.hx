@@ -4,17 +4,18 @@ package jp.sipo.gipo.core.handler;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.handler.GearDispatcher;
+import EnumValue;
 import haxe.PosInfos;
-import jp.sipo.gipo.core.handler.HandlerList;
-class HandlerListWrapper<ArgumentsHandler> extends HandlerList
+class GearDispatcherFlexible<ArgumentsHandler> extends GearDispatcherImpl
 {
 	/* 関数起動時に使用する特殊処理 */
 	private var wrapFunc:ArgumentsHandler -> Void;
 	
 	/** コンストラクタ */
-	public function new(addBehavior:AddBehavior, once:Bool, wrapFunc:ArgumentsHandler -> Void) 
+	public function new(addBehavior:AddBehavior, once:Bool, wrapFunc:ArgumentsHandler -> Void, pos:PosInfos) 
 	{
-		super(addBehavior, once);
+		super(addBehavior, once, pos);
 		this.wrapFunc = wrapFunc;
 	}
 	

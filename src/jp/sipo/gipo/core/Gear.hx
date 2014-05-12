@@ -5,14 +5,14 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
-import jp.sipo.gipo.core.handler.HandlerListWrapper;
+import jp.sipo.gipo.core.handler.GearDispatcherFlexible;
 import Type;
 import Reflect;
 import haxe.rtti.Meta;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.PosWrapper;
-import jp.sipo.gipo.core.handler.HandlerList;
-import jp.sipo.gipo.core.config.AddBehaviorPreset;
+import jp.sipo.gipo.core.handler.GearDispatcher;
+import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import haxe.PosInfos;
 enum GearPhase
 {
@@ -30,6 +30,8 @@ enum GearPhase
 	Invalid;
 	
 }
+private typedef EnumValueName = String;
+private typedef EnumName = String;
 @:final
 class Gear implements GearOutside
 {
@@ -49,10 +51,10 @@ class Gear implements GearOutside
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
-	private var diffusibleHandlerList:HandlerListWrapper<GearDiffuseTool->Void>;
-	private var runHandlerList:HandlerList;
-	private var bubbleHandlerList:HandlerList;
-	private var disposeTaskStack:HandlerList;
+	private var diffusibleHandlerList:GearDispatcher;
+	private var runHandlerList:GearDispatcher;
+	private var bubbleHandlerList:GearDispatcher;
+	private var disposeTaskStack:GearDispatcher;
 	
 	
 	
@@ -80,10 +82,10 @@ class Gear implements GearOutside
 		diffuser = new Diffuser(holder);
 		needTasks = new Array();
 		// HandlerListの初期化
-		diffusibleHandlerList = new HandlerListWrapper<GearDiffuseTool->Void>(AddBehaviorPreset.addTail, true, diffusibleHandlerWrapper);
-		runHandlerList = new HandlerList(AddBehaviorPreset.addTail, true);
-		bubbleHandlerList = new HandlerList(AddBehaviorPreset.addHead, true);
-		disposeTaskStack = new HandlerList(AddBehaviorPreset.addHead, true);
+		diffusibleHandlerList = flexibleDispatcher(AddBehaviorPreset.addTail, true, GearHandlerKind.Diffusible, diffusibleHandlerWrapper);
+		runHandlerList = dispatcher(AddBehaviorPreset.addTail, true, GearHandlerKind.Run);
+		bubbleHandlerList = dispatcher(AddBehaviorPreset.addHead, true, GearHandlerKind.Bubble);
+		disposeTaskStack = new GearDispatcherImpl(AddBehaviorPreset.addHead, true);
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
 	}
@@ -94,6 +96,52 @@ class Gear implements GearOutside
 		diffusible(diffuseTool);
 		diffuseTool.dispose();
 	}
+	
+	/* ================================================================
+	 * 自動登録可能なイベントハンドラのリストを生成する
+	 * ===============================================================*/
+	
+	// TODO:移動の検討
+	/**
+	 * 通常の、引数なし関数を呼び出す
+	 */
+	public function dispatcher(addBehavior:AddBehavior, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
+	{
+		var dispatcher = new GearDispatcherImpl(addBehavior, once, pos);
+		setDispatcher(key, dispatcher);
+		return dispatcher;
+	}
+	public function flexibleDispatcher<ArgumentsHandler>(addBehavior:AddBehavior, once:Bool, key:EnumValue, wrap:ArgumentsHandler->Void, ?pos:PosInfos):GearDispatcher
+	{
+		var dispatcher = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, wrap, pos);
+		setDispatcher(key, dispatcher);
+		return dispatcher; 
+	}
+//	public function redTapeDispatcher(addBehavior:AddBehavior, once:Bool, key:EnumValue, role:Enum<Dynamic>, ?pos:PosInfos):GearDispatcher
+//	{
+//		var dispatcher = new GearDispatcherImpl(addBehavior, once);
+//		setRedTapeDispatcher(dispatcher, key, role, pos);
+//		return dispatcher;
+//	}
+	
+	/* 自動登録対象のHandler登録を保持する */
+	private var dispatcherMap:Map<EnumValueName, GearDispatcherImpl> = new Map<EnumValueName, GearDispatcherImpl>();
+	/* 自動登録対象のRedTapeHandler登録を保持する */
+	private var redTapeDispatcherMap:Map<EnumValue, Map<Enum<Dynamic>, GearDispatcherImpl>> = new Map<EnumValue, Map<Enum<Dynamic>, GearDispatcherImpl>>();
+	
+	/* 自動登録するDispatcherとそのキーを登録 */
+	private function setDispatcher(key:EnumValue, dispatcher:GearDispatcherImpl):Void
+	{
+		var keyName:EnumValueName = createEnumValueName(Type.getEnumName(Type.getEnum(key)), Type.enumConstructor(key));
+		if (dispatcherMap.exists(keyName)) throw 'Dispatcherが２重登録されました。$key';
+		dispatcherMap.set(keyName, dispatcher);
+	}
+	/* EnumValueを指示するユニークな文字列 */
+	private function createEnumValueName(enumName:EnumName, enumConstractor:String):EnumValueName
+	{
+		return enumName + "#" + enumConstractor;
+	}
+	
 	
 	/* ================================================================
 	 * フェーズチェック共有
@@ -133,32 +181,32 @@ class Gear implements GearOutside
 	 * ハンドラ登録
 	 * ===============================================================*/
 	
-	/**
-	 * 追加された直後の初期化の動作を登録
-	 */
-	public function addDiffusibleHandler(diffusible:GearDiffuseTool -> Void, ?pos:PosInfos):Void
-	{
-		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
-		diffusibleHandlerList.addWithArguments(diffusible, pos);
-	}
+//	/**
+//	 * 追加された直後の初期化の動作を登録
+//	 */
+//	public function addDiffusibleHandler(diffusible:GearDiffuseTool -> Void, ?pos:PosInfos):Void
+//	{
+//		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
+//		diffusibleHandlerList.addWithArguments(diffusible, pos);
+//	}
 	
-	/**
-	 * 初期動作が全て終わった場合の動作を登録
-	 */
-	public function addRunHandler(run:Void -> Void, ?pos:PosInfos):Void
-	{
-		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
-		runHandlerList.add(run, pos);
-	}
-	
-	/**
-	 * 初期動作が全て終わった場合の動作かつ、逆順に実行される動作を登録
-	 */
-	public function addBubbleHandler(run:Void -> Void, ?pos:PosInfos):Void
-	{
-		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
-		bubbleHandlerList.add(run, pos);
-	}
+//	/**
+//	 * 初期動作が全て終わった場合の動作を登録
+//	 */
+//	public function addRunHandler(run:Void -> Void, ?pos:PosInfos):Void
+//	{
+//		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
+//		runHandlerList.add(run, pos);
+//	}
+//	
+//	/**
+//	 * 初期動作が全て終わった場合の動作かつ、逆順に実行される動作を登録
+//	 */
+//	public function addBubbleHandler(run:Void -> Void, ?pos:PosInfos):Void
+//	{
+//		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
+//		bubbleHandlerList.add(run, pos);
+//	}
 	
 	/**
 	 * 消去処理の追加。実行は追加の逆順で行われる
@@ -266,7 +314,9 @@ class Gear implements GearOutside
 					// @:handlerへの対応
 					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, function (keyArguments:Array<Dynamic>)
 					{
-						trace(keyArguments);// TODO:std
+						var enumValueName:EnumValueName = createEnumValueName(keyArguments[0], keyArguments[1]);
+						var dispatcher:GearDispatcherImpl = dispatcherMap.get(enumValueName);
+						dispatcher.add(Reflect.field(holder, name));
 					});
 					// @:redTapeHandlerへの対応
 					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, function (keyArguments:Array<Dynamic>)
@@ -505,8 +555,9 @@ enum GearNeedTask
 {
 	Core;
 }
-enum GearHandler
+enum GearHandlerKind
 {
 	Run;
 	Diffusible;
+	Bubble;
 }

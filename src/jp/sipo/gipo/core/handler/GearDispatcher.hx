@@ -8,22 +8,33 @@ import haxe.PosInfos;
  * 
  * @author sipo
  */
-typedef AddBehavior = Array<Task> -> Task -> Void;
-class HandlerList
+typedef AddBehavior = Array<Handler> -> Handler -> Void;
+interface GearDispatcher
+{
+	/**
+	 * 登録されたハンドラを実行する
+	 */
+	public function execute():Void;
+	
+}
+class GearDispatcherImpl implements GearDispatcher
 {
 	/* 実保存 */
-	private var tasks:Array<Task>;
+	private var list:Array<Handler>;
 	/* 追加時の挙動挙動 */
 	private var addBehavior:AddBehavior;
 	/* 実行が入れ子にならないようにロックする */
 	private var executeLock:Bool;
 	/* 一度限りで消去するかどうか */
 	private var once:Bool;
+	/* 定義位置 */
+	private var pos:PosInfos;
 	
-	public function new(addBehavior:AddBehavior, once:Bool)
+	public function new(addBehavior:AddBehavior, once:Bool, ?pos:PosInfos)
 	{
 		this.addBehavior = addBehavior;
 		this.once = once;
+		this.pos = pos;
 		
 		executeLock = false;
 		clear();
@@ -31,27 +42,27 @@ class HandlerList
 	/* 初期化処理 */
 	private function clear():Void
 	{
-		tasks = new Array<Task>();
+		list = new Array<Handler>();
 	}
 	
 	/**
-	 * タスクを追加する
+	 * ハンドラを追加する
 	 */
 	public function add(func:Void -> Void, ?pos:PosInfos):Void
 	{
-		var task:Task = new Task(func, pos);
-		addBehavior(tasks, task);
+		var task:Handler = new Handler(func, pos);
+		addBehavior(list, task);
 	}
 	
 	/**
-	 * タスクを実行する
+	 * 登録されたハンドラを実行する
 	 */
 	public function execute():Void
 	{
 		// 実行ロックのチェック
 		if (executeLock) throw new SipoError("実行関数が入れ子になっています");
 		executeLock = true;
-		var tmpTasks = tasks;	// 変数を退避
+		var tmpTasks = list;	// 変数を退避
 		// 先に初期化
 		if (once) clear();
 		// 実行
@@ -65,8 +76,7 @@ class HandlerList
 		executeLock = false;
 	}
 }
-
-class Task
+private class Handler
 {
 	public var func:Void -> Void;
 	public var pos:PosInfos;
