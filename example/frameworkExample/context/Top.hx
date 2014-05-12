@@ -5,6 +5,7 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import frameworkExample.context.Logic;
 import jp.sipo.util.GlobalDispatcher;
 import frameworkExample.context.Hook;
@@ -44,12 +45,9 @@ class Top extends GearHolderImpl
 		this.devConfig = devConfig;
 		// 
 		globalStatus = new GlobalStatus();
-		//
-		gear.addDiffusibleHandler(diffusible);
-		gear.addRunHandler(run);
 	}
 	
-	/* 初期化とDiffuse */
+	@:handler(GearHandlerKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		// configの拡散
@@ -107,7 +105,7 @@ class Top extends GearHolderImpl
 		globalDispatcher.addFrameHandler(frame);	// フレームイベント
 	}
 	
-	/* 初期化後処理 */
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		// 開始

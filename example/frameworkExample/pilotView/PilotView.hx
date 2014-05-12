@@ -5,6 +5,7 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import frameworkExample.scene.mock1.Mock1PilotView;
 import frameworkExample.scene.mock0.Mock0PilotView;
 import frameworkExample.context.LogicToView;
@@ -23,11 +24,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	private var gameLayer:Sprite;
 	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addDiffusibleHandler(diffusible);
-	}
+	public function new() { super(); }
 	
 	/**
 	 * 必要設定
@@ -41,6 +38,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	/**
 	 * 必要素材をdiffuse
 	 */
+	@:handler(GearHandlerKind.Diffusible)
 	public function diffusible(tool:GearDiffuseTool):Void
 	{
 		gameLayer = new Sprite();

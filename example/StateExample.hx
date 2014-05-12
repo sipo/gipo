@@ -4,6 +4,7 @@ package ;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import jp.sipo.util.Note;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import haxe.Timer;
@@ -45,19 +46,11 @@ class StateExample
  */
 class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>	// 子をGenericで指定する
 {
-	
-	/**
-	 * コンストラクタ
-	 */
-	public function new() 
-	{
-		super();
-		// 各種ハンドラ関数を登録する
-		gear.addDiffusibleHandler(diffusible);
-		gear.addRunHandler(run);
-	}
+	/** コンストラクタ */
+	public function new() { super(); }
 	
 	/* 初期化処理 */
+	@:handler(GearHandlerKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		trace("TopGearの初期化処理");
@@ -65,6 +58,7 @@ class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>	// 子をGener
 	}
 	
 	/* 初期化後処理 */
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		trace("TopGearの処理が開始");
@@ -83,13 +77,10 @@ class ChildState extends StateGearHolderImpl
 	private var switcher:TopSwitcher;
 	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addRunHandler(stateRun);
-	}
+	public function new() { super(); }
 	
 	/* 初期化後処理（Haxeの仕様上、継承先と名前が被らないようにしないといけない） */
+	@:handler(GearHandlerKind.Run)
 	private function stateRun():Void
 	{
 		// stateの共通処理は、それぞれがchangeStateされた時に最初に呼び出されることになる。
@@ -103,15 +94,11 @@ class ChildState extends StateGearHolderImpl
  */
 class ChildStateA extends ChildState
 {
-	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addRunHandler(run);
-	}
+	public function new() { super(); }
 	
 	/* 初期化後処理 */
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		trace("ChildStateAの処理が開始");
@@ -136,12 +123,10 @@ class ChildStateA extends ChildState
 class ChildStateB extends ChildState
 {
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addRunHandler(run);
-	}
+	public function new() { super(); }
+	
 	/* 初期化後処理 */
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		trace("ChildStateBの処理が開始");

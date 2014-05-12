@@ -4,6 +4,7 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import jp.sipo.gipo.core.handler.GearDispatcher.GearDispatcherImpl;
 import frameworkExample.context.LogicToView;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
@@ -21,11 +22,7 @@ class LogicScene extends StateGearHolderImpl
 	private var isChangeViewScene:Bool = false;
 	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addBubbleHandler(bubble);
-	}
+	public function new() { super();}
 	
 	/* 表示ViewSceneを変更をする。返ってきた値は、ViewSceneであり、各ScenOrderにcastして使う */
 	private function changeViewScene(viewSceneKind:ViewSceneKind, type:Class<Dynamic>):Dynamic
@@ -38,6 +35,7 @@ class LogicScene extends StateGearHolderImpl
 	}
 	
 	/* run後チェック処理 */
+	@:handler(GearHandlerKind.Bubble)
 	private function bubble():Void
 	{
 		// runのあと、ちゃんとchangeViewSceneが実行されているかチェックする

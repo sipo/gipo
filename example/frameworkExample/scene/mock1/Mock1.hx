@@ -4,6 +4,7 @@ package frameworkExample.scene.mock1;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import frameworkExample.context.LogicStatus;
 import frameworkExample.context.LogicToView;
 import frameworkExample.context.LogicScene;
@@ -48,13 +49,12 @@ class Mock1 extends LogicScene implements ScenePeek
 	public function new() 
 	{
 		super();
-		gear.addRunHandler(run);
 		updateHandlerList.add(update);
 		// 入力処理の登録
 		viewInputHandlerContainer.set(SceneInput, viewInput);
 	}
 	
-	/* 開始処理 */
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		// 表示回数のカウントアップ

@@ -41,7 +41,6 @@ class Mock0 extends LogicScene
 	public function new() 
 	{
 		super();
-		gear.addRunHandler(run);
 		// 入力処理の登録
 		viewInputHandlerContainer.set(SceneInput, viewInput);
 	}

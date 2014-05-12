@@ -4,6 +4,7 @@ package frameworkExample.etc;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import frameworkExample.context.LogicToView;
 import frameworkExample.context.LogicScene;
 import frameworkExample.scene.mock0.Mock0;
@@ -15,14 +16,11 @@ import frameworkExample.scene.mock0.Mock0;
  * ===============================================================*/
 class LogicInitialize extends LogicScene
 {
-	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addRunHandler(run);
-	}
 	
-	/* 初期化後処理 */
+	/** コンストラクタ */
+	public function new() { super(); }
+	
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		changeViewScene(ViewSceneKind.Blank, ViewSceneOrder);

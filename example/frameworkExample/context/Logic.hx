@@ -7,6 +7,7 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import frameworkExample.scene.mock1.Mock1;
 import frameworkExample.context.Hook.LogicToHook;
 import frameworkExample.etc.Snapshot;
@@ -23,13 +24,9 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements HookToLog
 	private var logicStatus:LogicStatus;
 	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addDiffusibleHandler(diffusible);
-	}
+	public function new() { super(); }
 	
-	/* diffuseを行なう */
+	@:handler(GearHandlerKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		logicStatus = new LogicStatus();

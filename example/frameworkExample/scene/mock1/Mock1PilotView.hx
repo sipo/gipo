@@ -4,6 +4,7 @@ package frameworkExample.scene.mock1;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import frameworkExample.pilotView.PilotViewScene;
@@ -37,11 +38,10 @@ class Mock1PilotView extends PilotViewScene implements SceneOrder
 	{
 		super();
 		this.peek = peek;
-		gear.addRunHandler(run);
 		sceneHandler.draw.add(draw);
 	}
 	
-	/* 初期化後処理 */
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		// UIの配置準備

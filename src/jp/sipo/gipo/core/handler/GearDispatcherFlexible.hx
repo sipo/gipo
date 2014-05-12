@@ -24,6 +24,15 @@ class GearDispatcherFlexible<ArgumentsHandler> extends GearDispatcherImpl
 	 */
 	public function addWithArguments(func:ArgumentsHandler, ?pos:PosInfos):Void
 	{
-		add(function () wrapFunc(func), pos);
+		super.add(function () wrapFunc(func), pos);
+	}
+	
+	
+	/**
+	 * 外部からのハンドラ追加を禁止
+	 */
+	override public function add(func:Void -> Void, ?pos:PosInfos):Void
+	{
+		throw 'GearDispatcherFlexibleへのaddは出来ません。addWithArgumentsを使用してください';
 	}
 }

@@ -54,7 +54,7 @@ class Gear implements GearOutside
 	private var diffusibleHandlerList:GearDispatcher;
 	private var runHandlerList:GearDispatcher;
 	private var bubbleHandlerList:GearDispatcher;
-	private var disposeTaskStack:GearDispatcher;
+	private var disposeTaskStack:GearDispatcherImpl;
 	
 	
 	
@@ -108,13 +108,13 @@ class Gear implements GearOutside
 	public function dispatcher(addBehavior:AddBehavior, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
 	{
 		var dispatcher = new GearDispatcherImpl(addBehavior, once, pos);
-		setDispatcher(key, dispatcher);
+		setDispatcher(key, DispatcherWraper.Impl(dispatcher));
 		return dispatcher;
 	}
 	public function flexibleDispatcher<ArgumentsHandler>(addBehavior:AddBehavior, once:Bool, key:EnumValue, wrap:ArgumentsHandler->Void, ?pos:PosInfos):GearDispatcher
 	{
 		var dispatcher = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, wrap, pos);
-		setDispatcher(key, dispatcher);
+		setDispatcher(key, DispatcherWraper.Flexible(dispatcher));
 		return dispatcher; 
 	}
 //	public function redTapeDispatcher(addBehavior:AddBehavior, once:Bool, key:EnumValue, role:Enum<Dynamic>, ?pos:PosInfos):GearDispatcher
@@ -125,12 +125,12 @@ class Gear implements GearOutside
 //	}
 	
 	/* 自動登録対象のHandler登録を保持する */
-	private var dispatcherMap:Map<EnumValueName, GearDispatcherImpl> = new Map<EnumValueName, GearDispatcherImpl>();
+	private var dispatcherMap:Map<EnumValueName, DispatcherWraper> = new Map<EnumValueName, DispatcherWraper>();
 	/* 自動登録対象のRedTapeHandler登録を保持する */
 	private var redTapeDispatcherMap:Map<EnumValue, Map<Enum<Dynamic>, GearDispatcherImpl>> = new Map<EnumValue, Map<Enum<Dynamic>, GearDispatcherImpl>>();
 	
 	/* 自動登録するDispatcherとそのキーを登録 */
-	private function setDispatcher(key:EnumValue, dispatcher:GearDispatcherImpl):Void
+	private function setDispatcher(key:EnumValue, dispatcher:DispatcherWraper):Void
 	{
 		var keyName:EnumValueName = createEnumValueName(Type.getEnumName(Type.getEnum(key)), Type.enumConstructor(key));
 		if (dispatcherMap.exists(keyName)) throw 'Dispatcherが２重登録されました。$key';
@@ -180,33 +180,6 @@ class Gear implements GearOutside
 	/* ================================================================
 	 * ハンドラ登録
 	 * ===============================================================*/
-	
-//	/**
-//	 * 追加された直後の初期化の動作を登録
-//	 */
-//	public function addDiffusibleHandler(diffusible:GearDiffuseTool -> Void, ?pos:PosInfos):Void
-//	{
-//		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
-//		diffusibleHandlerList.addWithArguments(diffusible, pos);
-//	}
-	
-//	/**
-//	 * 初期動作が全て終わった場合の動作を登録
-//	 */
-//	public function addRunHandler(run:Void -> Void, ?pos:PosInfos):Void
-//	{
-//		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
-//		runHandlerList.add(run, pos);
-//	}
-//	
-//	/**
-//	 * 初期動作が全て終わった場合の動作かつ、逆順に実行される動作を登録
-//	 */
-//	public function addBubbleHandler(run:Void -> Void, ?pos:PosInfos):Void
-//	{
-//		checkPhaseCreate(function () return 'このメソッドはコンストラクタのみで使用可能です');
-//		bubbleHandlerList.add(run, pos);
-//	}
 	
 	/**
 	 * 消去処理の追加。実行は追加の逆順で行われる
@@ -315,8 +288,12 @@ class Gear implements GearOutside
 					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, function (keyArguments:Array<Dynamic>)
 					{
 						var enumValueName:EnumValueName = createEnumValueName(keyArguments[0], keyArguments[1]);
-						var dispatcher:GearDispatcherImpl = dispatcherMap.get(enumValueName);
-						dispatcher.add(Reflect.field(holder, name));
+						var dispatcher:DispatcherWraper = dispatcherMap.get(enumValueName);
+						switch(dispatcher)
+						{
+							case DispatcherWraper.Impl(value): value.add(Reflect.field(holder, name));
+							case DispatcherWraper.Flexible(value): value.addWithArguments(Reflect.field(holder, name));
+						}
 					});
 					// @:redTapeHandlerへの対応
 					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, function (keyArguments:Array<Dynamic>)
@@ -560,4 +537,9 @@ enum GearHandlerKind
 	Run;
 	Diffusible;
 	Bubble;
+}
+private enum DispatcherWraper
+{
+	Impl(value:GearDispatcherImpl);
+	Flexible(value:GearDispatcherFlexible<Dynamic>);
 }

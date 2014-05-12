@@ -4,9 +4,8 @@ package frameworkExample.pilotView;
  * 
  * @auther sipo
  */
-import frameworkExample.scene.mock0.Mock0.Mock0Input;
+import jp.sipo.gipo.core.Gear.GearHandlerKind;
 import flash.display.Sprite;
-import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import frameworkExample.pilotView.PilotViewScene;
 /* ================================================================
  * 動作
@@ -17,13 +16,9 @@ class BlankPilotView extends PilotViewScene implements BlankViewOrder
 	private var bgLayer:Sprite;
 	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		gear.addRunHandler(run);
-	}
+	public function new() { super(); }
 	
-	/* 初期化後処理 */
+	@:handler(GearHandlerKind.Run)
 	private function run():Void
 	{
 		// UIの配置準備
