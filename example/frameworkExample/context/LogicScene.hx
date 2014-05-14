@@ -4,6 +4,7 @@ package frameworkExample.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.handler.GearDispatcherRedTape;
 import jp.sipo.gipo.core.handler.GearDispatcher;
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import frameworkExample.context.LogicToView;
@@ -15,7 +16,7 @@ class LogicScene extends StateGearHolderImpl
 	@:absorb
 	private var logic:Logic;
 	/* シーンごとのviewInputの受け取り処理 */
-	private var viewInputHandlerContainer:EnumKeyHandlerContainer = new EnumKeyHandlerContainer();
+	private var viewInputRedTape:GearDispatcherRedTape;
 	/* updateイベント受け取り */
 	private var updateDispatcher:GearDispatcher;
 	/* ViewSceneが切り替えられたかどうか */
@@ -25,6 +26,7 @@ class LogicScene extends StateGearHolderImpl
 	public function new() 
 	{
 		super();
+		viewInputRedTape = gear.dispatcherRedTape(LogicSceneDispatcherKind.ViewInput);
 		updateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, LogicSceneDispatcherKind.Update);
 	}
 	
@@ -53,7 +55,7 @@ class LogicScene extends StateGearHolderImpl
 	 */
 	inline public function noticeEvent(command:EnumValue):Void
 	{
-		viewInputHandlerContainer.call(command);
+		viewInputRedTape.execute(command);
 	}
 	
 	/**
@@ -68,4 +70,5 @@ enum LogicSceneDispatcherKind
 {
 	/** 更新処理 */
 	Update;
+	ViewInput;
 }

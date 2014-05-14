@@ -15,6 +15,8 @@ class GearDiffuseTool
 		this.gear = gear;
 	}
 	
+	// TODO:消去
+	
 //	/**
 //	 * 消去処理の追加
 //	 * 

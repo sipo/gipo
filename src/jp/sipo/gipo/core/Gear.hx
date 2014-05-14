@@ -5,13 +5,15 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import jp.sipo.gipo.core.handler.GearDispatcherHandler;
+import jp.sipo.gipo.core.handler.AutoHandlerDispatcher;
 import jp.sipo.gipo.core.handler.GearDispatcherFlexible;
-import Type;
-import Reflect;
+import jp.sipo.gipo.core.handler.GenericGearDispatcher;
+import jp.sipo.gipo.core.handler.GearDispatcher;
+import jp.sipo.gipo.core.handler.GearDispatcherRedTape;
 import haxe.rtti.Meta;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.PosWrapper;
-import jp.sipo.gipo.core.handler.GearDispatcher;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import haxe.PosInfos;
 enum GearPhase
@@ -51,10 +53,10 @@ class Gear implements GearOutside
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
-	private var diffusibleHandlerList:GearDispatcher;
+	private var diffusibleHandlerList:GearDispatcherFlexible<GearDiffuseTool -> Void>;
 	private var runHandlerList:GearDispatcher;
 	private var bubbleHandlerList:GearDispatcher;
-	private var disposeTaskStack:GearDispatcherImpl;
+	private var disposeTaskStack:GearDispatcher;
 	
 	
 	
@@ -82,19 +84,12 @@ class Gear implements GearOutside
 		diffuser = new Diffuser(holder);
 		needTasks = new Array();
 		// HandlerListの初期化
-		diffusibleHandlerList = flexibleDispatcher(AddBehaviorPreset.addTail, true, GearDispatcherKind.Diffusible, diffusibleHandlerWrapper);
+		diffusibleHandlerList = dispatcherFlexible(AddBehaviorPreset.addTail, true, GearDispatcherKind.Diffusible);
 		runHandlerList = dispatcher(AddBehaviorPreset.addTail, true, GearDispatcherKind.Run);
 		bubbleHandlerList = dispatcher(AddBehaviorPreset.addHead, true, GearDispatcherKind.Bubble);
-		disposeTaskStack = new GearDispatcherImpl(AddBehaviorPreset.addHead, true);
+		disposeTaskStack = new GearDispatcher(AddBehaviorPreset.addHead, true);
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
-	}
-	/** diffusibleのハンドラ登録時の引数用意 */
-	private function diffusibleHandlerWrapper(diffusible:GearDiffuseTool -> Void):Void
-	{
-		var diffuseTool:GearDiffuseTool = new GearDiffuseTool(this);
-		diffusible(diffuseTool);
-		diffuseTool.dispose();
 	}
 	
 	/* ================================================================
@@ -105,43 +100,54 @@ class Gear implements GearOutside
 	/**
 	 * 通常の、引数なし関数を呼び出す
 	 */
-	public function dispatcher(addBehavior:AddBehavior, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
+	public function dispatcher(addBehavior:AddBehavior<Void -> Void>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
 	{
-		var dispatcher = new GearDispatcherImpl(addBehavior, once, pos);
-		setDispatcher(key, DispatcherWraper.Impl(dispatcher));
+		var dispatcher:GearDispatcher = new GearDispatcher(addBehavior, once, pos);
+		setDispatcher(key, dispatcher);
 		return dispatcher;
 	}
-	public function flexibleDispatcher<ArgumentsHandler>(addBehavior:AddBehavior, once:Bool, key:EnumValue, wrap:ArgumentsHandler->Void, ?pos:PosInfos):GearDispatcher
+	public function dispatcherFlexible<ArgumentsHandler>(addBehavior:AddBehavior<ArgumentsHandler>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcherFlexible<ArgumentsHandler>
 	{
-		var dispatcher = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, wrap, pos);
-		setDispatcher(key, DispatcherWraper.Flexible(dispatcher));
+		var dispatcher:GearDispatcherFlexible<ArgumentsHandler> = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, pos);
+		setDispatcher(key, dispatcher);
 		return dispatcher; 
 	}
-//	public function redTapeDispatcher(addBehavior:AddBehavior, once:Bool, key:EnumValue, role:Enum<Dynamic>, ?pos:PosInfos):GearDispatcher
-//	{
-//		var dispatcher = new GearDispatcherImpl(addBehavior, once);
-//		setRedTapeDispatcher(dispatcher, key, role, pos);
-//		return dispatcher;
-//	}
+	public function dispatcherRedTape(key:EnumValue, ?pos:PosInfos):GearDispatcherRedTape
+	{
+		var dispatcher:GearDispatcherRedTape = new GearDispatcherRedTape(pos);
+		setRedTapeDispatcher(key, dispatcher);
+		return dispatcher;
+	}
 	
 	/* 自動登録対象のHandler登録を保持する */
-	private var dispatcherMap:Map<EnumValueName, DispatcherWraper> = new Map<EnumValueName, DispatcherWraper>();
+	private var dispatcherMap:Map<EnumValueName, AutoHandlerDispatcher> = new Map<EnumValueName, AutoHandlerDispatcher>();
 	/* 自動登録対象のRedTapeHandler登録を保持する */
-	private var redTapeDispatcherMap:Map<EnumValue, Map<Enum<Dynamic>, GearDispatcherImpl>> = new Map<EnumValue, Map<Enum<Dynamic>, GearDispatcherImpl>>();
+	private var dispatcherRedTapeMap:Map<EnumValueName, GearDispatcherRedTape> = new Map<EnumValueName, GearDispatcherRedTape>();
 	
 	/* 自動登録するDispatcherとそのキーを登録 */
-	private function setDispatcher(key:EnumValue, dispatcher:DispatcherWraper):Void
+	private function setDispatcher(key:EnumValue, dispatcher:AutoHandlerDispatcher):Void
 	{
-		var keyName:EnumValueName = createEnumValueName(Type.getEnumName(Type.getEnum(key)), Type.enumConstructor(key));
+		var keyName:EnumValueName = createEnumValueName(key);
 		if (dispatcherMap.exists(keyName)) throw 'Dispatcherが２重登録されました。$key';
 		dispatcherMap.set(keyName, dispatcher);
 	}
 	/* EnumValueを指示するユニークな文字列 */
-	private function createEnumValueName(enumName:EnumName, enumConstractor:String):EnumValueName
+	inline private function createEnumValueName(enumValue:EnumValue):EnumValueName
+	{
+		return createEnumValueName_(Type.getEnumName(Type.getEnum(enumValue)), Type.enumConstructor(enumValue));
+	}
+	inline private function createEnumValueName_(enumName:EnumName, enumConstractor:String):EnumValueName
 	{
 		return enumName + "#" + enumConstractor;
 	}
 	
+	/* 自動登録するRedTapeDispatcherとそのキー、ロールを登録 */
+	private function setRedTapeDispatcher(key:EnumValue, dispatcher:GearDispatcherRedTape):Void
+	{
+		var keyName:EnumValueName = createEnumValueName(key);
+		if (dispatcherRedTapeMap.exists(keyName)) throw 'RedTapeDispatcherが２重登録されました。$key';
+		dispatcherRedTapeMap.set(keyName, dispatcher);
+	}
 	
 	/* ================================================================
 	 * フェーズチェック共有
@@ -229,7 +235,11 @@ class Gear implements GearOutside
 		// 初期登録のの自動化
 		autoInitialize();
 		// 登録されたdiffusible関数の呼び出し
-		diffusibleHandlerList.execute();
+		var diffuseTool:GearDiffuseTool = new GearDiffuseTool(this);
+		diffusibleHandlerList.execute(function (handler:GearDispatcherHandler<GearDiffuseTool -> Void>){
+			handler.func(diffuseTool);
+		});
+		diffuseTool.dispose();
 		diffusibleHandlerList = null;
 		// 予約履行フェーズ
 		phase = GearPhase.Fulfill;	
@@ -287,24 +297,26 @@ class Gear implements GearOutside
 					// @:handlerへの対応
 					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, function (keyArguments:Array<Dynamic>)
 					{
-						var enumValueName:EnumValueName = createEnumValueName(keyArguments[0], keyArguments[1]);
-						var dispatcher:DispatcherWraper = dispatcherMap.get(enumValueName);
-						switch(dispatcher)
-						{
-							case DispatcherWraper.Impl(value): value.add(Reflect.field(holder, name));
-							case DispatcherWraper.Flexible(value): value.addWithArguments(Reflect.field(holder, name));
-						}
+						var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
+						var dispatcher:AutoHandlerDispatcher = dispatcherMap.get(enumValueName);
+						dispatcher.autoAdd(Reflect.field(holder, name));	// TODO:Posの捏造
 					});
 					// @:redTapeHandlerへの対応
 					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, function (keyArguments:Array<Dynamic>)
 					{
-						trace(keyArguments);// TODO:std
+						var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
+						var roleName:EnumName = keyArguments[2];
+						var dispatcher:GearDispatcherRedTape = dispatcherRedTapeMap.get(enumValueName);
+						dispatcher.setFromName(roleName, Reflect.field(holder, name));	// TODO:Posの捏造
 					});
 				}
 			}
 			holderClass = Type.getSuperClass(holderClass);	// 継承元もチェック
 		}
 	}
+	
+	
+	
 	/* 予約の履行 */
 	private function fulfill():Void
 	{
@@ -538,8 +550,8 @@ enum GearDispatcherKind
 	Diffusible;
 	Bubble;
 }
-private enum DispatcherWraper
-{
-	Impl(value:GearDispatcherImpl);
-	Flexible(value:GearDispatcherFlexible<Dynamic>);
-}
+//private enum DispatcherWraper	// FIXME:必要性についてチェック
+//{
+//	Normal(value:GearDispatcher);
+//	Flexible(value:GearDispatcherFlexible<Dynamic>);
+//}

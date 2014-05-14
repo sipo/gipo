@@ -7,7 +7,7 @@ package jp.sipo.gipo.util;
 import haxe.PosInfos;
 import jp.sipo.util.SipoError;
 class EnumKeyHandlerContainer
-{
+{// FIXME:必要性の検討
 	/* 対応するEnumの名前とハンドラ */
 	private var map:Map<String/*EnumName*/, EnumValue -> Void> = new Map();
 	

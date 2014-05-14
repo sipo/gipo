@@ -1,5 +1,5 @@
 package jp.sipo.gipo.core.handler;
-import jp.sipo.util.SipoError;
+import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 import haxe.PosInfos;
 /**
  * 関数処理を保持し、実行する
@@ -8,88 +8,40 @@ import haxe.PosInfos;
  * 
  * @author sipo
  */
-typedef AddBehavior = Array<Handler> -> Handler -> Void;
-interface GearDispatcher
+private typedef TFunc = Void -> Void;
+class GearDispatcher extends GenericGearDispatcher<TFunc> implements AutoHandlerDispatcher
 {
-	/**
-	 * 登録されたハンドラを実行する
-	 */
-	public function execute():Void;
-	
-}
-class GearDispatcherImpl implements GearDispatcher
-{
-	/* 実保存 */
-	private var list:Array<Handler>;
-	/* 追加時の挙動挙動 */
-	private var addBehavior:AddBehavior;
-	/* 実行が入れ子にならないようにロックする */
-	private var executeLock:Bool;
-	/* 一度限りで消去するかどうか */
-	private var once:Bool;
-	/* 定義位置 */
-	private var pos:PosInfos;
-	
-	public function new(addBehavior:AddBehavior, once:Bool, ?pos:PosInfos)
+	public function new(addBehavior:AddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
 	{
-		this.addBehavior = addBehavior;
-		this.once = once;
-		this.pos = pos;
-		
-		executeLock = false;
-		clear();
-	}
-	/* 初期化処理 */
-	private function clear():Void
-	{
-		list = new Array<Handler>();
+		super(addBehavior, once, pos);
 	}
 	
 	/**
-	 * ハンドラを追加する
+	 * ハンドラを登録する
 	 */
-	public function add(func:Void -> Void, ?pos:PosInfos):Void
+	public function add(func:TFunc, ?addPos:PosInfos):Void
 	{
-		var task:Handler = new Handler(func, pos);
-		addBehavior(list, task);
+		genericAdd(func, addPos);
+	}
+	
+	/**
+	 * 自動登録用
+	 */
+	public function autoAdd(func:Dynamic, ?addPos:PosInfos):Void
+	{
+		add(cast(func), addPos);
 	}
 	
 	/**
 	 * 登録されたハンドラを実行する
 	 */
-	public function execute():Void
+	public function execute(?executePos:PosInfos):Void
 	{
-		// 実行ロックのチェック
-		if (executeLock) throw new SipoError("実行関数が入れ子になっています");
-		executeLock = true;
-		var tmpTasks = list;	// 変数を退避
-		// 先に初期化
-		if (once) clear();
-		// 実行
-		for (i in 0...tmpTasks.length)// 配列の頭から実行
-		{
-//			if (i == tmpTasks.length - 1) executeLock = false;	// 最後の項目なら実行前にロックを解除
-// MEMO:最終項目から、再度executeすることに備えていたが、そもそもそれも入れ子じゃね？みたいな気がして、今のところコメントアウトしている
-			tmpTasks[i].func();
-		}
-		tmpTasks = null;
-		executeLock = false;
+		genericExecute(trat, executePos);
+	}
+	/* 実行処理関数 */
+	inline private function trat(handler:GearDispatcherHandler<TFunc>):Void
+	{
+		handler.func();
 	}
 }
-private class Handler
-{
-	public var func:Void -> Void;
-	public var pos:PosInfos;
-	
-	public function new(func:Void -> Void, pos:PosInfos)
-	{
-		this.func = func;
-		this.pos = pos;
-	}
-	
-	public function toString():String
-	{
-		return '[TASK ${pos} ${func}]';
-	}
-}
-

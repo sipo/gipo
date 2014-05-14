@@ -1,0 +1,68 @@
+package jp.sipo.gipo.core.handler;
+/**
+ * 
+ * 
+ * @auther sipo
+ */
+import jp.sipo.util.SipoError;
+import haxe.PosInfos;
+typedef AddBehavior<TFunc> = Array<GearDispatcherHandler<TFunc>> -> GearDispatcherHandler<TFunc> -> Void;
+class GenericGearDispatcher<TFunc>
+{
+	/* 実保存 */
+	private var list:Array<GearDispatcherHandler<TFunc>>;
+	/* 追加時の挙動挙動 */
+	private var addBehavior:AddBehavior<TFunc>;
+	/* 実行が入れ子にならないようにロックする */
+	private var executeLock:Bool;
+	/* 一度限りで消去するかどうか */
+	private var once:Bool;
+	/* 実行時の挙動 */
+	private var executeFunc:GearDispatcherHandler<TFunc> -> Void;
+	/* 定義位置 */
+	private var dispatcherPos:PosInfos;
+	
+	public function new(addBehavior:AddBehavior<TFunc>, once:Bool, ?dispatcherPos:PosInfos)
+	{
+		this.addBehavior = addBehavior;
+		this.once = once;
+		this.dispatcherPos = dispatcherPos;
+		
+		executeLock = false;
+		clear();
+	}
+	/* 初期化処理 */
+	private function clear():Void
+	{
+		list = new Array<GearDispatcherHandler<TFunc>>();
+	}
+	
+	/*
+	 * ハンドラを追加する
+	 */
+	inline private function genericAdd(func:TFunc, ?addPos:PosInfos):Void
+	{
+		var handler:GearDispatcherHandler<TFunc> = new GearDispatcherHandler<TFunc>(func, addPos);
+		addBehavior(list, handler);
+	}
+	
+	/*
+	 * 登録されたハンドラを実行する
+	 */
+	inline private function genericExecute(treat:GearDispatcherHandler<TFunc> -> Void, ?executePos:PosInfos):Void
+	{
+		// 実行ロックのチェック
+		if (executeLock) throw new SipoError("実行関数が入れ子になっています");
+		executeLock = true;
+		var tmpHandlerList:Array<GearDispatcherHandler<TFunc>> = list;	// 変数を退避
+		// 先に初期化
+		if (once) clear();
+		// 実行
+		for (i in 0...tmpHandlerList.length)// 配列の頭から実行
+		{
+			treat(tmpHandlerList[i]);
+		}
+		tmpHandlerList = null;
+		executeLock = false;
+	}
+}

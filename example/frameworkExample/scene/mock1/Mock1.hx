@@ -46,12 +46,7 @@ class Mock1 extends LogicScene implements ScenePeek
 	private var viewSceneOrder:ViewSceneOrder;
 	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		// 入力処理の登録
-		viewInputHandlerContainer.set(SceneInput, viewInput);
-	}
+	public function new() { super(); }
 	
 	@:handler(GearDispatcherKind.Run)
 	private function run():Void
@@ -74,6 +69,7 @@ class Mock1 extends LogicScene implements ScenePeek
 	}
 	
 	/* Viewからの入力 */
+	@:redTapeHandler(LogicSceneDispatcherKind.ViewInput)
 	private function viewInput(command:SceneInput):Void
 	{
 		switch(command)

@@ -38,12 +38,7 @@ class Mock0 extends LogicScene
 	private var viewSceneOrder:ViewSceneOrder;
 	
 	/** コンストラクタ */
-	public function new() 
-	{
-		super();
-		// 入力処理の登録
-		viewInputHandlerContainer.set(SceneInput, viewInput);
-	}
+	public function new() { super(); }
 	
 	/* 開始処理 */
 	@:handler(GearDispatcherKind.Run)
@@ -54,6 +49,7 @@ class Mock0 extends LogicScene
 	}
 	
 	/* Viewからの入力 */
+	@:redTapeHandler(LogicSceneDispatcherKind.ViewInput)
 	private function viewInput(command:SceneInput):Void
 	{
 		switch(command)

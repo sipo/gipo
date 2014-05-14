@@ -1,38 +1,39 @@
 package jp.sipo.gipo.core.handler;
 /**
- * ハンドラの登録と実行を管理する
+ * 実行時に自由な動作を選べるDispatcher
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.handler.GearDispatcher;
-import EnumValue;
 import haxe.PosInfos;
-class GearDispatcherFlexible<ArgumentsHandler> extends GearDispatcherImpl
+import jp.sipo.gipo.core.handler.GenericGearDispatcher;
+class GearDispatcherFlexible<TFunc> extends GenericGearDispatcher<TFunc> implements AutoHandlerDispatcher
 {
-	/* 関数起動時に使用する特殊処理 */
-	private var wrapFunc:ArgumentsHandler -> Void;
-	
-	/** コンストラクタ */
-	public function new(addBehavior:AddBehavior, once:Bool, wrapFunc:ArgumentsHandler -> Void, pos:PosInfos) 
+	public function new(addBehavior:AddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
 	{
 		super(addBehavior, once, pos);
-		this.wrapFunc = wrapFunc;
 	}
 	
 	/**
-	 * 引数ありのハンドラの追加
+	 * ハンドラを登録する
 	 */
-	public function addWithArguments(func:ArgumentsHandler, ?pos:PosInfos):Void
+	public function add(func:TFunc, ?addPos:PosInfos):Void
 	{
-		super.add(function () wrapFunc(func), pos);
+		genericAdd(func, addPos);
 	}
 	
+	/**
+	 * 自動登録用
+	 */
+	public function autoAdd(func:Dynamic, ?addPos:PosInfos):Void
+	{
+		add(cast(func), addPos);
+	}
 	
 	/**
-	 * 外部からのハンドラ追加を禁止
+	 * 登録されたハンドラを実行する
 	 */
-	override public function add(func:Void -> Void, ?pos:PosInfos):Void
+	public function execute(trat:GearDispatcherHandler<TFunc> -> Void):Void
 	{
-		throw 'GearDispatcherFlexibleへのaddは出来ません。addWithArgumentsを使用してください';
+		genericExecute(trat);
 	}
 }
