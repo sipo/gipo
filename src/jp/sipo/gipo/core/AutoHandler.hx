@@ -75,7 +75,7 @@ private class Impl {
 								var arg = switch (field) {
 									case
 										{ kind: FieldType.FFun({ args: [{ type: ComplexType.TPath(tpath) }] }) }
-										if (Context.getType(tpath.name).match(MacroType.TEnum)) :
+										if (TypeTools.follow(Context.getType(tpath.name)).match(MacroType.TEnum)) :
 										Context.getType(tpath.name).toString();
 									case _ :
 										Context.error("#5", meta.pos);
