@@ -6,13 +6,12 @@ package jp.sipo.gipo.core.handler;
  */
 import jp.sipo.util.SipoError;
 import haxe.PosInfos;
-typedef AddBehavior<TFunc> = Array<GearDispatcherHandler<TFunc>> -> GearDispatcherHandler<TFunc> -> Void;
 class GenericGearDispatcher<TFunc>
 {
 	/* 実保存 */
 	private var list:Array<GearDispatcherHandler<TFunc>>;
 	/* 追加時の挙動挙動 */
-	private var addBehavior:AddBehavior<TFunc>;
+	private var addBehavior:GearDispatcherAddBehavior<TFunc>;
 	/* 実行が入れ子にならないようにロックする */
 	private var executeLock:Bool;
 	/* 一度限りで消去するかどうか */
@@ -22,7 +21,7 @@ class GenericGearDispatcher<TFunc>
 	/* 定義位置 */
 	private var dispatcherPos:PosInfos;
 	
-	public function new(addBehavior:AddBehavior<TFunc>, once:Bool, ?dispatcherPos:PosInfos)
+	public function new(addBehavior:GearDispatcherAddBehavior<TFunc>, once:Bool, ?dispatcherPos:PosInfos)
 	{
 		this.addBehavior = addBehavior;
 		this.once = once;

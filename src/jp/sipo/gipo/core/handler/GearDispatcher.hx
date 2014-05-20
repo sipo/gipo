@@ -11,7 +11,7 @@ import haxe.PosInfos;
 private typedef TFunc = Void -> Void;
 class GearDispatcher extends GenericGearDispatcher<TFunc> implements AutoHandlerDispatcher
 {
-	public function new(addBehavior:AddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
+	public function new(addBehavior:GearDispatcherAddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
 	{
 		super(addBehavior, once, pos);
 	}

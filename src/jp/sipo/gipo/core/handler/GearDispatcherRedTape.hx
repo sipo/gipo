@@ -6,7 +6,6 @@ package jp.sipo.gipo.core.handler;
  * @auther sipo
  */
 import jp.sipo.util.SipoError;
-import jp.sipo.gipo.core.handler.GenericGearDispatcher.AddBehavior;
 import haxe.PosInfos;
 private typedef TFunc = Dynamic/*EnumValue*/ -> Void;
 private typedef EnumName = String;

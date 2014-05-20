@@ -8,7 +8,7 @@ import haxe.PosInfos;
 import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 class GearDispatcherFlexible<TFunc> extends GenericGearDispatcher<TFunc> implements AutoHandlerDispatcher
 {
-	public function new(addBehavior:AddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
+	public function new(addBehavior:GearDispatcherAddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
 	{
 		super(addBehavior, once, pos);
 	}

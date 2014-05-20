@@ -5,6 +5,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import jp.sipo.gipo.core.handler.GearDispatcherAddBehavior;
 import jp.sipo.gipo.core.handler.GearDispatcherHandler;
 import jp.sipo.gipo.core.handler.AutoHandlerDispatcher;
 import jp.sipo.gipo.core.handler.GearDispatcherFlexible;
@@ -100,13 +101,13 @@ class Gear implements GearOutside
 	/**
 	 * 通常の、引数なし関数を呼び出す
 	 */
-	public function dispatcher(addBehavior:AddBehavior<Void -> Void>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
+	public function dispatcher(addBehavior:GearDispatcherAddBehavior<Void -> Void>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
 	{
 		var dispatcher:GearDispatcher = new GearDispatcher(addBehavior, once, pos);
 		setDispatcher(key, dispatcher);
 		return dispatcher;
 	}
-	public function dispatcherFlexible<ArgumentsHandler>(addBehavior:AddBehavior<ArgumentsHandler>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcherFlexible<ArgumentsHandler>
+	public function dispatcherFlexible<ArgumentsHandler>(addBehavior:GearDispatcherAddBehavior<ArgumentsHandler>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcherFlexible<ArgumentsHandler>
 	{
 		var dispatcher:GearDispatcherFlexible<ArgumentsHandler> = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, pos);
 		setDispatcher(key, dispatcher);
