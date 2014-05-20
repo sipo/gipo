@@ -21,7 +21,7 @@ interface LogicToView
  * logicに対するScene定義
  * （個別Sceneの定義はLogicSceneのほうに）
  */
-interface ViewSceneOrder
+interface ViewSceneOrder	// TODO:必要性検証
 {}
 /** シーン変更命令 */
 enum ViewSceneKind

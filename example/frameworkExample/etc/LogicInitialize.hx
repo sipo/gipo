@@ -23,7 +23,8 @@ class LogicInitialize extends LogicScene
 	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
-		changeViewScene(ViewSceneKind.Blank, ViewSceneOrder);
+		// 仮の表示を用意
+		changeViewScene(ViewSceneKind.Blank);
 		// すぐにシーン移動
 		logic.changeState(new Mock0());
 	}

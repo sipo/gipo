@@ -13,19 +13,16 @@ import frameworkExample.scene.mock0.Mock0;
  * 設定
  * ===============================================================*/
 /** 入力 */
-private typedef SceneInput = Mock1Input;
 enum Mock1Input
 {
 	DemoChangeSceneButton;
 }
 /** 命令 */
-private typedef ViewSceneOrder = Mock1ViewOrder;
 interface Mock1ViewOrder
 {
 	// 今のところ特になし
 }
 /** 参照定義 */
-private typedef ScenePeek = Mock1ViewPeek;
 interface Mock1ViewPeek
 {
 	public var count(default, null):Int;
@@ -34,7 +31,7 @@ interface Mock1ViewPeek
 /* ================================================================
  * 動作
  * ===============================================================*/
-class Mock1 extends LogicScene implements ScenePeek
+class Mock1 extends LogicScene implements Mock1ViewPeek
 {
 	@:absorb
 	private var logicStatus:LogicStatus;
@@ -43,7 +40,7 @@ class Mock1 extends LogicScene implements ScenePeek
 	/** Mock1が表示された回数の表示 */
 	public var mock1Count:Int = 0;
 	/* Viewの対応シーンへの命令を行なうための参照 */
-	private var viewSceneOrder:ViewSceneOrder;
+	private var viewSceneOrder:Mock1ViewOrder;
 	
 	/** コンストラクタ */
 	public function new() { super(); }
@@ -55,7 +52,7 @@ class Mock1 extends LogicScene implements ScenePeek
 		logicStatus.mock1Count++;
 		mock1Count = logicStatus.mock1Count;
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
-		viewSceneOrder = changeViewScene(ViewSceneKind.Mock1(this), ViewSceneOrder);
+		viewSceneOrder = changeViewScene(ViewSceneKind.Mock1(this));
 	}
 	
 	/**
@@ -70,11 +67,11 @@ class Mock1 extends LogicScene implements ScenePeek
 	
 	/* Viewからの入力 */
 	@:redTapeHandler(LogicSceneDispatcherKind.ViewInput)
-	private function viewInput(command:SceneInput):Void
+	private function viewInput(command:Mock1Input):Void
 	{
 		switch(command)
 		{
-			case SceneInput.DemoChangeSceneButton: input_demoChangeSceneButton();
+			case Mock1Input.DemoChangeSceneButton: input_demoChangeSceneButton();
 		}
 	}
 	

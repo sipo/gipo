@@ -31,13 +31,11 @@ class LogicScene extends StateGearHolderImpl
 	}
 	
 	/* 表示ViewSceneを変更をする。返ってきた値は、ViewSceneであり、各ScenOrderにcastして使う */
-	private function changeViewScene(viewSceneKind:ViewSceneKind, type:Class<Dynamic>):Dynamic
+	private function changeViewScene(viewSceneKind:ViewSceneKind):Dynamic
 	{
 		isChangeViewScene = true;
 		var view:LogicToView = gear.absorb(LogicToView);
-		var viewScene:ViewSceneOrder = view.changeScene(viewSceneKind);
-		if (!Std.is(viewScene, type)) throw 'Viewのシーン変更時に指定された型（${type}}）と、返ってきたインスタンス（${viewScene}）の型が合いません。imprementsの忘れや、引数の間違いが無いか確認して下さい。';
-		return viewScene;
+		return view.changeScene(viewSceneKind);
 	}
 	
 	/* run後チェック処理 */

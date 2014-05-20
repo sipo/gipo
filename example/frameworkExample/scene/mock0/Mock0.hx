@@ -16,14 +16,12 @@ import frameworkExample.context.LogicScene;
  * 設定
  * ===============================================================*/
 /** 入力 */
-private typedef SceneInput = Mock0Input;
 enum Mock0Input
 {
 	DemoDisplayButton;
 	DemoChangeSceneButton;
 }
 /** 命令 */
-private typedef ViewSceneOrder = Mock0ViewOrder;
 interface Mock0ViewOrder
 {
 	/** デモ用表示をする */
@@ -35,7 +33,7 @@ interface Mock0ViewOrder
 class Mock0 extends LogicScene
 {
 	/* Viewの対応シーンへの命令を行なうための参照 */
-	private var viewSceneOrder:ViewSceneOrder;
+	private var viewSceneOrder:Mock0ViewOrder;
 	
 	/** コンストラクタ */
 	public function new() { super(); }
@@ -45,17 +43,17 @@ class Mock0 extends LogicScene
 	private function run():Void
 	{
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
-		viewSceneOrder = changeViewScene(ViewSceneKind.Mock0, ViewSceneOrder);
+		viewSceneOrder = changeViewScene(ViewSceneKind.Mock0);
 	}
 	
 	/* Viewからの入力 */
 	@:redTapeHandler(LogicSceneDispatcherKind.ViewInput)
-	private function viewInput(command:SceneInput):Void
+	private function viewInput(command:Mock0Input):Void
 	{
 		switch(command)
 		{
-			case SceneInput.DemoDisplayButton: input_demoTraceButton();
-			case SceneInput.DemoChangeSceneButton: input_demoChangeSceneButton();
+			case Mock0Input.DemoDisplayButton: input_demoTraceButton();
+			case Mock0Input.DemoChangeSceneButton: input_demoChangeSceneButton();
 		}
 	}
 	
