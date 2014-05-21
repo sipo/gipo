@@ -9,7 +9,6 @@ import jp.sipo.gipo.core.handler.GearDispatcher;
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import frameworkExample.context.LogicToView;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
-import jp.sipo.gipo.util.EnumKeyHandlerContainer;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 class LogicScene extends StateGearHolderImpl
 {

@@ -62,9 +62,9 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	{
 		switch(sceneKind)
 		{
-			case ViewSceneKind.Mock0 : return new Mock0PilotView();
-			case ViewSceneKind.Mock1(peek) : return new Mock1PilotView(peek);
-			case ViewSceneKind.Blank : return new BlankPilotView();
+			case ViewSceneKind.Mock0Scene : return new Mock0PilotView();
+			case ViewSceneKind.Mock1Scene(peek) : return new Mock1PilotView(peek);
+			case ViewSceneKind.BlankScene : return new BlankPilotView();
 		}
 	}
 	

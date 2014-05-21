@@ -24,7 +24,7 @@ class LogicInitialize extends LogicScene
 	private function run():Void
 	{
 		// 仮の表示を用意
-		changeViewScene(ViewSceneKind.Blank);
+		changeViewScene(ViewSceneKind.BlankScene);
 		// すぐにシーン移動
 		logic.changeState(new Mock0());
 	}

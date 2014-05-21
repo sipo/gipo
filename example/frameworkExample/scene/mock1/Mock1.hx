@@ -52,7 +52,7 @@ class Mock1 extends LogicScene implements Mock1ViewPeek
 		logicStatus.mock1Count++;
 		mock1Count = logicStatus.mock1Count;
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
-		viewSceneOrder = changeViewScene(ViewSceneKind.Mock1(this));
+		viewSceneOrder = changeViewScene(ViewSceneKind.Mock1Scene(this));
 	}
 	
 	/**

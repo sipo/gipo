@@ -27,12 +27,12 @@ interface ViewSceneOrder	// TODO:必要性検証
 enum ViewSceneKind
 {
 	/** 表示なし。あるいは、BG用1毎絵を表示する */
-	Blank;
+	BlankScene;
 	
 	// --------------------------------
 	// 各シーンに対応したシーンへの切り替え指定
 	// --------------------------------
 	
-	Mock0;
-	Mock1(peek:Mock1ViewPeek);
+	Mock0Scene;
+	Mock1Scene(peek:Mock1ViewPeek);
 }
