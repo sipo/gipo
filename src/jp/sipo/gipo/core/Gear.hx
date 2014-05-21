@@ -59,7 +59,14 @@ class Gear implements GearOutside
 	private var bubbleHandlerList:GearDispatcher;
 	private var disposeTaskStack:GearDispatcher;
 	
+	/* --------------------------------
+	 * 処理リスト
+	 * -------------------------------*/
 	
+	/* 自動登録対象のHandler登録を保持する */
+	private var dispatcherMap:Map<EnumValueName, AutoHandlerDispatcher> = new Map<EnumValueName, AutoHandlerDispatcher>();
+	/* 自動登録対象のRedTapeHandler登録を保持する */
+	private var dispatcherRedTapeMap:Map<EnumValueName, GearDispatcherRedTape> = new Map<EnumValueName, GearDispatcherRedTape>();
 	
 	/* 子の追加処理の遅延保持 */
 	private var bookChildList:Array<PosWrapper<GearHolder>>;
@@ -93,62 +100,6 @@ class Gear implements GearOutside
 		addNeedTask(GearNeedTask.Core);
 	}
 	
-	/* ================================================================
-	 * 自動登録可能なイベントハンドラのリストを生成する
-	 * ===============================================================*/
-	
-	// TODO:移動の検討
-	/**
-	 * 通常の、引数なし関数を呼び出す
-	 */
-	public function dispatcher(addBehavior:GearDispatcherAddBehavior<Void -> Void>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
-	{
-		var dispatcher:GearDispatcher = new GearDispatcher(addBehavior, once, pos);
-		setDispatcher(key, dispatcher);
-		return dispatcher;
-	}
-	public function dispatcherFlexible<ArgumentsHandler>(addBehavior:GearDispatcherAddBehavior<ArgumentsHandler>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcherFlexible<ArgumentsHandler>
-	{
-		var dispatcher:GearDispatcherFlexible<ArgumentsHandler> = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, pos);
-		setDispatcher(key, dispatcher);
-		return dispatcher; 
-	}
-	public function dispatcherRedTape(key:EnumValue, ?pos:PosInfos):GearDispatcherRedTape
-	{
-		var dispatcher:GearDispatcherRedTape = new GearDispatcherRedTape(pos);
-		setRedTapeDispatcher(key, dispatcher);
-		return dispatcher;
-	}
-	
-	/* 自動登録対象のHandler登録を保持する */
-	private var dispatcherMap:Map<EnumValueName, AutoHandlerDispatcher> = new Map<EnumValueName, AutoHandlerDispatcher>();
-	/* 自動登録対象のRedTapeHandler登録を保持する */
-	private var dispatcherRedTapeMap:Map<EnumValueName, GearDispatcherRedTape> = new Map<EnumValueName, GearDispatcherRedTape>();
-	
-	/* 自動登録するDispatcherとそのキーを登録 */
-	private function setDispatcher(key:EnumValue, dispatcher:AutoHandlerDispatcher):Void
-	{
-		var keyName:EnumValueName = createEnumValueName(key);
-		if (dispatcherMap.exists(keyName)) throw 'Dispatcherが２重登録されました。$key';
-		dispatcherMap.set(keyName, dispatcher);
-	}
-	/* EnumValueを指示するユニークな文字列 */
-	inline private function createEnumValueName(enumValue:EnumValue):EnumValueName
-	{
-		return createEnumValueName_(Type.getEnumName(Type.getEnum(enumValue)), Type.enumConstructor(enumValue));
-	}
-	inline private function createEnumValueName_(enumName:EnumName, enumConstractor:String):EnumValueName
-	{
-		return enumName + "#" + enumConstractor;
-	}
-	
-	/* 自動登録するRedTapeDispatcherとそのキー、ロールを登録 */
-	private function setRedTapeDispatcher(key:EnumValue, dispatcher:GearDispatcherRedTape):Void
-	{
-		var keyName:EnumValueName = createEnumValueName(key);
-		if (dispatcherRedTapeMap.exists(keyName)) throw 'RedTapeDispatcherが２重登録されました。$key';
-		dispatcherRedTapeMap.set(keyName, dispatcher);
-	}
 	
 	/* ================================================================
 	 * フェーズチェック共有
@@ -185,7 +136,58 @@ class Gear implements GearOutside
 	}
 	
 	/* ================================================================
-	 * ハンドラ登録
+	 * 自動登録可能なハンドラのリストを生成する
+	 * ===============================================================*/
+	
+	/**
+	 * 通常の、引数なし関数を呼び出す
+	 */
+	public function dispatcher(addBehavior:GearDispatcherAddBehavior<Void -> Void>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
+	{
+		var dispatcher:GearDispatcher = new GearDispatcher(addBehavior, once, pos);
+		setDispatcher(key, dispatcher);
+		return dispatcher;
+	}
+	public function dispatcherFlexible<ArgumentsHandler>(addBehavior:GearDispatcherAddBehavior<ArgumentsHandler>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcherFlexible<ArgumentsHandler>
+	{
+		var dispatcher:GearDispatcherFlexible<ArgumentsHandler> = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, pos);
+		setDispatcher(key, dispatcher);
+		return dispatcher; 
+	}
+	public function dispatcherRedTape(key:EnumValue, ?pos:PosInfos):GearDispatcherRedTape
+	{
+		var dispatcher:GearDispatcherRedTape = new GearDispatcherRedTape(pos);
+		setRedTapeDispatcher(key, dispatcher);
+		return dispatcher;
+	}
+	
+	/* 自動登録するDispatcherとそのキーを登録 */
+	private function setDispatcher(key:EnumValue, dispatcher:AutoHandlerDispatcher):Void
+	{
+		var keyName:EnumValueName = createEnumValueName(key);
+		if (dispatcherMap.exists(keyName)) throw 'Dispatcherが２重登録されました。$key';
+		dispatcherMap.set(keyName, dispatcher);
+	}
+	/* EnumValueを指示するユニークな文字列 */
+	inline private function createEnumValueName(enumValue:EnumValue):EnumValueName
+	{
+		return createEnumValueName_(Type.getEnumName(Type.getEnum(enumValue)), Type.enumConstructor(enumValue));
+	}
+	inline private function createEnumValueName_(enumName:EnumName, enumConstractor:String):EnumValueName
+	{
+		return enumName + "#" + enumConstractor;
+	}
+	
+	/* 自動登録するRedTapeDispatcherとそのキー、ロールを登録 */
+	private function setRedTapeDispatcher(key:EnumValue, dispatcher:GearDispatcherRedTape):Void
+	{
+		var keyName:EnumValueName = createEnumValueName(key);
+		if (dispatcherRedTapeMap.exists(keyName)) throw 'RedTapeDispatcherが２重登録されました。$key';
+		dispatcherRedTapeMap.set(keyName, dispatcher);
+	}
+	
+	/* ================================================================
+	 * 削除タスク
 	 * ===============================================================*/
 	
 	/**
@@ -560,8 +562,3 @@ enum GearDispatcherKind
 	Diffusible;
 	Bubble;
 }
-//private enum DispatcherWraper	// FIXME:必要性についてチェック
-//{
-//	Normal(value:GearDispatcher);
-//	Flexible(value:GearDispatcherFlexible<Dynamic>);
-//}

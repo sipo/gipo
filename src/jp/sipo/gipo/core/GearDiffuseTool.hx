@@ -15,34 +15,6 @@ class GearDiffuseTool
 		this.gear = gear;
 	}
 	
-	// TODO:消去
-	
-//	/**
-//	 * 消去処理の追加
-//	 * 
-//	 * @gearDispose
-//	 */
-//	public function entryDispose(func:Void -> Void, ?pos:PosInfos):Void
-//	{
-//		gear.entryDispose(func, pos);
-//	}
-//	
-//	/**
-//	 * diffuseインスタンスを取得する
-//	 */
-//	public function absorb(clazz:Class<Dynamic>):Dynamic
-//	{
-//		gear.absorb(clazz);
-//	}
-//	
-//	/**
-//	 * diffuseインスタンスをキーで取得する
-//	 */
-//	public function absorbWithEnum(enumKey:EnumValue):Dynamic
-//	{
-//		gear.absorbWithEnum(enumKey);
-//	}
-	
 	/**
 	 * diffuseインスタンスを追加する
 	 * @gearDispose
