@@ -300,7 +300,7 @@ class Gear implements GearOutside
 					{
 						var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
 						var dispatcher:AutoHandlerDispatcher = dispatcherMap.get(enumValueName);
-						dispatcher.autoAdd(Reflect.field(holder, name));	// TODO:Posの捏造
+						dispatcher.autoAdd(Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
 					});
 					// @:redTapeHandlerへの対応
 					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, function (keyArguments:Array<Dynamic>)
@@ -308,11 +308,20 @@ class Gear implements GearOutside
 						var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
 						var roleName:EnumName = keyArguments[2];
 						var dispatcher:GearDispatcherRedTape = dispatcherRedTapeMap.get(enumValueName);
-						dispatcher.setFromName(roleName, Reflect.field(holder, name));	// TODO:Posの捏造
+						dispatcher.setFromName(roleName, Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
 					});
 				}
 			}
 			holderClass = Type.getSuperClass(holderClass);	// 継承元もチェック
+		}
+	}
+	private function createDummyPosInfos(holderClass:Class<Dynamic>, methodName:String):PosInfos
+	{
+		return {
+			fileName:"",
+			lineNumber:0,
+			className:Type.getClassName(holderClass),
+			methodName:methodName
 		}
 	}
 	
