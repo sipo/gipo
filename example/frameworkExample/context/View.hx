@@ -13,8 +13,8 @@ package frameworkExample.context;
  * @auther sipo
  */
 import flash.display.Sprite;
-import jp.sipo.gipo.core.GearHolder;
-interface View extends GearHolder extends LogicToView
+import jp.sipo.gipo.core.GearHolderLow;
+interface View extends GearHolderLow extends LogicToView
 {
 	/**
 	 * 必要設定

@@ -43,13 +43,13 @@ class Top extends GearHolderImpl
 		super();
 		this.current = current;
 		this.devConfig = devConfig;
-		// 
-		globalStatus = new GlobalStatus();
 	}
 	
 	@:handler(GearDispatcherKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
+		globalStatus = new GlobalStatus();
+		
 		// configの拡散
 		tool.diffuse(devConfig, DevConfig);
 		tool.diffuse(globalStatus, GlobalStatus);

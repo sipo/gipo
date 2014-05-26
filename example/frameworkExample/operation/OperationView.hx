@@ -4,10 +4,9 @@ package frameworkExample.operation;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.GearHolder;
+import jp.sipo.gipo.core.GearHolderLow;
 import flash.display.Sprite;
-import frameworkExample.operation.OperationLogic.OperationPeek;
-interface OperationView extends GearHolder
+interface OperationView extends GearHolderLow
 {
 	/** 必要データの付与 */
 	public function setContext(operationViewLayer:Sprite):Void;

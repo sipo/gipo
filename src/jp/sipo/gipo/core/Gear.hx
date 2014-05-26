@@ -39,7 +39,7 @@ private typedef EnumName = String;
 class Gear implements GearOutside
 {
 	/* 保持クラス */
-	private var holder:GearHolder;
+	private var holder:GearHolderLow;
 	/** 子 */
 	private var childGearList:Array<Gear>;
 	/** 親 */
@@ -69,7 +69,7 @@ class Gear implements GearOutside
 	private var dispatcherRedTapeMap:Map<EnumValueName, GearDispatcherRedTape> = new Map<EnumValueName, GearDispatcherRedTape>();
 	
 	/* 子の追加処理の遅延保持 */
-	private var bookChildList:Array<PosWrapper<GearHolder>>;
+	private var bookChildList:Array<PosWrapper<GearHolderLow>>;
 	
 	/* 初期化完了に必要なタスク。このタスクリストが全て解除された時に、runが呼び出される。*/
 	private var needTasks:Array<EnumValue>;
@@ -81,7 +81,7 @@ class Gear implements GearOutside
 	/**
 	 * コンストラクタ
 	 */
-	public function new(holder:GearHolder)
+	public function new(holder:GearHolderLow)
 	{
 		this.holder = holder;
 		// 初期状態の設定
@@ -433,7 +433,7 @@ class Gear implements GearOutside
 	 * @gearDispose
 	 */
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
-	private function bookChild(child:GearHolder, ?pos:PosInfos):Void
+	private function bookChild(child:GearHolderLow, ?pos:PosInfos):Void
 	{
 		checkPhaseDiffusible(function () return "処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません");
 		// 後で追加するリストに入れる
@@ -449,7 +449,7 @@ class Gear implements GearOutside
 	 * 
 	 * @gearDispose
 	 */
-	public function addChild(child:GearHolder, ?pos:PosInfos):Void
+	public function addChild(child:GearHolderLow, ?pos:PosInfos):Void
 	{
 		addChildGear(getGear(child), pos);
 	}
@@ -471,7 +471,7 @@ class Gear implements GearOutside
 	 * 子を削除する
 	 * 削除した子は再利用できない
 	 */
-	public function removeChild(child:GearHolder):Void
+	public function removeChild(child:GearHolderLow):Void
 	{
 		removeChildGear(getGear(child));
 	}
@@ -484,7 +484,7 @@ class Gear implements GearOutside
 	}
 	
 	/* Gear内部専用の特殊処理。IGearOutをGearに戻す */
-	inline private function getGear(gearHolder:GearHolder):Gear
+	inline private function getGear(gearHolder:GearHolderLow):Gear
 	{
 		return gearHolder.gearOutside().getImplement();
 	}

@@ -38,7 +38,7 @@ class GearDiffuseTool
 	 * 
 	 * @gearDispose
 	 */
-	public function bookChild(child:GearHolder, ?pos:PosInfos):Void
+	public function bookChild(child:GearHolderLow, ?pos:PosInfos):Void
 	{
 		gear.bookChild(child, pos);
 	}

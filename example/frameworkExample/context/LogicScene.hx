@@ -67,5 +67,6 @@ enum LogicSceneDispatcherKind
 {
 	/** 更新処理 */
 	Update;
+	/** 入力処理 */
 	ViewInput;
 }

@@ -1,13 +1,4 @@
 package jp.sipo.gipo.core;
-/**
- * GearHolderとして機能するための要件設定
- * 
- * @author sipo
- */
-interface GearHolder
+interface GearHolder extends GearHolderLow extends AutoAbsorb extends AutoHandler
 {
-	/**
-	 * 外部からのGear機能の呼び出し
-	 */
-	public function gearOutside():GearOutside;
 }

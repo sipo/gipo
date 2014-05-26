@@ -11,7 +11,6 @@ import frameworkExample.operation.OperationHook.OperationHookEvent;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import jp.sipo.gipo.core.GearHolderImpl;
-import jp.sipo.gipo.core.GearHolder;
 class OperationOverView extends GearHolderImpl implements OperationView
 {
 	

@@ -8,7 +8,7 @@ package jp.sipo.gipo.util;
 import jp.sipo.gipo.core.GearOutside;
 import flash.events.ProgressEvent;
 import flash.display.LoaderInfo;
-import jp.sipo.gipo.core.GearHolder;
+import jp.sipo.gipo.core.GearHolderLow;
 import flash.events.SecurityErrorEvent;
 import flash.events.IOErrorEvent;
 import flash.events.ErrorEvent;
@@ -26,7 +26,7 @@ class EventManager
 	 * 
 	 * @gearDispose
 	 */
-	static inline public function addLoaderEvent(gearHolder:GearHolder, loader:Loader, handlerContext:LoaderHandlerContext, ?pos:PosInfos):Void
+	static inline public function addLoaderEvent(gearHolder:GearHolderLow, loader:Loader, handlerContext:LoaderHandlerContext, ?pos:PosInfos):Void
 	{
 		var gear:GearOutside = gearHolder.gearOutside();
 		var contentLoaderInfo:LoaderInfo = loader.contentLoaderInfo;
@@ -64,7 +64,7 @@ class EventManager
 	/*
 	 * とりあえず、Flashのハンドリングなしイベントが発生しないようにする
 	 */
-	static inline public function defaultErrorHandler(event:ErrorEvent, gearHolder:GearHolder, loader:Loader, ?pos:PosInfos):Void
+	static inline public function defaultErrorHandler(event:ErrorEvent, gearHolder:GearHolderLow, loader:Loader, ?pos:PosInfos):Void
 	{
 		throw 'event=$event gearHolder=$gearHolder loader=$loader pos=$pos';
 	}
@@ -76,7 +76,7 @@ class EventManager
 	 * 
 	 * @gearDispose
 	 */
-	static inline public function addEvent(gearHolder:GearHolder, dispatcher:IEventDispatcher, kind:String, handler:Dynamic -> Void, ?pos:PosInfos):Void
+	static inline public function addEvent(gearHolder:GearHolderLow, dispatcher:IEventDispatcher, kind:String, handler:Dynamic -> Void, ?pos:PosInfos):Void
 	{
 		dispatcher.addEventListener(kind, handler);
 		// 消去登録
