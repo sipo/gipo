@@ -10,18 +10,9 @@ import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import frameworkExample.pilotView.PilotViewScene;
 import frameworkExample.scene.mock1.Mock1;
 /* ================================================================
- * 設定
- * ===============================================================*/
-/** 使用する入力定義 */
-private typedef SceneInput = Mock1Input;
-/** 使用する依頼定義 */
-private typedef SceneOrder = Mock1ViewOrder;
-/** 参照定義 */
-private typedef ScenePeek = Mock1ViewPeek;
-/* ================================================================
  * 動作
  * ===============================================================*/
-class Mock1PilotView extends PilotViewScene implements SceneOrder
+class Mock1PilotView extends PilotViewScene implements Mock1ViewOrder
 {
 	/* 表示レイヤー */
 	private var uiLayer:Sprite;
@@ -29,12 +20,12 @@ class Mock1PilotView extends PilotViewScene implements SceneOrder
 	/* デモUIコンテナ */
 	private var uiContainer:MinimalcompsGipoContainer;
 	/* peek */
-	private var peek:ScenePeek;
+	private var peek:Mock1ViewPeek;
 	/* Countを表示するラベル */
 	private var countLabel:com.bit101.components.Label;
 	
 	/** コンストラクタ */
-	public function new(peek:ScenePeek) 
+	public function new(peek:Mock1ViewPeek) 
 	{
 		super();
 		this.peek = peek;
@@ -69,7 +60,7 @@ class Mock1PilotView extends PilotViewScene implements SceneOrder
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInput(SceneInput.DemoChangeSceneButton);
+		hook.viewInput(Mock1Input.DemoChangeSceneButton);
 	}
 	
 	/**

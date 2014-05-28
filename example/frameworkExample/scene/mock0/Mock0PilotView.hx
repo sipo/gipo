@@ -10,16 +10,9 @@ import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import frameworkExample.pilotView.PilotViewScene;
 /* ================================================================
- * 設定
- * ===============================================================*/
-/** 使用する入力定義 */
-private typedef SceneInput = Mock0Input;
-/** 使用する依頼定義 */
-private typedef SceneOrder = Mock0ViewOrder;
-/* ================================================================
  * 動作
  * ===============================================================*/
-class Mock0PilotView extends PilotViewScene implements SceneOrder
+class Mock0PilotView extends PilotViewScene implements Mock0ViewOrder
 {
 	/* 表示レイヤー */
 	private var uiLayer:Sprite;
@@ -54,13 +47,13 @@ class Mock0PilotView extends PilotViewScene implements SceneOrder
 	/* 反応テスト */
 	private function demoDisplayButton_click():Void
 	{
-		hook.viewInput(SceneInput.DemoDisplayButton);
+		hook.viewInput(Mock0Input.DemoDisplayButton);
 	}
 	
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInput(SceneInput.DemoChangeSceneButton);
+		hook.viewInput(Mock0Input.DemoChangeSceneButton);
 	}
 	
 	/* ================================================================
