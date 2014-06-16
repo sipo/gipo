@@ -6,6 +6,8 @@ MVCを参考に、名称や関係の変更や、Haxeの機能の利用をし、�
 
 他プロジェクト[flatomo](https://github.com/tmskst/flatomo)との連携を予定しています。
 
+全体設計例はこちら[gipo_framework_example](https://github.com/sipo/gipo_framework_example)
+
 ## 以下の特徴を持ちます
 
 ### 木構造を持ちます
