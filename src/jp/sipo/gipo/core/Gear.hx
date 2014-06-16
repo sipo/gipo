@@ -371,7 +371,7 @@ class Gear implements GearOutside
 	/**
 	 * diffuseインスタンスを取得する
 	 */
-	public function absorb(clazz:Class<Dynamic>, ?pos:PosInfos):Dynamic
+	public function absorb<T>(clazz:Class<T>, ?pos:PosInfos):T
 	{
 		return diffuser.get(clazz, pos);
 	}
