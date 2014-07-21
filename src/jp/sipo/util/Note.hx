@@ -24,6 +24,10 @@ class Note
 	public static inline var HIDE_DEBUG_WARNING:String = "デバッグ表示が残っています。";
 	public static inline var NO_ALLOW_TEMPORAL:String = "staticな一時的表示は現在許可されていません。";
 	
+	// 表示タグ
+	public static inline var TAG_LOG:String = "[Note]";
+	public static inline var TAG_DEBUG:String = "[debug]";
+	
 	/* ================================================================
 	 * 全体タグ設定処理
 	 */	
@@ -162,9 +166,9 @@ class Note
 	public function log(message:Dynamic, ?posInfos:PosInfos):Void
 	{
 		if (!display) return;
-		displayMessage(message, logFunction, posInfos);
+		displayMessage(TAG_LOG, message, logFunction, posInfos);
 	}
-	inline private function displayMessage(message:Dynamic, func:String -> PosInfos -> Void, posInfos:PosInfos):Void
+	inline private function displayMessage(tag:String, message:Dynamic, func:String -> PosInfos -> Void, posInfos:PosInfos):Void
 	{
 		switch(tagState)
 		{
@@ -175,7 +179,7 @@ class Note
 			}
 			case TagState.DisplayWarning, TagState.Ready : // 特に何もしない
 		}
-		func('[Note]' + Std.string(message) + tagsString, posInfos);
+		func(tag + Std.string(message) + tagsString, posInfos);
 	}
 	
 	/**
@@ -184,7 +188,7 @@ class Note
 	public function lazyLog(messageFunc:Void -> String, ?posInfos:PosInfos):Void
 	{
 		if (!display) return;
-		displayMessage(messageFunc(), logFunction, posInfos);
+		displayMessage(TAG_LOG, messageFunc(), logFunction, posInfos);
 	}
 	
 	/**
@@ -196,7 +200,7 @@ class Note
 			checkDebugFirst(posInfos);
 			return;
 		}
-		displayMessage(message, debugFunction, posInfos);
+		displayMessage(TAG_DEBUG, message, debugFunction, posInfos);
 	}
 	
 	
