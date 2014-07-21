@@ -175,7 +175,7 @@ class Note
 			}
 			case TagState.DisplayWarning, TagState.Ready : // 特に何もしない
 		}
-		func(Std.string(message) + tagsString, posInfos);
+		func('[Note]' + Std.string(message) + tagsString, posInfos);
 	}
 	
 	/**
