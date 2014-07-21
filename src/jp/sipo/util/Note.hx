@@ -4,6 +4,7 @@ package jp.sipo.util;
  * ...
  * @author sipo
  */
+import Type;
 import haxe.macro.Expr;
 import haxe.macro.Context;
 import Std;
@@ -133,7 +134,19 @@ class Note
 	public function new(tags:Array<EnumValue>) 
 	{
 		localTags = tags;
-		tagsString = " <" + tags.join(",") + ">";	// 表示の最後につけるやつ
+		var tagsStringArray:Array<String> = [];
+		for (tag in tags)
+		{
+			// Enumの名前だけを取り出す
+//			var enumName:String = Type.getEnumName(Type.getEnum(tag));
+//			var dotSplit:Array<String> = enumName.split(".");
+//			enumName = dotSplit[dotSplit.length - 1];
+//			// コンストラクタ名と合わせて配列保存
+//			tagsStringArray.push(enumName + "." + Type.enumConstructor(tag));
+			// MEMO:上記処理は長くなるので保留。DisplayLongTagとかで切り替えれるといいかも
+			tagsStringArray.push(Type.enumConstructor(tag));
+		}
+		tagsString = " <" + tagsStringArray.join(", ") + ">";	// 表示の最後につけるやつ
 		if (!Type.enumEq(tagState, TagState.Ready)){
 			// まだタグ設定がされていない場合、待機リストへ追加
 			waitInstances.push(this);
