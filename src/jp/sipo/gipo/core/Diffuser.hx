@@ -116,7 +116,7 @@ class Diffuser
 		var answer:Dynamic = instanceEnumDictionary.get(enumKey);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
-			if (parent == null) throw new SipoError('指定されたクラス${enumKey}はDiffuser${startDiffuser}に登録されていません。$pos');
+			if (parent == null) throw new SipoError('指定されたキー${enumKey}はDiffuser${startDiffuser}に登録されていません。$pos');
 			// 親がある場合は親に問い合わせ
 			answer = parent.getWithEnum_(enumKey, startDiffuser, pos);
 		}
