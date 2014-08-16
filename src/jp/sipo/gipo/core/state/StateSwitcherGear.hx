@@ -27,7 +27,7 @@ class StateSwitcherGear
 	public function new(holder:StateSwitcherGearHolder, gear:Gear)
 	{
 		this.gear = gear;
-		changeNote = new Note([GearNoteTag.gearSystem, GearNoteTag.stateChange]);
+		changeNote = new Note([GearNoteTag.GearSystem, GearNoteTag.StateChange]);
 		// HandlerListの初期化
 		stateAssignmentList = new Array<StateGearHolder -> Void>();
 		gear.disposeTask(function (){
