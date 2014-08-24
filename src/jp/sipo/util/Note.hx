@@ -274,9 +274,12 @@ class Note
 }
 enum CommonTag
 {
-	common;
-//	notice;
-//	warning;
+	/** 共通で必ず表示するためのもの */
+	Common;
+	/** デバッグ用表示 */
+	Debug;
+	/** 警告表示 */
+	Warning;
 }
 private enum TagState
 {
