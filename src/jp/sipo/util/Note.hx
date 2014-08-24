@@ -4,6 +4,7 @@ package jp.sipo.util;
  * ...
  * @author sipo
  */
+import Type;
 import haxe.macro.Expr;
 import haxe.macro.Context;
 import Std;
@@ -23,6 +24,10 @@ class Note
 	public static inline var NO_FILTER_WARNING:String = "フィルター設定をする前にNoteが使われています。出力をフィルタリングするには、Note.setTagsを使用してください。";
 	public static inline var HIDE_DEBUG_WARNING:String = "デバッグ表示が残っています。";
 	public static inline var NO_ALLOW_TEMPORAL:String = "staticな一時的表示は現在許可されていません。";
+	
+	// 表示タグ
+	public static inline var TAG_LOG:String = "[Note]";
+	public static inline var TAG_DEBUG:String = "[debug]";
 	
 	/* ================================================================
 	 * 全体タグ設定処理
@@ -129,7 +134,19 @@ class Note
 	public function new(tags:Array<EnumValue>) 
 	{
 		localTags = tags;
-		tagsString = " <" + tags.join(",") + ">";	// 表示の最後につけるやつ
+		var tagsStringArray:Array<String> = [];
+		for (tag in tags)
+		{
+			// Enumの名前だけを取り出す
+//			var enumName:String = Type.getEnumName(Type.getEnum(tag));
+//			var dotSplit:Array<String> = enumName.split(".");
+//			enumName = dotSplit[dotSplit.length - 1];
+//			// コンストラクタ名と合わせて配列保存
+//			tagsStringArray.push(enumName + "." + Type.enumConstructor(tag));
+			// MEMO:上記処理は長くなるので保留。DisplayLongTagとかで切り替えれるといいかも
+			tagsStringArray.push(Type.enumConstructor(tag));
+		}
+		tagsString = " <" + tagsStringArray.join(", ") + ">";	// 表示の最後につけるやつ
 		if (!Type.enumEq(tagState, TagState.Ready)){
 			// まだタグ設定がされていない場合、待機リストへ追加
 			waitInstances.push(this);
@@ -162,9 +179,9 @@ class Note
 	public function log(message:Dynamic, ?posInfos:PosInfos):Void
 	{
 		if (!display) return;
-		displayMessage(message, logFunction, posInfos);
+		displayMessage(TAG_LOG, message, logFunction, posInfos);
 	}
-	inline private function displayMessage(message:Dynamic, func:String -> PosInfos -> Void, posInfos:PosInfos):Void
+	inline private function displayMessage(tag:String, message:Dynamic, func:String -> PosInfos -> Void, posInfos:PosInfos):Void
 	{
 		switch(tagState)
 		{
@@ -175,7 +192,7 @@ class Note
 			}
 			case TagState.DisplayWarning, TagState.Ready : // 特に何もしない
 		}
-		func('[Note]' + Std.string(message) + tagsString, posInfos);
+		func(tag + Std.string(message) + tagsString, posInfos);
 	}
 	
 	/**
@@ -184,7 +201,7 @@ class Note
 	public function lazyLog(messageFunc:Void -> String, ?posInfos:PosInfos):Void
 	{
 		if (!display) return;
-		displayMessage(messageFunc(), logFunction, posInfos);
+		displayMessage(TAG_LOG, messageFunc(), logFunction, posInfos);
 	}
 	
 	/**
@@ -196,7 +213,7 @@ class Note
 			checkDebugFirst(posInfos);
 			return;
 		}
-		displayMessage(message, debugFunction, posInfos);
+		displayMessage(TAG_DEBUG, message, debugFunction, posInfos);
 	}
 	
 	

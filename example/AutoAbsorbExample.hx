@@ -4,7 +4,7 @@ import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import haxe.rtti.Meta;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import jp.sipo.gipo.core.GearHolderImpl;
-
+// TODO:<<尾野>>使用例としてのExampleに変更しておく
 class AutoAbsorbExample {
 
 	public static function main() {

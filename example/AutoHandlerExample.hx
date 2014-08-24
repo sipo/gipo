@@ -1,6 +1,7 @@
 package ;
 
 import jp.sipo.gipo.core.AutoHandler;
+// TODO:<<尾野>>使用例としてのExampleに変更しておく
 
 class AutoHandlerExample {
 
