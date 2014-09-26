@@ -1,6 +1,6 @@
 package jp.sipo.gipo.reproduce;
 /**
- * 
+ * 記録を行うState
  * 
  * @auther sipo
  */

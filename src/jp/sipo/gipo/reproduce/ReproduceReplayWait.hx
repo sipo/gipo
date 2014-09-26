@@ -1,6 +1,6 @@
 package jp.sipo.gipo.reproduce;
 /**
- * 
+ * 再生を行う前に、その開始タイミングを揃えるために少し待つためのState
  * 
  * @auther sipo
  */

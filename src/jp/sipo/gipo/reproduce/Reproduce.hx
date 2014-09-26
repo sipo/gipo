@@ -1,7 +1,6 @@
 package jp.sipo.gipo.reproduce;
 /**
- * イベントの再生を担当する。
- * Gipoライブラリに編入を目指すこと
+ * 動作コマンドの記録と再生を担当する。
  * 
  * @auther sipo
  */
