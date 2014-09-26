@@ -5,4 +5,6 @@ enum GearNoteTag
 	GearSystem;
 	/** StateGearの状態追跡 */
 	StateChange;
+	/** 状況保存の状態通知 */
+	Reproduce;
 }
