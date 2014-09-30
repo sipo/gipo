@@ -7,10 +7,10 @@ package jp.sipo.gipo.reproduce;
  * @author sipo
  */
 import haxe.PosInfos;
-class LogPart<UpdateKind>
+class LogPart<TUpdateKind>
 {
 	/** 再現フェーズ */
-	public var phase:ReproducePhase<UpdateKind>;
+	public var phase:ReproducePhase<TUpdateKind>;
 	/** 発生フレーム */
 	public var frame:Int;
 	/** ログ情報 */
@@ -21,7 +21,7 @@ class LogPart<UpdateKind>
 	public var factorPos:PosInfos;
 	
 	/** コンストラクタ */
-	public function new(phase:ReproducePhase<UpdateKind>, frame:Int, logway:LogwayKind, id:Int, factorPos:PosInfos) 
+	public function new(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, id:Int, factorPos:PosInfos) 
 	{
 		this.phase = phase;
 		this.frame = frame;
@@ -34,11 +34,11 @@ class LogPart<UpdateKind>
 	 * 同じログかどうかをチェックする。１度ファイル化されていることを考慮して、参照比較は出来ない場合に使用する。
 	 * 比較するのはphaseとlogwayで、違うframeとidでも、内容が同じであれば同じものと判断する。
 	 */
-	public function isSame(target:LogPart<UpdateKind>):Bool
+	public function isSame(target:LogPart<TUpdateKind>):Bool
 	{
 		return isSameParam(target.phase, target.logway);
 	}
-	public function isSameParam(phase:ReproducePhase<UpdateKind>, logway:LogwayKind):Bool
+	public function isSameParam(phase:ReproducePhase<TUpdateKind>, logway:LogwayKind):Bool
 	{
 		return Type.enumEq(this.phase, phase) && Type.enumEq(this.logway, logway);
 	}
@@ -58,7 +58,7 @@ class LogPart<UpdateKind>
 	/**
 	 * 対象のPhaseがフレーム外かどうか判別する
 	 */
-	public static inline function isOutFramePhase<UpdateKind>(phase:ReproducePhase<UpdateKind>):Bool
+	public static inline function isOutFramePhase<TUpdateKind>(phase:ReproducePhase<TUpdateKind>):Bool
 	{
 		return switch(phase)
 		{
@@ -80,12 +80,12 @@ class LogPart<UpdateKind>
  * 
  * @auther sipo
  */
-enum ReproducePhase<UpdateKind>
+enum ReproducePhase<TUpdateKind>
 {
 	/** フレームとフレームの間で発生する。ユーザー入力やロード待ちなどほとんどがこれ */
 	OutFrame;
 	/** Updateタイミングで発生するもの。ドラッグなど */
-	InFrame(kind:UpdateKind);
+	InFrame(kind:TUpdateKind);
 }
 /**
  * Logの記録と再生方法の種類

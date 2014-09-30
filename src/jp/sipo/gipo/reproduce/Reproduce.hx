@@ -47,14 +47,14 @@ enum OperationHookEvent
 /* ================================================================
  * 実装
  * ===============================================================*/
-class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<UpdateKind>>
+class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<TUpdateKind>>
 {
 	@:absorb
 	private var operationHook:OperationHookForReproduce;
 	@:absorb
 	private var hook:HookForReproduce;
 	/* 記録フェーズ */
-	private var phase:Option<ReproducePhase<UpdateKind>> = Option.None;
+	private var phase:Option<ReproducePhase<TUpdateKind>> = Option.None;
 	
 	
 	private var note:Note;
@@ -75,7 +75,7 @@ class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<U
 	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
-		stateSwitcherGear.changeState(new ReproduceRecord<UpdateKind>());
+		stateSwitcherGear.changeState(new ReproduceRecord<TUpdateKind>());
 	}
 	
 	/**
@@ -104,12 +104,12 @@ class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<U
 	/**
 	 * フレーム内のフェーズ切り替え
 	 */
-	public function startInFramePhase(updateKind:UpdateKind):Void
+	public function startInFramePhase(TUpdateKind:TUpdateKind):Void
 	{
-		startPhase(ReproducePhase.InFrame(updateKind));
+		startPhase(ReproducePhase.InFrame(TUpdateKind));
 	}
 	/* フェーズ切り替え共通動作 */
-	private function startPhase(nextPhase:ReproducePhase<UpdateKind>):Void
+	private function startPhase(nextPhase:ReproducePhase<TUpdateKind>):Void
 	{
 		switch(phase)
 		{
@@ -125,7 +125,7 @@ class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<U
 	 */
 	public function noticeLog(logway:LogwayKind, factorPos:PosInfos):Void
 	{
-		var phaseValue:ReproducePhase<UpdateKind> = switch(phase)
+		var phaseValue:ReproducePhase<TUpdateKind> = switch(phase)
 		{
 			case Option.None : throw 'フェーズ中でなければ記録できません $phase';
 			case Option.Some(v) : v;
@@ -151,7 +151,7 @@ class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<U
 	 */
 	public function endPhase():Void
 	{
-		var phaseValue:ReproducePhase<UpdateKind> =switch(phase)
+		var phaseValue:ReproducePhase<TUpdateKind> =switch(phase)
 		{
 			case Option.None : throw '開始していないフェーズを終了しようとしました $phase';
 			case Option.Some(value) : value;
@@ -165,7 +165,7 @@ class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<U
 		if (phaseIsOutFrame)
 		{
 			// 必要ならReplayへ以降
-			var stateSwitchWay:ReproduceSwitchWay<UpdateKind> = state.getChangeWay();
+			var stateSwitchWay:ReproduceSwitchWay<TUpdateKind> = state.getChangeWay();
 			switch (stateSwitchWay)
 			{
 				case ReproduceSwitchWay.None :
@@ -182,7 +182,7 @@ class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<U
 	/**
 	 * ログを返す
 	 */
-	public function getRecordLog():RecordLog<UpdateKind>
+	public function getRecordLog():RecordLog<TUpdateKind>
 	{
 		return state.getRecordLog();
 	}
@@ -190,14 +190,14 @@ class Reproduce<UpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<U
 	/**
 	 * 再生状態に切り替える
 	 */
-	public function startReplay(log:ReplayLog<UpdateKind>, logIndex:Int):Void
+	public function startReplay(log:ReplayLog<TUpdateKind>, logIndex:Int):Void
 	{
 		note.log('replayStart($logIndex) $log');
 		log.setPosition(logIndex);
 		stateSwitcherGear.changeState(new ReproduceReplay(log));
 	}
 }
-interface ReproduceState<UpdateKind> extends StateGearHolder
+interface ReproduceState<TUpdateKind> extends StateGearHolder
 {
 	/* フレームカウント */
 	public var frame(default, null):Int;
@@ -212,25 +212,25 @@ interface ReproduceState<UpdateKind> extends StateGearHolder
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<UpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void;
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void;
 	
 	/**
 	 * 切り替えの問い合わせ
 	 */
-	public function getChangeWay():ReproduceSwitchWay<UpdateKind>;
+	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>;
 	
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<UpdateKind>):Void;
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void;
 	
 	/**
 	 * RecordLogを得る（記録状態の時のみ）
 	 */
-	public function getRecordLog():RecordLog<UpdateKind>;
+	public function getRecordLog():RecordLog<TUpdateKind>;
 }
-enum ReproduceSwitchWay<UpdateKind>
+enum ReproduceSwitchWay<TUpdateKind>
 {
 	None;
-	ToReplay(replayLog:ReplayLog<UpdateKind>);
+	ToReplay(replayLog:ReplayLog<TUpdateKind>);
 }

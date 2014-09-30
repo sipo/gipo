@@ -8,7 +8,7 @@ import jp.sipo.gipo.reproduce.Reproduce;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
-class ReproduceReplayWait<UpdateKind> extends StateGearHolderImpl implements ReproduceState<UpdateKind>
+class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
 {
 	
 	/* フレームカウント */
@@ -16,10 +16,10 @@ class ReproduceReplayWait<UpdateKind> extends StateGearHolderImpl implements Rep
 	/* フレーム処理実行可能かどうかの判定 */
 	public var canProgress:Bool = true;
 	/* 再生ログ */
-	private var replayLog:ReplayLog<UpdateKind>;
+	private var replayLog:ReplayLog<TUpdateKind>;
 	
 	/** コンストラクタ */
-	public function new(replayLog:ReplayLog<UpdateKind>) 
+	public function new(replayLog:ReplayLog<TUpdateKind>) 
 	{
 		super();
 		this.replayLog = replayLog;
@@ -37,7 +37,7 @@ class ReproduceReplayWait<UpdateKind> extends StateGearHolderImpl implements Rep
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<UpdateKind>, logway:LogwayKind):Void
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind):Void
 	{
 		// 特になし
 	}
@@ -45,7 +45,7 @@ class ReproduceReplayWait<UpdateKind> extends StateGearHolderImpl implements Rep
 	/**
 	 * 切り替えの問い合わせ
 	 */
-	public function getChangeWay():ReproduceSwitchWay<UpdateKind>
+	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>
 	{
 		return ReproduceSwitchWay.ToReplay(replayLog);
 	}
@@ -53,7 +53,7 @@ class ReproduceReplayWait<UpdateKind> extends StateGearHolderImpl implements Rep
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<UpdateKind>):Void
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void
 	{
 		// 特になし
 	}
@@ -61,7 +61,7 @@ class ReproduceReplayWait<UpdateKind> extends StateGearHolderImpl implements Rep
 	/**
 	 * RecordLogを得る（記録状態の時のみ）
 	 */
-	public function getRecordLog():RecordLog<UpdateKind>
+	public function getRecordLog():RecordLog<TUpdateKind>
 	{
 		// 特になし
 	}

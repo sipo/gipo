@@ -13,7 +13,7 @@ import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import flash.Vector;
 import jp.sipo.util.Note;
 import jp.sipo.gipo.reproduce.Reproduce;
-class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements ReproduceState<UpdateKind>
+class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
 {
 	@:absorb
 	private var hook:HookForReproduce;
@@ -21,16 +21,16 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/* フレームカウント */
 	public var frame(default, null):Int = 0;
 	/* 再生ログ */
-	private var replayLog:ReplayLog<UpdateKind>;
+	private var replayLog:ReplayLog<TUpdateKind>;
 	
 	/* 再生可能かどうかの判定 */
 	public var canProgress(default, null):Bool = true;
 	/* 現在フレームで再現実行されるPart */
-	private var nextLogPartList:Vector<LogPart<UpdateKind>> = new Vector<LogPart<UpdateKind>>();
+	private var nextLogPartList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
 	/* 非同期処理のうち通知が来たが、フレーム処理がまだであるもののリスト */
-	private var aheadAsyncList:Vector<LogPart<UpdateKind>> = new Vector<LogPart<UpdateKind>>();
+	private var aheadAsyncList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
 	/* 非同期処理のうちフレーム処理が先に来たが、通知がまだであるもののリスト */
-	private var yetAsyncList:Vector<LogPart<UpdateKind>> = new Vector<LogPart<UpdateKind>>();
+	private var yetAsyncList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
 	/* 再現の終了状態 */
 	private var isEnd:Bool = false;
 	
@@ -38,7 +38,7 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	private var note:Note;
 	
 	/** コンストラクタ */
-	public function new(replayLog:ReplayLog<UpdateKind>) 
+	public function new(replayLog:ReplayLog<TUpdateKind>) 
 	{
 		super();
 		this.replayLog = replayLog;
@@ -73,7 +73,7 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 			var isYet:Bool = false;
 			while(replayLog.hasNext() && replayLog.nextPartFrame == frame)
 			{
-				var part:LogPart<UpdateKind> = replayLog.next();
+				var part:LogPart<TUpdateKind> = replayLog.next();
 				// フレームで発生するモノリストに追加
 				nextLogPartList.push(part);
 				// 非同期イベントなら
@@ -98,11 +98,11 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 		}
 	}
 	/* 対象の再生Partがリスト内と同じものがあるか確認し、あれば相殺してtrueを返す */
-	private function compensate(phaseValue:ReproducePhase<UpdateKind>, logway:LogwayKind, list:Vector<LogPart<UpdateKind>>):Bool
+	private function compensate(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, list:Vector<LogPart<TUpdateKind>>):Bool
 	{
 		for (i in 0...list.length)
 		{
-			var target:LogPart<UpdateKind> = list[i];
+			var target:LogPart<TUpdateKind> = list[i];
 			if (target.isSameParam(phaseValue, logway))
 			{
 				note.log('非同期イベントが待機リストと相殺して解決しました $target');
@@ -117,7 +117,7 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<UpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void
 	{
 		// 非同期でなければ何もしない
 		if (!LogPart.isAsyncLogway(logway)) return;
@@ -131,7 +131,7 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 		}
 		// 相殺出来なかった場合は、aheadリストへ追加
 		note.log('非同期イベントの再現が実際の発生より先に到達しました。動作を待機して非同期イベントを待ちます。 $phaseValue $logway');
-		aheadAsyncList.push(new LogPart<UpdateKind>(phaseValue, frame, logway, -1, factorPos));	// idはひとまず-1で
+		aheadAsyncList.push(new LogPart<TUpdateKind>(phaseValue, frame, logway, -1, factorPos));	// idはひとまず-1で
 		// TODO:<<尾野>>余計なイベントが発生した場合、aheadに溜め込まれてしまう問題があるので、対策を検討→複数の同じイベントがAheadに入ったら警告
 	}
 	
@@ -139,7 +139,7 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * 切り替えの問い合わせ
 	 */
-	public function getChangeWay():ReproduceSwitchWay<UpdateKind>
+	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>
 	{
 		return ReproduceSwitchWay.None;
 	}
@@ -147,13 +147,13 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<UpdateKind>):Void
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void
 	{
 		if (!canProgress) return;
 		// 再生予定リストを再生
 		while (nextLogPartList.length != 0)
 		{
-			var part:LogPart<UpdateKind> = nextLogPartList[0];
+			var part:LogPart<TUpdateKind> = nextLogPartList[0];
 			// phaseが一致しているもののみ
 			if (!Type.enumEq(part.phase, phaseValue)) break;
 			hook.executeEvent(part.logway, part.factorPos);
@@ -170,7 +170,7 @@ class ReproduceReplay<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * RecordLogを得る（記録状態の時のみ）
 	 */
-	public function getRecordLog():RecordLog<UpdateKind>
+	public function getRecordLog():RecordLog<TUpdateKind>
 	{
 		throw '記録状態の時のみ';
 	}

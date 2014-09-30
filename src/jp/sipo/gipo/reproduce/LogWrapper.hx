@@ -9,9 +9,9 @@ import haxe.PosInfos;
 import Type;
 import jp.sipo.gipo.reproduce.LogPart;
 import flash.Vector;
-class LogWrapper<UpdateKind>
+class LogWrapper<TUpdateKind>
 {
-	private var list = new Array<LogPart<UpdateKind>>();
+	private var list = new Array<LogPart<TUpdateKind>>();
 	
 	/** コンストラクタ */
 	public function new() {  }
@@ -30,7 +30,7 @@ class LogWrapper<UpdateKind>
  * 
  * @auther sipo
  */
-class RecordLog<UpdateKind> extends LogWrapper<UpdateKind>
+class RecordLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 {
 	/* Partに割り振るID */
 	private var nextId:Int = 0;
@@ -41,9 +41,9 @@ class RecordLog<UpdateKind> extends LogWrapper<UpdateKind>
 	/**
 	 * 追加する
 	 */
-	public function add(phase:ReproducePhase<UpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos):Void
+	public function add(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos):Void
 	{
-		var logPart:LogPart<UpdateKind> = new LogPart<UpdateKind>(phase, frame, logway, nextId++, factorPos);
+		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phase, frame, logway, nextId++, factorPos);
 		list.push(logPart);
 	}
 	
@@ -58,9 +58,9 @@ class RecordLog<UpdateKind> extends LogWrapper<UpdateKind>
 	/**
 	 * 再生用データに変換する
 	 */
-	public function convertReplay():ReplayLog<UpdateKind>
+	public function convertReplay():ReplayLog<TUpdateKind>
 	{
-		return new ReplayLog<UpdateKind>(list);
+		return new ReplayLog<TUpdateKind>(list);
 	}
 }
 
@@ -69,7 +69,7 @@ class RecordLog<UpdateKind> extends LogWrapper<UpdateKind>
  * 
  * @auther sipo
  */
-class ReplayLog<UpdateKind> extends LogWrapper<UpdateKind>
+class ReplayLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 {
 	/* 再生インデックス */
 	private var position:Int = 0;
@@ -79,7 +79,7 @@ class ReplayLog<UpdateKind> extends LogWrapper<UpdateKind>
 	private var length:Int = 0;
 	
 	/** コンストラクタ */
-	public function new(list:Array<LogPart<UpdateKind>>) 
+	public function new(list:Array<LogPart<TUpdateKind>>) 
 	{
 		super();
 		this.list = list;
@@ -132,7 +132,7 @@ class ReplayLog<UpdateKind> extends LogWrapper<UpdateKind>
 	/**
 	 * 現在の位置のデータを返す
 	 */
-	public function next():LogPart<UpdateKind>
+	public function next():LogPart<TUpdateKind>
 	{
 		var ans = list[position++];
 		checkNextFrame();
@@ -142,7 +142,7 @@ class ReplayLog<UpdateKind> extends LogWrapper<UpdateKind>
 	private function checkNextFrame():Void
 	{
 		if (!hasNext()) return;
-		var nextPart:LogPart<UpdateKind> = list[position];
+		var nextPart:LogPart<TUpdateKind> = list[position];
 		nextPartFrame = nextPart.frame;
 	}
 }

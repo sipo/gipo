@@ -11,7 +11,7 @@ import jp.sipo.gipo.reproduce.LogPart;
 import haxe.PosInfos;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.util.Note;
-class ReproduceRecord<UpdateKind> extends StateGearHolderImpl implements ReproduceState<UpdateKind>
+class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
 {
 	@:absorb
 	private var operationHook:OperationHookForReproduce;
@@ -22,7 +22,7 @@ class ReproduceRecord<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/* 再生可能かどうかの判定 */
 	public var canProgress(default, null):Bool = true;
 	/* 記録ログ */
-	private var recordLog:RecordLog<UpdateKind> = new RecordLog<UpdateKind>();
+	private var recordLog:RecordLog<TUpdateKind> = new RecordLog<TUpdateKind>();
 	
 	private var note:Note;
 	
@@ -44,7 +44,7 @@ class ReproduceRecord<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<UpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void
 	{
 		// 非同期イベントが、updatePhase内で発生したら警告
 		if (LogPart.isAsyncLogway(logway) && !LogPart.isOutFramePhase(phaseValue)) throw "非同期イベントは、updateタイミングで発生してはいけません。（再現時の待機に問題が出るため）。meantimeUpdate等の関数で発生するようにしてください。";
@@ -59,7 +59,7 @@ class ReproduceRecord<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * 切り替えの問い合わせ
 	 */
-	public function getChangeWay():ReproduceSwitchWay<UpdateKind>
+	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>
 	{
 		return ReproduceSwitchWay.None;
 	}
@@ -67,7 +67,7 @@ class ReproduceRecord<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<UpdateKind>):Void
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void
 	{
 		// 特になし
 	}
@@ -76,7 +76,7 @@ class ReproduceRecord<UpdateKind> extends StateGearHolderImpl implements Reprodu
 	/**
 	 * RecordLogを得る（記録状態の時のみ）
 	 */
-	public function getRecordLog():RecordLog<UpdateKind>
+	public function getRecordLog():RecordLog<TUpdateKind>
 	{
 		return recordLog;
 	}
