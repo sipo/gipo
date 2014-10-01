@@ -74,6 +74,15 @@ class Gear implements GearOutside
 	/* 初期化完了に必要なタスク。このタスクリストが全て解除された時に、runが呼び出される。*/
 	private var needTasks:Array<EnumValue>;
 	
+	/* --------------------------------
+	 * デバッグデータ
+	 * -------------------------------*/
+	 
+	/* absorbした変数などの情報 */
+	private var absorbLogList:Array<AbsorbLog>;
+	/* absorbした変数などの情報 */
+	private var absorbWithKeyLogList:Array<AbsorbLog>;
+	
 	/* ================================================================
 	 * 基礎処理
 	 * ===============================================================*/
@@ -86,16 +95,22 @@ class Gear implements GearOutside
 		this.holder = holder;
 		// 初期状態の設定
 		phase = GearPhase.Create;
-		// 変数初期化
-		childGearList = new Array();
-		bookChildList = new Array();
-		diffuser = new Diffuser(holder);
-		needTasks = new Array();
 		// HandlerListの初期化
 		diffusibleHandlerList = dispatcherFlexible(AddBehaviorPreset.addTail, true, GearDispatcherKind.Diffusible);
 		runHandlerList = dispatcher(AddBehaviorPreset.addTail, true, GearDispatcherKind.Run);
 		bubbleHandlerList = dispatcher(AddBehaviorPreset.addHead, true, GearDispatcherKind.Bubble);
 		disposeTaskStack = new GearDispatcher(AddBehaviorPreset.addHead, true);
+		// 変数初期化
+		childGearList = new Array();
+		bookChildList = new Array();
+		diffuser = new Diffuser(holder);
+		needTasks = new Array();
+		
+		absorbLogList = new Array();
+		disposeTask(function () absorbLogList = null);
+		absorbWithKeyLogList = new Array();
+		disposeTask(function () absorbWithKeyLogList = null);
+		
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
 	}
@@ -286,13 +301,20 @@ class Gear implements GearOutside
 					// @:absorbへの対応
 					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_TAG, function (keyArguments:Array<Dynamic>)
 					{
-						Reflect.setField(holder, name, absorb(Type.resolveClass(keyArguments[0])));	// ２重変換になっているが、意味的に仕方ない
+						var className:String = keyArguments[0];
+						var target:Dynamic = absorb(Type.resolveClass(className));
+						Reflect.setField(holder, name, target);	// ２重変換になっているが、意味的に仕方ない
+						absorbLogList.push(new AbsorbLog(name, className, target));
 					});
 					// @:absorbWithKeyへの対応
 					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG, function (keyArguments:Array<Dynamic>)
 					{
-						var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(keyArguments[0]), keyArguments[1]);
-						Reflect.setField(holder, name, absorbWithEnum(enumKey));
+						var enumName:String = keyArguments[0];
+						var enumConstractorName:String = keyArguments[1];
+						var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(enumName), enumConstractorName);
+						var target:Dynamic = absorbWithEnum(enumKey);
+						Reflect.setField(holder, name, target);
+						absorbWithKeyLogList.push(new AbsorbLog(name, '$enumName # $enumConstractorName', target));
 					});
 				}
 				// Handlerのチェック
@@ -561,4 +583,18 @@ enum GearDispatcherKind
 	Run;
 	Diffusible;
 	Bubble;
+}
+class AbsorbLog
+{
+	public var variable:String;
+	public var key:Dynamic;
+	public var target:Dynamic;
+	
+	/** コンストラクタ */
+	public function new(variable:String, key:Dynamic, target:Dynamic) 
+	{
+		this.variable = variable;
+		this.key = key;
+		this.target = target;
+	}
 }
