@@ -4,6 +4,7 @@ package jp.sipo.gipo.core.state;
  * 
  * @auther sipo
  */
+import haxe.PosInfos;
 class StateSwitcherGearHolderImpl<TState/*:StateGearHolder*/> extends StateSwitcherGearHolderLowLevelImpl
 {
 	/** State */
@@ -19,9 +20,9 @@ class StateSwitcherGearHolderImpl<TState/*:StateGearHolder*/> extends StateSwitc
 	/**
 	 * Stateの切り替え
 	 */
-	public function changeState(nextState:TState):Void
+	public function changeState(nextState:TState, ?pos:PosInfos):Void
 	{
-		stateSwitcherGear.changeState(cast(nextState, StateGearHolder));
+		stateSwitcherGear.changeState(cast(nextState, StateGearHolder), pos);
 	}
 	
 	/**
