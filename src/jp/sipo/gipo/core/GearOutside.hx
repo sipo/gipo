@@ -34,7 +34,7 @@ interface GearOutside
 	 * 外部からキーによるDiffuseを行なう
 	 * @gearDispose
 	 */
-	public function otherDiffuseWithEnum(diffuseInstance:Dynamic, key:EnumValue):Void;
+	public function otherDiffuseWithKey(diffuseInstance:Dynamic, key:EnumValue):Void;
 	
 	/**
 	 * Gearの実態を取得する。

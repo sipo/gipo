@@ -68,7 +68,7 @@ class Diffuser
 	/**
 	 * Diffuseインスタンスをキー持ちで新規登録する
 	 */ 
-	public function addWithEnum(diffuseInstance:Dynamic, enumKey:EnumValue):Void
+	public function addWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
 		if (instanceEnumDictionary.exists(enumKey)) throw new SipoError("既に登録されているEnumを登録しようとしました" + instanceEnumDictionary.get(enumKey));
 		instanceEnumDictionary.set(enumKey, diffuseInstance);
@@ -77,7 +77,7 @@ class Diffuser
 	/**
 	 * 明示的に消去
 	 */
-	public function removeWithEnum(enumKey:EnumValue):Void
+	public function removeWithKey(enumKey:EnumValue):Void
 	{
 		instanceEnumDictionary.remove(enumKey);
 	}
@@ -107,18 +107,18 @@ class Diffuser
 	/**
 	 * Diffuseインスタンスをキー持ちで取得する
 	 */
-	public function getWithEnum(enumKey:EnumValue, pos:PosInfos):Dynamic
+	public function getWithKey(enumKey:EnumValue, pos:PosInfos):Dynamic
 	{
-		return getWithEnum_(enumKey, this, pos);
+		return getWithKey_(enumKey, this, pos);
 	}
-	private function getWithEnum_(enumKey:EnumValue, startDiffuser:Diffuser, pos:PosInfos):Dynamic
+	private function getWithKey_(enumKey:EnumValue, startDiffuser:Diffuser, pos:PosInfos):Dynamic
 	{
 		var answer:Dynamic = instanceEnumDictionary.get(enumKey);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
 			if (parent == null) throw new SipoError('指定されたキー${enumKey}はDiffuser${startDiffuser}に登録されていません。$pos');
 			// 親がある場合は親に問い合わせ
-			answer = parent.getWithEnum_(enumKey, startDiffuser, pos);
+			answer = parent.getWithKey_(enumKey, startDiffuser, pos);
 		}
 		return answer;
 	}

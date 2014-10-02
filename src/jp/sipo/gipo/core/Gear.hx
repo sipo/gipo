@@ -312,7 +312,7 @@ class Gear implements GearOutside
 						var enumName:String = keyArguments[0];
 						var enumConstractorName:String = keyArguments[1];
 						var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(enumName), enumConstractorName);
-						var target:Dynamic = absorbWithEnum(enumKey);
+						var target:Dynamic = absorbWithKey(enumKey);
 						Reflect.setField(holder, name, target);
 						absorbWithKeyLogList.push(new AbsorbLog(name, '$enumName # $enumConstractorName', target));
 					});
@@ -401,9 +401,9 @@ class Gear implements GearOutside
 	/**
 	 * diffuseインスタンスをキーで取得する
 	 */
-	public function absorbWithEnum(enumKey:EnumValue, ?pos:PosInfos):Dynamic
+	public function absorbWithKey(enumKey:EnumValue, ?pos:PosInfos):Dynamic
 	{
-		return diffuser.getWithEnum(enumKey, pos);
+		return diffuser.getWithKey(enumKey, pos);
 	}
 	
 	/* --------------------------------
@@ -438,15 +438,15 @@ class Gear implements GearOutside
 	 * @gearDispose
 	 */
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
-	private function diffuseWithEnum(diffuseInstance:Dynamic, enumKey:EnumValue):Void
+	private function diffuseWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
-		diffuserAddWithEnum(diffuseInstance, enumKey, false);	// 追加処理
+		diffuserAddWithKey(diffuseInstance, enumKey, false);	// 追加処理
 	}
 	/* 内部処理 */
-	inline private function diffuserAddWithEnum(diffuseInstance:Dynamic, enumKey:EnumValue, fromOther:Bool):Void
+	inline private function diffuserAddWithKey(diffuseInstance:Dynamic, enumKey:EnumValue, fromOther:Bool):Void
 	{
 		diffuseBeforeCheck(diffuseInstance, fromOther);
-		diffuser.addWithEnum(diffuseInstance, enumKey);	// 追加処理
+		diffuser.addWithKey(diffuseInstance, enumKey);	// 追加処理
 	}
 	
 	/**
@@ -561,9 +561,9 @@ class Gear implements GearOutside
 	 * 外部からキーによるDiffuseを行なう
 	 * @gearDispose
 	 */
-	public function otherDiffuseWithEnum(diffuseInstance:Dynamic, key:EnumValue):Void
+	public function otherDiffuseWithKey(diffuseInstance:Dynamic, key:EnumValue):Void
 	{
-		diffuserAddWithEnum(diffuseInstance, key, true);	// 追加処理
+		diffuserAddWithKey(diffuseInstance, key, true);	// 追加処理
 	}
 	
 	/**

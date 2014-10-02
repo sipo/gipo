@@ -30,7 +30,7 @@ class GearDiffuseTool
 	 */
 	public function diffuseWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
-		gear.diffuseWithEnum(diffuseInstance, enumKey);
+		gear.diffuseWithKey(diffuseInstance, enumKey);
 	}
 	
 	/**
