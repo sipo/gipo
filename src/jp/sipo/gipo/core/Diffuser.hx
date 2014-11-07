@@ -129,10 +129,10 @@ class Diffuser
 	 */
 	public function dispose():Void
 	{
-		for (key in instanceClassDictionary) {
+		for (key in instanceClassDictionary.keys()) {
 			instanceClassDictionary.remove(key);
 		}
-		for (key in instanceEnumDictionary) {
+		for (key in instanceEnumDictionary.keys()) {
 			instanceEnumDictionary.remove(key);
 		}
 		parent = null;
@@ -145,5 +145,24 @@ class Diffuser
 	public function toString():String
 	{
 		return '[Diffuser holder=$holder]';
+	}
+	
+	/**
+	 * エラー表示のためにリストを返す
+	 */
+	public function getDictionaryondition():String
+	{
+		var listString:String = "";
+		for (key in instanceClassDictionary.keys())
+		{
+			var value:Dynamic = instanceClassDictionary.get(key);
+			listString += 'key:${key} =>value:${value}, ';
+		}
+		for (key in instanceEnumDictionary.keys())
+		{
+			var value:Dynamic = instanceEnumDictionary.get(key);
+			listString += 'key:${key} =>value:${value}, ';
+		}
+		return listString;
 	}
 }

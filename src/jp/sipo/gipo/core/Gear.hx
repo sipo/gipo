@@ -5,6 +5,8 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import jp.sipo.util.SipoError;
+import jp.sipo.util.SipoError;
 import jp.sipo.gipo.core.handler.GearDispatcherAddBehavior;
 import jp.sipo.gipo.core.handler.GearDispatcherHandler;
 import jp.sipo.gipo.core.handler.AutoHandlerDispatcher;
@@ -121,32 +123,53 @@ class Gear implements GearOutside
 	 * ===============================================================*/
 	
 	/* Create時チェック */
-	inline private function checkPhaseCreate(messageFunc:Void -> String):Void
+	inline private function checkPhaseCreate():Bool
 	{
-		switch(phase)
+		return switch(phase)
 		{
-			case GearPhase.Create: 
-			case GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError(messageFunc());
+			case GearPhase.Create: true;
+			case GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
 	
-	/* Initialize時チェック */
-	inline private function checkPhaseDiffusible(messageFunc:Void -> String):Void
+	/* DiffuseTool可能時チェック */
+	inline private function checkPhaseCanDiffuseTool():Bool
 	{
-		switch(phase)
+		return switch(phase)
 		{
-			case GearPhase.Diffusible: 
-			case GearPhase.Create, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError(messageFunc());
+			case GearPhase.Diffusible: true;
+			case GearPhase.Create, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
 	
-	/* Initialize時チェック */
-	inline private function checkPhaseBeforeDispose(messageFunc:Void -> String):Void
+	/* Absorb可能かのチェック（DiffuseTool+MiddleTool） */
+	inline private function checkPhaseCanAbsorb():Bool
 	{
-		switch(phase)
+		return switch(phase)
 		{
-			case GearPhase.Create, GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle: 
-			case GearPhase.Dispose, GearPhase.Invalid: throw new SipoError(messageFunc());
+			case GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle: true;
+			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: false;
+		}
+	}
+	
+	// TODO:<<尾野>>
+	/* MiddleTool可能かのチェック */
+	inline private function checkPhaseCanMiddleTool():Bool
+	{
+		return switch(phase)
+		{
+			case GearPhase.Fulfill, GearPhase.Middle: true;
+			case GearPhase.Create, GearPhase.Diffusible, GearPhase.Dispose, GearPhase.Invalid: false;
+		}
+	}
+	
+	/* 無効前かどうか（まだGearHolderが生きているか）のチェック */
+	inline private function checkPhaseBeforeDispose():Bool
+	{
+		return switch(phase)
+		{
+			case GearPhase.Create, GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle: true;
+			case GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
 	
@@ -210,7 +233,7 @@ class Gear implements GearOutside
 	 */
 	public function disposeTask(func:Void -> Void, ?pos:PosInfos):Void
 	{
-		checkPhaseBeforeDispose(function () return '既に消去処理が開始されているため、消去時のハンドラを登録できません phase=$phase');
+		if (!checkPhaseBeforeDispose()) throw new SipoError('既に消去処理が開始されているため、消去時のハンドラを登録できません phase=$phase');
 		// 消去処理リストに保持しておく
 		disposeTaskStack.add(func, pos);
 	}
@@ -228,7 +251,7 @@ class Gear implements GearOutside
 	 */
 	public function initializeTop(parentDiffuser:Diffuser):Void
 	{
-		checkPhaseCreate(function () return '既に親子関係が生成されたインスタンス(${this})をtopに設定しようとしました');
+		if (!checkPhaseCreate()) throw new SipoError('既に親子関係が生成されたインスタンス(${this})をtopに設定しようとしました');
 		// 初期化
 		initializeCommon(parentDiffuser);
 	}
@@ -236,7 +259,7 @@ class Gear implements GearOutside
 	/* 子として追加された場合の動作 */
 	private function setParent(parent:Gear):Void
 	{
-		checkPhaseCreate(function () return '既に親子関係が生成されたインスタンス(${this})を${parent}の子に設定しようとしました');
+		if (!checkPhaseCreate()) throw new SipoError('既に親子関係が生成されたインスタンス(${this})を${parent}の子に設定しようとしました');
 		// 親を保持
 		this.parent = parent;
 		// 初期化
@@ -368,7 +391,7 @@ class Gear implements GearOutside
 	public function addNeedTask(key:EnumValue, ?pos:PosInfos):Void
 	{
 		if (Lambda.has(needTasks, key)) throw new SipoError('${key}が初期化タスクに２重登録されました');
-		checkPhaseCreate(function () return 'initializeTaskの追加はコンストラクタで行なって下さい${key}');
+		if (!checkPhaseCreate()) throw new SipoError('initializeTaskの追加はコンストラクタで行なって下さい${key}');
 		needTasks.push(key);
 	}
 	
@@ -395,7 +418,10 @@ class Gear implements GearOutside
 	 */
 	public function absorb<T>(clazz:Class<T>, ?pos:PosInfos):T
 	{
-		return diffuser.get(clazz, pos);
+		if (!checkPhaseCanAbsorb()) throw new SipoError("absorbは、親のGearHolderにaddChildされた後でなければ使用できません。" + this);
+		var ans:T = diffuser.get(clazz, pos);
+		if (ans == null) throw new SipoError('absorbに失敗しました。対象class=${clazz} 現在diffuse可能なリスト=\n${diffuser.getDictionaryondition()}');
+		return ans;
 	}
 	
 	/**
@@ -403,7 +429,10 @@ class Gear implements GearOutside
 	 */
 	public function absorbWithKey(enumKey:EnumValue, ?pos:PosInfos):Dynamic
 	{
-		return diffuser.getWithKey(enumKey, pos);
+		if (!checkPhaseCanAbsorb()) throw new SipoError("absorbWithKeyは、親のGearHolderにaddChildされた後でなければ使用できません。" + this);
+		var ans:Dynamic = diffuser.getWithKey(enumKey, pos);
+		if (ans == null) throw new SipoError('absorbWithKeyに失敗しました。対象enumKey=${enumKey} 現在diffuse可能なリスト=\n${diffuser.getDictionaryondition()}');
+		return ans;
 	}
 	
 	/* --------------------------------
@@ -428,8 +457,12 @@ class Gear implements GearOutside
 	}
 	inline private function diffuseBeforeCheck(diffuseInstance:Dynamic, fromOther:Bool):Void
 	{
-		if (fromOther) checkPhaseCreate(function () return '別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
-		else checkPhaseDiffusible(function () return '処理の順序が間違っています。diffuseは、diffusibleメソッドの中で追加されなければいけません');
+		if (fromOther)
+		{
+			if (!checkPhaseCreate()) throw new SipoError('別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
+		}else{
+			if (!checkPhaseCanDiffuseTool()) throw new SipoError('処理の順序が間違っています。diffuseは、diffusibleメソッドの中で追加されなければいけません');
+		}
 		if (diffuseInstance == null) throw 'diffuseされるインスタンスがありません $diffuseInstance';
 	}
 	
@@ -457,7 +490,7 @@ class Gear implements GearOutside
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
 	private function bookChild(child:GearHolderLow, ?pos:PosInfos):Void
 	{
-		checkPhaseDiffusible(function () return "処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません");
+		if (!checkPhaseCanDiffuseTool()) throw new SipoError("処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません");
 		// 後で追加するリストに入れる
 		bookChildList.push(new PosWrapper(child, pos)); // posを引き継いで、追加された箇所がわかるように
 	}
