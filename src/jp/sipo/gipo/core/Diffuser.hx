@@ -97,7 +97,7 @@ class Diffuser
 		var answer:Dynamic = instanceClassDictionary.get(className);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
-			if (parent == null) throw new SipoError('指定されたクラス${className}はDiffuser${startDiffuser}に登録されていません。$pos');
+			if (parent == null) throw new SipoError('指定されたクラス${className}は${startDiffuser.holder}のDiffuserに登録されていません。;取得可能なリスト=${getDictionaryCondition()} ;pos=$pos');
 			// 親がある場合は親に問い合わせ
 			answer = parent.getWithClassName(className, startDiffuser, pos);
 		}
@@ -116,7 +116,7 @@ class Diffuser
 		var answer:Dynamic = instanceEnumDictionary.get(enumKey);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
-			if (parent == null) throw new SipoError('指定されたキー${enumKey}はDiffuser${startDiffuser}に登録されていません。$pos');
+			if (parent == null) throw new SipoError('指定されたキー${enumKey}は${startDiffuser.holder}のDiffuserに登録されていません。;取得可能なリスト=${getDictionaryCondition()} ;pos=$pos');
 			// 親がある場合は親に問い合わせ
 			answer = parent.getWithKey_(enumKey, startDiffuser, pos);
 		}
@@ -150,7 +150,7 @@ class Diffuser
 	/**
 	 * エラー表示のためにリストを返す
 	 */
-	public function getDictionaryondition():String
+	public function getDictionaryCondition():String
 	{
 		var listString:String = "";
 		for (key in instanceClassDictionary.keys())

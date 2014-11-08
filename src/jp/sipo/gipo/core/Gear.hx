@@ -420,7 +420,7 @@ class Gear implements GearOutside
 	{
 		if (!checkPhaseCanAbsorb()) throw new SipoError("absorbは、親のGearHolderにaddChildされた後でなければ使用できません。" + this);
 		var ans:T = diffuser.get(clazz, pos);
-		if (ans == null) throw new SipoError('absorbに失敗しました。対象class=${clazz} 現在diffuse可能なリスト=\n${diffuser.getDictionaryondition()}');
+		if (ans == null) throw new SipoError('absorbに失敗しました。対象class=${clazz} 現在diffuse可能なリスト=\n${diffuser.getDictionaryCondition()}');
 		return ans;
 	}
 	
@@ -431,7 +431,6 @@ class Gear implements GearOutside
 	{
 		if (!checkPhaseCanAbsorb()) throw new SipoError("absorbWithKeyは、親のGearHolderにaddChildされた後でなければ使用できません。" + this);
 		var ans:Dynamic = diffuser.getWithKey(enumKey, pos);
-		if (ans == null) throw new SipoError('absorbWithKeyに失敗しました。対象enumKey=${enumKey} 現在diffuse可能なリスト=\n${diffuser.getDictionaryondition()}');
 		return ans;
 	}
 	
