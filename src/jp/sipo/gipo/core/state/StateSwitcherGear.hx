@@ -48,7 +48,7 @@ class StateSwitcherGear
 	{
 		if (changeLock) throw new SipoError("changeStateが２重に呼び出されました。");
 		// ログ
-		changeNote.log('changeState ${nextStateHolder} switcher=${this} ', pos);	
+		changeNote.log('ChangeState state=${nextStateHolder} (from ${this})', pos);	
 		// ２重呼び出しをロック
 		changeLock = true;
 		// １つ前のStateをremove処理
