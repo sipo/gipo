@@ -411,7 +411,10 @@ class Gear implements GearOutside
 	 */
 	public function addNeedTask(key:EnumValue, ?pos:PosInfos):Void
 	{
-		if (Lambda.has(needTasks, key)) throw new SipoError('${key}が初期化タスクに２重登録されました');
+		// Lambda.has(needTasks, key) と同じ。最適化のために展開してある。
+		for (needTask in needTasks) {
+			if (needTask == key) { throw new SipoError('${key}が初期化タスクに２重登録されました'); }
+		}
 		if (!checkPhaseCreate()) throw new SipoError('initializeTaskの追加はコンストラクタで行なって下さい${key}');
 		needTasks.push(key);
 	}
