@@ -162,14 +162,18 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	/* 要素追加の共通処理 */
 	private function addComponent(component:Component):Void
 	{
+		// サイズ反映
+		component.scaleX = component.scaleY = config.scale;
+		// 右寄せ左寄せ
 		switch (config.alignH){
 			case AlignH.Right : 
 			{
-				component.x = putX - component.width;
+				component.x = putX - component.width * component.scaleX;
 			}
 			case AlignH.Left:
 		}
-		putY += Math.round(component.height + config.childMargin);
+		// 上の要素の次に並べる
+		putY += Math.round(component.height * component.scaleY + config.childMargin);
 	}
 	
 	/**
@@ -192,6 +196,8 @@ class Config
 	public var size:Option<{width:Int, height:Int}> = Option.None;
 	/** 左右文字寄せ */
 	public var alignH:AlignH = AlignH.Left;
+	/** サイズ比 */
+	public var scale:Float = 1.0;
 	
 	/** コンストラクタ */
 	public function new() { }
