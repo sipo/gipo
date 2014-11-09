@@ -307,61 +307,82 @@ class Gear implements GearOutside
 				var metaTags = Reflect.field(metaData, name);
 				// メタデータの取り出し共通処理
 				var lastGearTag:String = null;
-				var trim = function (tag:String, chew:Array<Dynamic> -> Void):Void
-				{
-					// キーを取り出し
-					var keyArguments:Array<Dynamic> = Reflect.field(metaTags, tag);
-					if (keyArguments != null){	// キーがあるなら
-						// ２重に無いかチェック
-						if (lastGearTag != null) throw '$holder の $name に２重にGearメタデータタグが存在します。 [${lastGearTag}, ${tag}]';
-						lastGearTag = tag;
-						// 下に記載されている個別チェックを起動する
-						chew(keyArguments);
-					}
-				};
 				// Absorbのチェック
 				if (isAutoAbsorb){
 					// @:absorbへの対応
-					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_TAG, function (keyArguments:Array<Dynamic>)
-					{
-						var className:String = keyArguments[0];
-						var target:Dynamic = absorb(Type.resolveClass(className));
-						Reflect.setField(holder, name, target);	// ２重変換になっているが、意味的に仕方ない
-						absorbLogList.push(new AbsorbLog(name, className, target));
-					});
+					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_TAG, metaTags, name, lastGearTag, holderClass);
 					// @:absorbWithKeyへの対応
-					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG, function (keyArguments:Array<Dynamic>)
-					{
-						var enumName:String = keyArguments[0];
-						var enumConstractorName:String = keyArguments[1];
-						var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(enumName), enumConstractorName);
-						var target:Dynamic = absorbWithKey(enumKey);
-						Reflect.setField(holder, name, target);
-						absorbWithKeyLogList.push(new AbsorbLog(name, '$enumName # $enumConstractorName', target));
-					});
+					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG, metaTags, name, lastGearTag, holderClass);
 				}
 				// Handlerのチェック
 				if (isAutoHandler){
 					// @:handlerへの対応
-					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, function (keyArguments:Array<Dynamic>)
-					{
-						var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
-						var dispatcher:AutoHandlerDispatcher = dispatcherMap.get(enumValueName);
-						dispatcher.autoAdd(Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
-					});
+					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, metaTags, name, lastGearTag, holderClass);
 					// @:redTapeHandlerへの対応
-					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, function (keyArguments:Array<Dynamic>)
-					{
-						var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
-						var roleName:EnumName = keyArguments[2];
-						var dispatcher:GearDispatcherRedTape = dispatcherRedTapeMap.get(enumValueName);
-						dispatcher.setFromName(roleName, Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
-					});
+					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, metaTags, name, lastGearTag, holderClass);
 				}
 			}
 			holderClass = Type.getSuperClass(holderClass);	// 継承元もチェック
 		}
 	}
+	
+	private function trim(tag:String, metaTags:Dynamic, name:String, lastGearTag:String, holderClass:Class<Dynamic>):Void {
+		// キーを取り出し
+		var keyArguments:Array<Dynamic> = Reflect.field(metaTags, tag);
+		if (keyArguments != null){	// キーがあるなら
+			// ２重に無いかチェック
+			if (lastGearTag != null) throw '$holder の $name に２重にGearメタデータタグが存在します。 [${lastGearTag}, ${tag}]';
+			lastGearTag = tag;
+			// 下に記載されている個別チェックを起動する
+			switch (tag) {
+				case AutoAbsorb.AutoAbsorbTag.ABSORB_TAG :
+					initializeAbsorbTag(keyArguments, name);
+				case AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG :
+					initializeAbsorbWithKeyTag(keyArguments, name);
+				case AutoHandler.AutoHandlerTag.HANDLER_TAG :
+					initializeHandlerTag(keyArguments, name, holderClass);
+				case AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG :
+					initializeRedTapeHandlerTag(keyArguments, name, holderClass);
+				default :
+					throw '予期していないタグ ${tag} が検出されました。';
+			}
+		}
+	}
+	
+	private function initializeAbsorbTag(keyArguments:Array<Dynamic>, name:String)
+	{
+		var className:String = keyArguments[0];
+		var target:Dynamic = absorb(Type.resolveClass(className));
+		Reflect.setField(holder, name, target);	// ２重変換になっているが、意味的に仕方ない
+		absorbLogList.push(new AbsorbLog(name, className, target));
+	}
+	
+	private function initializeAbsorbWithKeyTag(keyArguments:Array<Dynamic>, name:String)
+	{
+		var enumName:String = keyArguments[0];
+		var enumConstractorName:String = keyArguments[1];
+		var enumKey:EnumValue = Type.createEnum(Type.resolveEnum(enumName), enumConstractorName);
+		var target:Dynamic = absorbWithKey(enumKey);
+		Reflect.setField(holder, name, target);
+		absorbWithKeyLogList.push(new AbsorbLog(name, '$enumName # $enumConstractorName', target));
+	}
+	
+	private function initializeHandlerTag(keyArguments:Array<Dynamic>, name:String, holderClass:Class<Dynamic>)
+	{
+		var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
+		var dispatcher:AutoHandlerDispatcher = dispatcherMap.get(enumValueName);
+		dispatcher.autoAdd(Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
+	}
+	
+	private function initializeRedTapeHandlerTag(keyArguments:Array<Dynamic>, name:String, holderClass:Class<Dynamic>)
+	{
+		var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
+		var roleName:EnumName = keyArguments[2];
+		var dispatcher:GearDispatcherRedTape = dispatcherRedTapeMap.get(enumValueName);
+		dispatcher.setFromName(roleName, Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
+	}
+	
+	
 	private function createDummyPosInfos(holderClass:Class<Dynamic>, methodName:String):PosInfos
 	{
 		return {
