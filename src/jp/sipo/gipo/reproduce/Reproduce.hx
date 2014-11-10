@@ -39,6 +39,8 @@ enum OperationHookEvent
 	LogUpdate;
 	/** ローカル保存の指示 */
 	LocalSave;
+	/** サーバー送信の指示 */
+	ServerSend;
 	/** ローカル読み込みの指示 */
 	LocalLoad;
 	/** リプレイの開始 */
