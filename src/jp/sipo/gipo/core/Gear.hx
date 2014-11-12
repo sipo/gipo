@@ -5,6 +5,8 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import haxe.ds.ObjectMap;
+import Type;
 import jp.sipo.util.SipoError;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.core.handler.GearDispatcherAddBehavior;
@@ -68,9 +70,9 @@ class Gear implements GearOutside
 	 * -------------------------------*/
 	
 	/* 自動登録対象のHandler登録を保持する */
-	private var dispatcherMap:Map<EnumValueName, AutoHandlerDispatcher> = new Map<EnumValueName, AutoHandlerDispatcher>();
+	private var dispatcherMap:ObjectMap<Dynamic, AutoHandlerDispatcher> = new ObjectMap<Dynamic, AutoHandlerDispatcher>();
 	/* 自動登録対象のRedTapeHandler登録を保持する */
-	private var dispatcherRedTapeMap:Map<EnumValueName, GearDispatcherRedTape> = new Map<EnumValueName, GearDispatcherRedTape>();
+	private var dispatcherRedTapeMap:ObjectMap<Dynamic, GearDispatcherRedTape> = new ObjectMap<Dynamic, GearDispatcherRedTape>();
 	
 	/* 子の追加処理の遅延保持 */
 	private var bookChildList:Array<PosWrapper<GearHolderLow>>;
@@ -155,7 +157,6 @@ class Gear implements GearOutside
 		}
 	}
 	
-	// TODO:<<尾野>>
 	/* MiddleTool可能かのチェック */
 	inline private function checkPhaseCanMiddleTool():Bool
 	{
@@ -205,26 +206,20 @@ class Gear implements GearOutside
 	/* 自動登録するDispatcherとそのキーを登録 */
 	private function setDispatcher(key:EnumValue, dispatcher:AutoHandlerDispatcher):Void
 	{
-		var keyName:EnumValueName = createEnumValueName(key);
-		if (dispatcherMap.exists(keyName)) throw 'Dispatcherが２重登録されました。$key';
-		dispatcherMap.set(keyName, dispatcher);
+		if (dispatcherMap.exists(key)) throw 'Dispatcherが２重登録されました。$key';
+		dispatcherMap.set(key, dispatcher);
 	}
-	/* EnumValueを指示するユニークな文字列 */
-	inline private function createEnumValueName(enumValue:EnumValue):EnumValueName
+	/* EnumValueを生成する（引数なし） */
+	inline private function createEnumValue(enumName:EnumName, enumConstractor:String):EnumValue
 	{
-		return createEnumValueName_(Type.getEnumName(Type.getEnum(enumValue)), Type.enumConstructor(enumValue));
-	}
-	inline private function createEnumValueName_(enumName:EnumName, enumConstractor:String):EnumValueName
-	{
-		return enumName + "#" + enumConstractor;
+		return Type.createEnum(Type.resolveEnum(enumName), enumConstractor);
 	}
 	
 	/* 自動登録するRedTapeDispatcherとそのキー、ロールを登録 */
 	private function setRedTapeDispatcher(key:EnumValue, dispatcher:GearDispatcherRedTape):Void
 	{
-		var keyName:EnumValueName = createEnumValueName(key);
-		if (dispatcherRedTapeMap.exists(keyName)) throw 'RedTapeDispatcherが２重登録されました。$key';
-		dispatcherRedTapeMap.set(keyName, dispatcher);
+		if (dispatcherRedTapeMap.exists(key)) throw 'RedTapeDispatcherが２重登録されました。$key';
+		dispatcherRedTapeMap.set(key, dispatcher);
 	}
 	
 	/* ================================================================
@@ -379,16 +374,16 @@ class Gear implements GearOutside
 	
 	private function initializeHandlerTag(keyArguments:Array<Dynamic>, name:String, holderClass:Class<Dynamic>)
 	{
-		var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
-		var dispatcher:AutoHandlerDispatcher = dispatcherMap.get(enumValueName);
+		var enumValue:EnumValue = createEnumValue(keyArguments[0], keyArguments[1]);
+		var dispatcher:AutoHandlerDispatcher = dispatcherMap.get(enumValue);
 		dispatcher.autoAdd(Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
 	}
 	
 	private function initializeRedTapeHandlerTag(keyArguments:Array<Dynamic>, name:String, holderClass:Class<Dynamic>)
 	{
-		var enumValueName:EnumValueName = createEnumValueName_(keyArguments[0], keyArguments[1]);
+		var enumValue:EnumValue = createEnumValue(keyArguments[0], keyArguments[1]);
 		var roleName:EnumName = keyArguments[2];
-		var dispatcher:GearDispatcherRedTape = dispatcherRedTapeMap.get(enumValueName);
+		var dispatcher:GearDispatcherRedTape = dispatcherRedTapeMap.get(enumValue);
 		dispatcher.setFromName(roleName, Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
 	}
 	
