@@ -53,6 +53,8 @@ class Gear implements GearOutside
 	 * 処理順序整理
 	 * -------------------------------*/
 	
+	/* absorbとhandlerの自動化が無効かされているか */
+	private var autoInitializerDisabled:Bool;
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
@@ -95,6 +97,7 @@ class Gear implements GearOutside
 	public function new(holder:GearHolderLow)
 	{
 		this.holder = holder;
+		autoInitializerDisabled = false;
 		// 初期状態の設定
 		phase = GearPhase.Create;
 		// HandlerListの初期化
@@ -289,9 +292,16 @@ class Gear implements GearOutside
 		phase = GearPhase.Middle;
 		endNeedTask(GearNeedTask.Core);
 	}
+	/* AbsorbとHandlerの自動化を禁止する */
+	private function disableAutoInitialize():Void
+	{
+		autoInitializerDisabled = true;
+	}
 	/* Absorbとハンドラの自動化 */
 	private function autoInitialize():Void
 	{
+		// 自動化が無効化されていたら中断する
+		if (autoInitializerDisabled) { return; }
 		// 各フラグ用インターフェースを実装しているかチェックする
 		var isAutoAbsorb:Bool = Std.is(holder, AutoAbsorb);
 		var isAutoHandler:Bool = Std.is(holder, AutoHandler);
