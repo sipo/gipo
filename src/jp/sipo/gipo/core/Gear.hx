@@ -114,12 +114,17 @@ class Gear implements GearOutside
 		needTasks = new Array();
 		
 		absorbLogList = new Array();
-		disposeTask(function () absorbLogList = null);
 		absorbWithKeyLogList = new Array();
-		disposeTask(function () absorbWithKeyLogList = null);
+		disposeTask(dispose);
 		
 		// タスク数の設定
 		addNeedTask(GearNeedTask.Core);
+	}
+	
+	private function dispose():Void
+	{
+		absorbLogList = null;
+		absorbWithKeyLogList = null;
 	}
 	
 	

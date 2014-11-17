@@ -5,6 +5,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import de.polygonal.ds.HashMap;
 import haxe.PosInfos;
 import jp.sipo.util.SipoError;
 class Diffuser
@@ -12,9 +13,9 @@ class Diffuser
 	/* 親Diffuser */
 	private var parent : Diffuser;
 	/* クラスを使った辞書 */
-	private var instanceClassDictionary:Map<String, Dynamic>;	// MEMO:本来は、Class<Dynamic>などをキーにしたいが、Mapが対応していない
+	private var instanceClassDictionary:HashMap<String, Dynamic>;	// MEMO:本来は、Class<Dynamic>などをキーにしたいが、Mapが対応していない
 	/* Enumキーを使った辞書 */
-	private var instanceEnumDictionary:Map<EnumValue, Dynamic>;
+	private var instanceEnumDictionary:HashMap<EnumValue, Dynamic>;
 	/* 関連クラス（デバッグ表示のみに使用される） */
 	private var holder:Dynamic;
 	
@@ -26,8 +27,8 @@ class Diffuser
 		this.holder = holder;
 		// 変数初期化
 		parent = null;
-		instanceClassDictionary = new Map<String, Dynamic>();
-		instanceEnumDictionary = new Map<EnumValue, Dynamic>();
+		instanceClassDictionary = new HashMap<String, Dynamic>();
+		instanceEnumDictionary = new HashMap<EnumValue, Dynamic>();
 	}
 	
 	/* ================================================================
@@ -52,7 +53,7 @@ class Diffuser
 	public function add(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
 	{
 		var className:String = Type.getClassName(clazz);
-		if (instanceClassDictionary.exists(className)) throw new SipoError("既に登録されているクラスを登録しようとしました" + instanceClassDictionary.get(className));
+		if (instanceClassDictionary.hasKey(className)) throw new SipoError("既に登録されているクラスを登録しようとしました" + instanceClassDictionary.get(className));
 		instanceClassDictionary.set(className, diffuseInstance);
 	}
 	
@@ -70,7 +71,7 @@ class Diffuser
 	 */ 
 	public function addWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
-		if (instanceEnumDictionary.exists(enumKey)) throw new SipoError("既に登録されているEnumを登録しようとしました" + instanceEnumDictionary.get(enumKey));
+		if (instanceEnumDictionary.hasKey(enumKey)) throw new SipoError("既に登録されているEnumを登録しようとしました" + instanceEnumDictionary.get(enumKey));
 		instanceEnumDictionary.set(enumKey, diffuseInstance);
 	}
 	
