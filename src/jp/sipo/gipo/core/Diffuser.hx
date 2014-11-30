@@ -7,6 +7,8 @@ package jp.sipo.gipo.core;
  */
 import haxe.PosInfos;
 import jp.sipo.util.SipoError;
+private typedef EnumValueName = String;
+private typedef EnumName = String;
 class Diffuser
 {
 	/* 親Diffuser */
@@ -14,7 +16,7 @@ class Diffuser
 	/* クラスを使った辞書 */
 	private var instanceClassDictionary:Map<String, Dynamic>;	// MEMO:本来は、Class<Dynamic>などをキーにしたいが、Mapが対応していない
 	/* Enumキーを使った辞書 */
-	private var instanceEnumDictionary:Map<EnumValue, Dynamic>;
+	private var instanceEnumDictionary:Map<EnumValueName, Dynamic>;
 	/* 関連クラス（デバッグ表示のみに使用される） */
 	private var holder:Dynamic;
 	
@@ -27,7 +29,7 @@ class Diffuser
 		// 変数初期化
 		parent = null;
 		instanceClassDictionary = new Map<String, Dynamic>();
-		instanceEnumDictionary = new Map<EnumValue, Dynamic>();
+		instanceEnumDictionary = new Map<EnumValueName, Dynamic>();
 	}
 	
 	/* ================================================================
@@ -70,8 +72,19 @@ class Diffuser
 	 */ 
 	public function addWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
-		if (instanceEnumDictionary.exists(enumKey)) throw new SipoError("既に登録されているEnumを登録しようとしました" + instanceEnumDictionary.get(enumKey));
-		instanceEnumDictionary.set(enumKey, diffuseInstance);
+		var enumValueName:EnumValueName = createEnumValueName(enumKey);
+		if (instanceEnumDictionary.exists(enumValueName)) throw new SipoError("既に登録されているEnumを登録しようとしました" + instanceEnumDictionary.get(enumValueName));
+		instanceEnumDictionary.set(enumValueName, diffuseInstance);
+	}
+	// TODO:<<尾野>>統合
+	/* EnumValueを指示するユニークな文字列 */
+	inline private function createEnumValueName(enumValue:EnumValue):EnumValueName
+	{
+		return createEnumValueName_(Type.getEnumName(Type.getEnum(enumValue)), Type.enumConstructor(enumValue));
+	}
+	inline private function createEnumValueName_(enumName:EnumName, enumConstractor:String):EnumValueName
+	{
+		return enumName + "#" + enumConstractor;
 	}
 	
 	/**
@@ -79,7 +92,8 @@ class Diffuser
 	 */
 	public function removeWithKey(enumKey:EnumValue):Void
 	{
-		instanceEnumDictionary.remove(enumKey);
+		var enumValueName:EnumValueName = createEnumValueName(enumKey);
+		instanceEnumDictionary.remove(enumValueName);
 	}
 	
 	/**
@@ -113,7 +127,8 @@ class Diffuser
 	}
 	private function getWithKey_(enumKey:EnumValue, startDiffuser:Diffuser, pos:PosInfos):Dynamic
 	{
-		var answer:Dynamic = instanceEnumDictionary.get(enumKey);
+		var enumValueName:EnumValueName = createEnumValueName(enumKey);
+		var answer:Dynamic = instanceEnumDictionary.get(enumValueName);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
 			if (parent == null) throw new SipoError('指定されたキー${enumKey}は${startDiffuser.holder}のDiffuserに登録されていません。;取得可能なリスト=${getDictionaryCondition()} ;pos=$pos');
