@@ -27,22 +27,18 @@ interface HookForReproduce
  * ===============================================================*/
 interface OperationHookForReproduce
 {
-	/** 入力処理の発生 */
-	public function input(event:OperationHookEvent):Void;
+	/**
+	 * Reproduceからのイベント処理
+	 */
+	public function noticeReproduceEvent(event:ReproduceEvent):Void;
 }
 /**
  * OperationLogic向けのイベント定義
  */
-enum OperationHookEvent
+enum ReproduceEvent
 {
-	/** ログの入力あり */
+	/** ログの更新あり */
 	LogUpdate;
-	/** ローカル保存の指示 */
-	LocalSave;
-	/** ローカル読み込みの指示 */
-	LocalLoad;
-	/** リプレイの開始 */
-	StartReplay(logIndex:Int);
 }
 /* ================================================================
  * 実装

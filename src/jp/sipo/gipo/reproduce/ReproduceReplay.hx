@@ -84,7 +84,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 					// 相殺できなければ待機リストへ追加
 					if (!setoff)
 					{
-						note.log('非同期イベントの発生が再現イベントタイミングより先に到達しました $part');
+						note.log('非同期イベントの再現が実際の発生より先に到達しました。動作を待機して非同期イベントを待ちます。 $part');
 						yetAsyncList.push(part);
 						isYet = true;
 					}
@@ -130,7 +130,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 			if (setoff) return;
 		}
 		// 相殺出来なかった場合は、aheadリストへ追加
-		note.log('非同期イベントの再現が実際の発生より先に到達しました。動作を待機して非同期イベントを待ちます。 $phaseValue $logway');
+		note.log('非同期イベントの発生が再現イベントタイミングより先に到達しました $phaseValue $logway');
 		aheadAsyncList.push(new LogPart<TUpdateKind>(phaseValue, frame, logway, -1, factorPos));	// idはひとまず-1で
 		// TODO:<<尾野>>余計なイベントが発生した場合、aheadに溜め込まれてしまう問題があるので、対策を検討→複数の同じイベントがAheadに入ったら警告
 	}

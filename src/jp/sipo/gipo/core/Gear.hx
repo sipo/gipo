@@ -447,7 +447,7 @@ class Gear implements GearOutside
 	 */
 	public function absorb<T>(clazz:Class<T>, ?pos:PosInfos):T
 	{
-		if (!checkPhaseCanAbsorb()) throw new SipoError("absorbは、親のGearHolderにaddChildされた後でなければ使用できません。" + this);
+		if (!checkPhaseCanAbsorb()) throw new SipoError('absorbは、親のGearHolderにaddChildされた後でなければ使用できません。${this}');
 		var ans:T = diffuser.get(clazz, pos);
 		if (ans == null) throw new SipoError('absorbに失敗しました。対象class=${clazz} 現在diffuse可能なリスト=\n${diffuser.getDictionaryCondition()}');
 		return ans;
@@ -458,7 +458,7 @@ class Gear implements GearOutside
 	 */
 	public function absorbWithKey(enumKey:EnumValue, ?pos:PosInfos):Dynamic
 	{
-		if (!checkPhaseCanAbsorb()) throw new SipoError("absorbWithKeyは、親のGearHolderにaddChildされた後でなければ使用できません。" + this);
+		if (!checkPhaseCanAbsorb()) throw new SipoError('absorbWithKeyは、親のGearHolderにaddChildされた後でなければ使用できません。${this}');
 		var ans:Dynamic = diffuser.getWithKey(enumKey, pos);
 		return ans;
 	}
@@ -518,7 +518,7 @@ class Gear implements GearOutside
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
 	private function bookChild(child:GearHolderLow, ?pos:PosInfos):Void
 	{
-		if (!checkPhaseCanDiffuseTool()) throw new SipoError("処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません");
+		if (!checkPhaseCanDiffuseTool()) throw new SipoError('処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません');
 		// 後で追加するリストに入れる
 		bookChildList.push(new PosWrapper(child, pos)); // posを引き継いで、追加された箇所がわかるように
 	}
@@ -540,8 +540,8 @@ class Gear implements GearOutside
 	{
 		switch(phase)
 		{
-			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError("Gearは処理中にしか子を登録することはできません。(" + phase + ") $pos");
-			case GearPhase.Diffusible : throw new SipoError("phase=${phase}の時のaddChildは、明示的にaddChildDelayを使用してください。(" + phase + ") $pos");
+			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError('Gearは処理中にしか子を登録することはできません。($phase) $pos');
+			case GearPhase.Diffusible : throw new SipoError('phase=${phase}の時のaddChildは、明示的にaddChildDelayを使用してください。($phase) $pos');
 			case GearPhase.Fulfill, GearPhase.Middle : 
 		}
 		// 追加

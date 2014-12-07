@@ -51,7 +51,7 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		// 記録に追加
 		recordLog.add(phaseValue, frame, logway, factorPos);
 		// 記録が更新されたことをOperationの表示へ通知
-		operationHook.input(OperationHookEvent.LogUpdate);
+		operationHook.noticeReproduceEvent(ReproduceEvent.LogUpdate);
 		// 実行する
 		hook.executeEvent(logway, factorPos);
 	}
