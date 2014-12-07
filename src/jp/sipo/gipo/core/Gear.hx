@@ -532,9 +532,10 @@ class Gear implements GearOutside
 	 * 
 	 * @gearDispose
 	 */
-	public function addChild(child:GearHolderLow, ?pos:PosInfos):Void
+	public function addChild<T:(GearHolderLow)>(child:T, ?pos:PosInfos):T
 	{
 		addChildGear(getGear(child), pos);
+		return child;
 	}
 	inline private function addChildGear(childGear:Gear, pos:PosInfos):Void
 	{
