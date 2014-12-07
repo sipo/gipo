@@ -516,11 +516,12 @@ class Gear implements GearOutside
 	 * @gearDispose
 	 */
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
-	private function bookChild(child:GearHolderLow, ?pos:PosInfos):Void
+	private function bookChild<T:(GearHolderLow)>(child:T, ?pos:PosInfos):T
 	{
 		if (!checkPhaseCanDiffuseTool()) throw new SipoError('処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません');
 		// 後で追加するリストに入れる
-		bookChildList.push(new PosWrapper(child, pos)); // posを引き継いで、追加された箇所がわかるように
+		bookChildList.push(new PosWrapper<GearHolderLow>(child, pos)); // posを引き継いで、追加された箇所がわかるように
+		return child;
 	}
 	
 	/* ================================================================
