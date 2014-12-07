@@ -5,6 +5,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import Map.IMap;
 import haxe.PosInfos;
 import jp.sipo.util.SipoError;
 class Diffuser
@@ -97,7 +98,7 @@ class Diffuser
 		var answer:Dynamic = instanceClassDictionary.get(className);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
-			if (parent == null) throw new SipoError('指定されたクラス${className}は${startDiffuser.holder}のDiffuserに登録されていません。;取得可能なリスト=${getDictionaryCondition()} ;pos=$pos');
+			if (parent == null) throw new SipoError('指定されたクラス${className}は${startDiffuser.holder}のDiffuserに登録されていません。;取得可能なリスト=${getDictionaryCondition(startDiffuser)} ;pos=$pos');
 			// 親がある場合は親に問い合わせ
 			answer = parent.getWithClassName(className, startDiffuser, pos);
 		}
@@ -154,19 +155,27 @@ class Diffuser
 	/**
 	 * エラー表示のために現在のDiffuserに登録されているリストを返す
 	 */
-	public function getDictionaryCondition():String
+	public function getDictionaryCondition(startDiffuser:Diffuser):String
 	{
 		var listString:String = "";
-		for (key in instanceClassDictionary.keys())
+		var targetDiffuser:Diffuser = startDiffuser;
+		while(true)
 		{
-			var value:Dynamic = instanceClassDictionary.get(key);
-			listString += 'key:${key} =>value:${value}, ';
+			listString += getMapCondition(targetDiffuser.instanceClassDictionary);
+			listString += getMapCondition(targetDiffuser.instanceEnumDictionary);
+			if (targetDiffuser.parent == null) return listString;
+			targetDiffuser = targetDiffuser.parent;
 		}
-		for (key in instanceEnumDictionary.keys())
+	}
+	inline private function getMapCondition(target:IMap<Dynamic, Dynamic>):String
+	{
+		var listString:String = "";
+		for (key in target.keys())
 		{
-			var value:Dynamic = instanceEnumDictionary.get(key);
+			var value:Dynamic = target.get(key);
 			listString += 'key:${key} =>value:${value}, ';
 		}
 		return listString;
 	}
+	
 }
