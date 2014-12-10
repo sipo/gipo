@@ -131,7 +131,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		}
 		// 相殺出来なかった場合は、aheadリストへ追加
 		note.log('非同期イベントの発生が再現イベントタイミングより先に到達しました $phaseValue $logway');
-		aheadAsyncList.push(new LogPart<TUpdateKind>(phaseValue, frame, logway, -1, factorPos));	// idはひとまず-1で
+		aheadAsyncList.push(new LogPart<TUpdateKind>(phaseValue, frame, logway, factorPos));	// idはひとまず-1で
 		// TODO:<<尾野>>余計なイベントが発生した場合、aheadに溜め込まれてしまう問題があるので、対策を検討→複数の同じイベントがAheadに入ったら警告
 	}
 	

@@ -15,19 +15,26 @@ class LogPart<TUpdateKind>
 	public var frame:Int;
 	/** ログ情報 */
 	public var logway:LogwayKind;
-	/** 通し番号 */
-	public var id:Int;
 	/** 要因となったコードの場所情報 */
 	public var factorPos:PosInfos;
+	/** 通し番号 */
+	public var id:Int = -1; // MEMO:Optionを使用したいところだが速度優先で、無しは-1に
 	
 	/** コンストラクタ */
-	public function new(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, id:Int, factorPos:PosInfos) 
+	public function new(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos) 
 	{
 		this.phase = phase;
 		this.frame = frame;
 		this.logway = logway;
-		this.id = id;
 		this.factorPos = factorPos;
+	}
+	
+	/**
+	 * デバッグのためのIDを追加
+	 */
+	public function setId(id:Int):Void
+	{
+		this.id = id;
 	}
 	
 	/**

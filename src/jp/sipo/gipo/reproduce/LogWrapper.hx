@@ -32,9 +32,6 @@ class LogWrapper<TUpdateKind>
  */
 class RecordLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 {
-	/* Partに割り振るID */
-	private var nextId:Int = 0;
-	
 	/** コンストラクタ */
 	public function new() { super(); }
 	
@@ -43,7 +40,8 @@ class RecordLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 	 */
 	public function add(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos):Void
 	{
-		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phase, frame, logway, nextId++, factorPos);
+		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phase, frame, logway, factorPos);
+		logPart.setId(list.length);
 		list.push(logPart);
 	}
 	
