@@ -17,10 +17,6 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	private var operationHook:OperationHookForReproduce;
 	@:absorb
 	private var hook:HookForReproduce;
-	/* フレームカウント */
-	public var frame(default, null):Int = 0;
-	/* 再生可能かどうかの判定 */
-	public var canProgress(default, null):Bool = true;
 	/* 記録ログ */
 	private var recordLog:RecordLog<TUpdateKind> = new RecordLog<TUpdateKind>();
 	
@@ -36,15 +32,22 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	/**
 	 * 更新処理
 	 */
-	public function update():Void
+	public function update(frame:Int):Void
 	{
-		frame++;
+	}
+	
+	/**
+	 * 進行可能かどうかチェックする
+	 */
+	public function checkCanProgress():Bool
+	{
+		return true;
 	}
 	
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos, canProgress:Bool):Void
 	{
 		// 非同期イベントが、updatePhase内で発生したら警告
 		if (LogPart.isAsyncLogway(logway) && !LogPart.isOutFramePhase(phaseValue)) throw "非同期イベントは、updateタイミングで発生してはいけません。（再現時の待機に問題が出るため）。meantimeUpdate等の関数で発生するようにしてください。";
@@ -67,7 +70,7 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void
 	{
 		// 特になし
 	}

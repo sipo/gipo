@@ -51,6 +51,10 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	private var hook:HookForReproduce;
 	/* 記録フェーズ */
 	private var phase:Option<ReproducePhase<TUpdateKind>> = Option.None;
+	/* 再生可能かどうかの判定 */
+	private var canProgress:Bool = true;
+	/* フレームカウント */
+	private var frame:Int = 0;
 	
 	
 	private var note:Note;
@@ -75,11 +79,12 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	}
 	
 	/**
-	 * 再生可能かどうかを問い合わせる
+	 * 再生可能かどうかを確認して状態を切り替える
 	 */
-	public function getCanProgress():Bool
+	public function checkCanProgress():Bool
 	{
-		return state.canProgress;
+		canProgress = state.checkCanProgress();
+		return canProgress;
 	}
 	
 	/**
@@ -87,7 +92,10 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	 */
 	public function update():Void
 	{
-		state.update();
+		if (!canProgress) return;
+		// TODO:<<尾野>>ここに、bookを確認して、切り替える処理を入れるので、frameを-1にしなくてよくなる
+		frame++;
+		state.update(frame);
 	}
 	
 	/**
@@ -127,7 +135,8 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 			case Option.Some(v) : v;
 		}
 		// メイン処理
-		state.noticeLog(phaseValue, logway, factorPos);
+		Note.temporal('replay update $frame $canProgress');
+		state.noticeLog(phaseValue, frame, logway, factorPos, canProgress);
 	}
 	
 	// MEMO:フェーズ終了で実行されるのはリプレイの時のみで、通常動作時は、即実行される
@@ -169,7 +178,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 			}
 		}
 		// メイン処理
-		state.endPhase(phaseValue);
+		state.endPhase(phaseValue, canProgress);
 		// フェーズを無しに
 		phase = Option.None;
 	}
@@ -190,25 +199,26 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	{
 		note.log('replayStart($logIndex) $log');
 		log.setPosition(logIndex);
+		frame = -1;
 		stateSwitcherGear.changeState(new ReproduceReplay(log));
 	}
 }
 interface ReproduceState<TUpdateKind> extends StateGearHolder
 {
-	/* フレームカウント */
-	public var frame(default, null):Int;
-	/* フレーム処理実行可能かどうかの判定 */
-	public var canProgress(default, null):Bool;
+	/**
+	 * 進行可能かどうかチェックする
+	 */
+	public function checkCanProgress():Bool;
 	
 	/**
 	 * 更新処理
 	 */
-	public function update():Void;
+	public function update(frame:Int):Void;
 	
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void;
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos, canProgress:Bool):Void;
 	
 	/**
 	 * 切り替えの問い合わせ
@@ -218,7 +228,7 @@ interface ReproduceState<TUpdateKind> extends StateGearHolder
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void;
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void;
 	
 	/**
 	 * RecordLogを得る（記録状態の時のみ）

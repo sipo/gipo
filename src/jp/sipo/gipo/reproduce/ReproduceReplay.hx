@@ -17,25 +17,21 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 {
 	@:absorb
 	private var hook:HookForReproduce;
-	
-	/* フレームカウント */
-	public var frame(default, null):Int = 0;
 	/* 再生ログ */
 	private var replayLog:ReplayLog<TUpdateKind>;
 	
-	/* 再生可能かどうかの判定 */
-	public var canProgress(default, null):Bool = true;
 	/* 現在フレームで再現実行されるPart */
 	private var nextLogPartList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
 	/* 非同期処理のうち通知が来たが、フレーム処理がまだであるもののリスト */
 	private var aheadAsyncList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
 	/* 非同期処理のうちフレーム処理が先に来たが、通知がまだであるもののリスト */
 	private var yetAsyncList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
-	/* 再現の終了状態 */
-	private var isEnd:Bool = false;
 	
 	@:absorb
 	private var note:Note;
+	
+	/* comment */
+	private var isEnd:Bool = false;
 	
 	/** コンストラクタ */
 	public function new(replayLog:ReplayLog<TUpdateKind>) 
@@ -50,51 +46,45 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	{
 		note.log('再現の開始');
 		replayLog.setPosition(0);
-		// 起動時処理を擬似再現
-		// FIXME:<<尾野>>タイミングが不安定なので、Reproduceにもらう
-		frame = -1;
-		update();
+		update(0);
 	}
+	
+	/**
+	 * 進行可能かどうかチェックする
+	 */
+	public function checkCanProgress():Bool
+	{
+		return yetAsyncList.length == 0;
+	}
+	
 	
 	/**
 	 * 更新処理
 	 */
-	public function update():Void
+	public function update(frame:Int):Void
 	{
-		if (isEnd) return;
-		if (canProgress)
+		if (isEnd) return;	// TODO:<<尾野>>いらなくなる
+		// ここに来た時は前フレームのリストは全て解消されているはず
+		if (nextLogPartList.length != 0) throw '解消されていないLogPartが残っています $nextLogPartList';
+		// 発生するイベントをリストアップする
+		// このフレームで実行されるパートを取り出す
+		while(replayLog.hasNext() && replayLog.nextPartFrame == frame)
 		{
-			// ここに来た時は前フレームのリストは全て解消されているはず
-			if (nextLogPartList.length != 0) throw '解消されていないLogPartが残っています $nextLogPartList';
-			// 実行可能ならフレームを進める
-			frame++;
-			// 発生するイベントをリストアップする
-			// このフレームで実行されるパートを取り出す
-			var isYet:Bool = false;
-			while(replayLog.hasNext() && replayLog.nextPartFrame == frame)
+			var part:LogPart<TUpdateKind> = replayLog.next();
+			// フレームで発生するモノリストに追加
+			nextLogPartList.push(part);
+			// 非同期イベントなら
+			if (LogPart.isAsyncLogway(part.logway))
 			{
-				var part:LogPart<TUpdateKind> = replayLog.next();
-				// フレームで発生するモノリストに追加
-				nextLogPartList.push(part);
-				// 非同期イベントなら
-				if (LogPart.isAsyncLogway(part.logway))
+				// 相殺を確認
+				var setoff:Bool = compensate(part.phase, part.logway, aheadAsyncList);
+				// 相殺できなければ待機リストへ追加
+				if (!setoff)
 				{
-					// 相殺を確認
-					var setoff:Bool = compensate(part.phase, part.logway, aheadAsyncList);
-					// 相殺できなければ待機リストへ追加
-					if (!setoff)
-					{
-						note.log('非同期イベントの再現が実際の発生より先に到達しました。動作を待機して非同期イベントを待ちます。 $part');
-						yetAsyncList.push(part);
-						isYet = true;
-					}
-				} 
-			}
-			// 未解決のものがあれば、次へ進めないとする
-			canProgress = !isYet;
-		}else{
-			// 全ての未解決状態の非同期イベントが無くなれば進行可能状態とする
-			canProgress = (yetAsyncList.length == 0);
+					note.log('非同期イベントの再現が実際の発生より先に到達しました。動作を待機して非同期イベントを待ちます。 $part');
+					yetAsyncList.push(part);
+				}
+			} 
 		}
 	}
 	/* 対象の再生Partがリスト内と同じものがあるか確認し、あれば相殺してtrueを返す */
@@ -117,7 +107,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, factorPos:PosInfos):Void
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos, canProgress:Bool):Void
 	{
 		// 非同期でなければ何もしない
 		if (!LogPart.isAsyncLogway(logway)) return;
@@ -147,16 +137,18 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void
 	{
 		if (!canProgress) return;
 		// 再生予定リストを再生
 		while (nextLogPartList.length != 0)
 		{
 			var part:LogPart<TUpdateKind> = nextLogPartList[0];
-			// phaseが一致しているもののみ
+			// phaseが一致しているもののでなければ終了
 			if (!Type.enumEq(part.phase, phaseValue)) break;
+			// 実行
 			hook.executeEvent(part.logway, part.factorPos);
+			// 削除
 			nextLogPartList.shift();
 			// 終了のチェック
 			if (nextLogPartList.length == 0 && !replayLog.hasNext())

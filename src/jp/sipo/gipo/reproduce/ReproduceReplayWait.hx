@@ -4,6 +4,7 @@ package jp.sipo.gipo.reproduce;
  * 
  * @auther sipo
  */
+import haxe.PosInfos;
 import jp.sipo.gipo.reproduce.Reproduce;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
@@ -25,11 +26,18 @@ class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements Re
 		this.replayLog = replayLog;
 	}
 	
+	/**
+	 * 進行可能かどうかチェックする
+	 */
+	public function checkCanProgress():Bool
+	{
+		return true;
+	}
 	
 	/**
 	 * 更新処理
 	 */
-	public function update():Void
+	public function update(frame:Int):Void
 	{
 		// 特になし
 	}
@@ -37,7 +45,7 @@ class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements Re
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind):Void
+	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos, canProgress:Bool):Void
 	{
 		// 特になし
 	}
