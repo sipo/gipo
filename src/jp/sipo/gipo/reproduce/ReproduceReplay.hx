@@ -74,10 +74,10 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 			// フレームで発生するモノリストに追加
 			nextLogPartList.push(part);
 			// 非同期イベントなら
-			if (LogPart.isAsyncLogway(part.logway))
+			if (part.isAsyncLogway())
 			{
 				// 相殺を確認
-				var setoff:Bool = compensate(part.phase, part.logway, aheadAsyncList);
+				var setoff:Bool = compensate(part, aheadAsyncList);
 				// 相殺できなければ待機リストへ追加
 				if (!setoff)
 				{
@@ -88,12 +88,12 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		}
 	}
 	/* 対象の再生Partがリスト内と同じものがあるか確認し、あれば相殺してtrueを返す */
-	private function compensate(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind, list:Vector<LogPart<TUpdateKind>>):Bool
+	private function compensate(logPart:LogPart<TUpdateKind>, list:Vector<LogPart<TUpdateKind>>):Bool
 	{
 		for (i in 0...list.length)
 		{
 			var target:LogPart<TUpdateKind> = list[i];
-			if (target.isSameParam(phaseValue, logway))
+			if (target.isSame(logPart))
 			{
 				note.log('非同期イベントが待機リストと相殺して解決しました $target');
 				list.splice(i, 1);	// リストから削除
@@ -110,12 +110,12 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void
 	{
 		// 非同期でなければ何もしない
-		if (!LogPart.isAsyncLogway(logPart.logway)) return;	// TODO:<<尾野>>LogPart化の検証
+		if (!logPart.isAsyncLogway()) return;
 		// 停止中なら、yetListが存在するはずなので相殺をチェックする。実行中は相殺対象は無いはず。
 		if (!canProgress)
 		{
 			// 相殺を確認
-			var setoff:Bool = compensate(logPart.phase, logPart.logway, yetAsyncList);	// TODO:<<尾野>>LogPart化の検証
+			var setoff:Bool = compensate(logPart, yetAsyncList);
 			// 相殺したなら追加しないでいい
 			if (setoff) return;
 		}
@@ -145,7 +145,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		{
 			var part:LogPart<TUpdateKind> = nextLogPartList[0];
 			// phaseが一致しているもののでなければ終了
-			if (!Type.enumEq(part.phase, phaseValue)) break;
+			if (!part.equalPhase(phaseValue)) break;
 			// 実行
 			hook.executeEvent(part.logway, part.factorPos);
 			// 削除

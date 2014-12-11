@@ -9,16 +9,16 @@ package jp.sipo.gipo.reproduce;
 import haxe.PosInfos;
 class LogPart<TUpdateKind>
 {
-	/** 再現フェーズ */
-	public var phase:ReproducePhase<TUpdateKind>;
+	/* 再現フェーズ */
+	private var phase:ReproducePhase<TUpdateKind>;
 	/** 発生フレーム */
-	public var frame:Int;
+	public var frame(default, null):Int;
 	/** ログ情報 */
-	public var logway:LogwayKind;
+	public var logway(default, null):LogwayKind;
 	/** 要因となったコードの場所情報 */
-	public var factorPos:PosInfos;
-	/** 通し番号 */
-	public var id:Int = -1; // MEMO:Optionを使用したいところだが速度優先で、無しは-1に
+	public var factorPos(default, null):PosInfos;
+	/* 通し番号 */
+	private var id:Int = -1; // MEMO:Optionを使用したいところだが速度優先で、無しは-1に
 	
 	/** コンストラクタ */
 	public function new(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos) 
@@ -43,17 +43,13 @@ class LogPart<TUpdateKind>
 	 */
 	public function isSame(target:LogPart<TUpdateKind>):Bool
 	{
-		return isSameParam(target.phase, target.logway);
-	}
-	public function isSameParam(phase:ReproducePhase<TUpdateKind>, logway:LogwayKind):Bool
-	{
-		return Type.enumEq(this.phase, phase) && Type.enumEq(this.logway, logway);
+		return Type.enumEq(this.phase, target.phase) && Type.enumEq(this.logway, target.logway);
 	}
 	
 	/**
 	 * 対象のLogwayがAsyncかどうか判別する
 	 */
-	public static inline function isAsyncLogway(logway:LogwayKind):Bool
+	public function isAsyncLogway():Bool
 	{
 		return switch(logway)
 		{
@@ -65,13 +61,21 @@ class LogPart<TUpdateKind>
 	/**
 	 * 対象のPhaseがフレーム外かどうか判別する
 	 */
-	public static inline function isOutFramePhase<TUpdateKind>(phase:ReproducePhase<TUpdateKind>):Bool
+	public function isOutFramePhase<TUpdateKind>():Bool
 	{
 		return switch(phase)
 		{
 			case ReproducePhase.OutFrame : true;
 			case ReproducePhase.InFrame(_): false;
 		}
+	}
+	
+	/**
+	 * 対象と同じフェーズかどうかチェック
+	 */
+	public function equalPhase(phase:ReproducePhase<TUpdateKind>):Bool
+	{
+		return Type.enumEq(this.phase, phase);
 	}
 	
 	/**

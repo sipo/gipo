@@ -50,7 +50,7 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void
 	{
 		// 非同期イベントが、updatePhase内で発生したら警告
-		if (LogPart.isAsyncLogway(logPart.logway) && !LogPart.isOutFramePhase(logPart.phase)) throw "非同期イベントは、updateタイミングで発生してはいけません。（再現時の待機に問題が出るため）。meantimeUpdate等の関数で発生するようにしてください。";
+		if (logPart.isAsyncLogway() && !logPart.isOutFramePhase()) throw "非同期イベントは、updateタイミングで発生してはいけません。（再現時の待機に問題が出るため）。meantimeUpdate等の関数で発生するようにしてください。";
 		// 記録に追加
 		recordLog.add(logPart);
 		// 記録が更新されたことをOperationの表示へ通知
