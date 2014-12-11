@@ -136,7 +136,8 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 		}
 		// メイン処理
 		Note.temporal('replay update $frame $canProgress');
-		state.noticeLog(phaseValue, frame, logway, factorPos, canProgress);
+		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phaseValue, frame, logway, factorPos);
+		state.noticeLog(logPart, canProgress);
 	}
 	
 	// MEMO:フェーズ終了で実行されるのはリプレイの時のみで、通常動作時は、即実行される
@@ -218,7 +219,7 @@ interface ReproduceState<TUpdateKind> extends StateGearHolder
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos, canProgress:Bool):Void;
+	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void;
 	
 	/**
 	 * 切り替えの問い合わせ

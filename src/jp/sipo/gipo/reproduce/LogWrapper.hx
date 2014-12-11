@@ -38,9 +38,8 @@ class RecordLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 	/**
 	 * 追加する
 	 */
-	public function add(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos):Void
+	public function add(logPart:LogPart<TUpdateKind>):Void
 	{
-		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phase, frame, logway, factorPos);
 		logPart.setId(list.length);
 		list.push(logPart);
 	}
