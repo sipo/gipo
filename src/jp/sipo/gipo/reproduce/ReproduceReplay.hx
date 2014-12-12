@@ -22,10 +22,10 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	
 	/* 現在フレームで再現実行されるPart */
 	private var nextLogPartList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
-	/* 非同期処理のうち通知が来たが、フレーム処理がまだであるもののリスト */
-	private var aheadAsyncList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
-	/* 非同期処理のうちフレーム処理が先に来たが、通知がまだであるもののリスト */
-	private var yetAsyncList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
+	/* 準備処理のうち通知が来たが、フレーム処理がまだであるもののリスト */
+	private var aheadReadyList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
+	/* 準備処理のうちフレーム処理が先に来たが、通知がまだであるもののリスト */
+	private var yetReadyList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
 	
 	@:absorb
 	private var note:Note;
@@ -54,7 +54,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	 */
 	public function checkCanProgress():Bool
 	{
-		return yetAsyncList.length == 0;
+		return yetReadyList.length == 0;
 	}
 	
 	
@@ -74,15 +74,15 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 			// フレームで発生するモノリストに追加
 			nextLogPartList.push(part);
 			// 非同期イベントなら
-			if (part.isAsyncLogway())
+			if (part.isReadyLogway())
 			{
 				// 相殺を確認
-				var setoff:Bool = compensate(part, aheadAsyncList);
+				var setoff:Bool = compensate(part, aheadReadyList);
 				// 相殺できなければ待機リストへ追加
 				if (!setoff)
 				{
-					note.log('非同期イベントの再現が実際の発生より先に到達しました。動作を待機して非同期イベントを待ちます。 $part');
-					yetAsyncList.push(part);
+					note.log('準備イベントが、実際の発生より先に再現が到達しました。動作を待機して実際の準備イベントを待ちます。 $part');
+					yetReadyList.push(part);
 				}
 			} 
 		}
@@ -95,7 +95,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 			var target:LogPart<TUpdateKind> = list[i];
 			if (target.isSame(logPart))
 			{
-				note.log('非同期イベントが待機リストと相殺して解決しました $target');
+				note.log('準備イベントが待機リストと相殺して解決しました $target');
 				list.splice(i, 1);	// リストから削除
 				return true;
 			}
@@ -110,18 +110,18 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void
 	{
 		// 非同期でなければ何もしない
-		if (!logPart.isAsyncLogway()) return;
+		if (!logPart.isReadyLogway()) return;
 		// 停止中なら、yetListが存在するはずなので相殺をチェックする。実行中は相殺対象は無いはず。
 		if (!canProgress)
 		{
 			// 相殺を確認
-			var setoff:Bool = compensate(logPart, yetAsyncList);
+			var setoff:Bool = compensate(logPart, yetReadyList);
 			// 相殺したなら追加しないでいい
 			if (setoff) return;
 		}
 		// 相殺出来なかった場合は、aheadリストへ追加
-		note.log('非同期イベントの発生が再現イベントタイミングより先に到達しました $logPart');
-		aheadAsyncList.push(logPart);
+		note.log('準備イベントの実際の発生が再現タイミングより先に到達しました。再現タイミングを待ちます。 $logPart');
+		aheadReadyList.push(logPart);
 		// TODO:<<尾野>>余計なイベントが発生した場合、aheadに溜め込まれてしまう問題があるので、対策を検討→複数の同じイベントがAheadに入ったら警告
 	}
 	

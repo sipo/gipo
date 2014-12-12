@@ -98,7 +98,7 @@ class ReplayLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 			// snapshotだけを配列へ
 			switch (part.logway)
 			{
-				case LogwayKind.Instant(_), LogwayKind.Async(_) : continue;
+				case LogwayKind.Instant(_), LogwayKind.Ready(_) : continue;
 				case LogwayKind.Snapshot(value) : 
 				{
 					var snapshot:Snapshot = value;

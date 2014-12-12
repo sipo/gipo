@@ -47,13 +47,13 @@ class LogPart<TUpdateKind>
 	}
 	
 	/**
-	 * 対象のLogwayがAsyncかどうか判別する
+	 * 対象のLogwayがReadyかどうか判別する
 	 */
-	public function isAsyncLogway():Bool
+	public function isReadyLogway():Bool
 	{
 		return switch(logway)
 		{
-			case LogwayKind.Async(_) : true;
+			case LogwayKind.Ready(_) : true;
 			case LogwayKind.Instant(_), LogwayKind.Snapshot(_): false;
 		}
 	}
@@ -105,8 +105,8 @@ enum LogwayKind
 {
 	/** 対象タイミングで実行 */
 	Instant(command:EnumValue);
-	/** 対象タイミングで準備が整うまで全体を待たせる（処理時間が不明瞭な動作） */
-	Async(command:EnumValue);
+	/** 対象タイミングで準備が整うまで全体を待たせる（再現時に、ダミーの値だけではなく、実際にリソースを用意したりする必要がある場合） */
+	Ready(command:EnumValue);
 	/** Logicを生成するのに必要。再生の最初のほか、途中再開にも使用できる */
 	Snapshot(value:Snapshot);
 }
