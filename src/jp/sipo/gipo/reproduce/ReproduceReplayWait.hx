@@ -16,14 +16,14 @@ class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements Re
 	public var frame:Int = 0;
 	/* フレーム処理実行可能かどうかの判定 */
 	public var canProgress:Bool = true;
-	/* 再生ログ */
-	private var replayLog:ReplayLog<TUpdateKind>;
+	/* 実行関数 */
+	private var executeEvent:LogPart<TUpdateKind> -> Void;	// TODO:<<尾野>>共通化？
 	
 	/** コンストラクタ */
-	public function new(replayLog:ReplayLog<TUpdateKind>) 
+	public function new(executeEvent:LogPart<TUpdateKind> -> Void) 
 	{
 		super();
-		this.replayLog = replayLog;
+		this.executeEvent = executeEvent;
 	}
 	
 	/**
@@ -45,31 +45,17 @@ class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements Re
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos, canProgress:Bool):Void
+	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void
 	{
-		// 特になし
+		// そのまま実行
+		executeEvent(logPart);
 	}
 	
-	/**
-	 * 切り替えの問い合わせ
-	 */
-	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>
-	{
-		return ReproduceSwitchWay.ToReplay(replayLog);
-	}
 	
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void
-	{
-		// 特になし
-	}
-	
-	/**
-	 * RecordLogを得る（記録状態の時のみ）
-	 */
-	public function getRecordLog():RecordLog<TUpdateKind>
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void
 	{
 		// 特になし
 	}

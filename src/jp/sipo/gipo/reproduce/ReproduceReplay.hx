@@ -15,10 +15,10 @@ import jp.sipo.util.Note;
 import jp.sipo.gipo.reproduce.Reproduce;
 class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
 {
-	@:absorb
-	private var hook:HookForReproduce;
 	/* 再生ログ */
 	private var replayLog:ReplayLog<TUpdateKind>;
+	/* 実行関数 */
+	private var executeEvent:LogPart<TUpdateKind> -> Void;
 	
 	/* 現在フレームで再現実行されるPart */
 	private var nextLogPartList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
@@ -34,10 +34,11 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	private var isEnd:Bool = false;
 	
 	/** コンストラクタ */
-	public function new(replayLog:ReplayLog<TUpdateKind>) 
+	public function new(replayLog:ReplayLog<TUpdateKind>, executeEvent:LogPart<TUpdateKind> -> Void) 
 	{
 		super();
 		this.replayLog = replayLog;
+		this.executeEvent = executeEvent;
 	}
 	
 	
@@ -127,14 +128,6 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	
 	
 	/**
-	 * 切り替えの問い合わせ
-	 */
-	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>
-	{
-		return ReproduceSwitchWay.None;
-	}
-	
-	/**
 	 * フェーズ終了
 	 */
 	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void
@@ -146,10 +139,10 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 			var part:LogPart<TUpdateKind> = nextLogPartList[0];
 			// phaseが一致しているもののでなければ終了
 			if (!part.equalPhase(phaseValue)) break;
-			// 実行
-			hook.executeEvent(part.logway, part.factorPos);
 			// 削除
 			nextLogPartList.shift();
+			// 実行
+			executeEvent(part);
 			// 終了のチェック
 			if (nextLogPartList.length == 0 && !replayLog.hasNext())
 			{
@@ -159,11 +152,4 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		}
 	}
 	
-	/**
-	 * RecordLogを得る（記録状態の時のみ）
-	 */
-	public function getRecordLog():RecordLog<TUpdateKind>
-	{
-		throw '記録状態の時のみ';
-	}
 }

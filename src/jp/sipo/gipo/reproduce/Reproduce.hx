@@ -49,12 +49,16 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	private var operationHook:OperationHookForReproduce;
 	@:absorb
 	private var hook:HookForReproduce;
-	/* 記録フェーズ */
+	/* 記録担当 */
+	private var recorder:ReproduceRecord<TUpdateKind>;
+	/* 再生フェーズ */
 	private var phase:Option<ReproducePhase<TUpdateKind>> = Option.None;
 	/* 再生可能かどうかの判定 */
 	private var canProgress:Bool = true;
 	/* フレームカウント */
 	private var frame:Int = 0;
+	/* 再生予約 */
+	private var bookReplay:BookReplay<TUpdateKind> = BookReplay.None;
 	
 	
 	private var note:Note;
@@ -68,6 +72,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	@:handler(GearDispatcherKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
+		// 下位層にNoteを渡す
 		note = new Note([GearNoteTag.Reproduce]);
 		tool.diffuse(note, Note);
 	}
@@ -75,7 +80,16 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	@:handler(GearDispatcherKind.Run)
 	private function run():Void
 	{
-		stateSwitcherGear.changeState(new ReproduceRecord<TUpdateKind>());
+		// 記録開始
+		startRecord();
+		// 再生は待機状態へ
+		stateSwitcherGear.changeState(new ReproduceReplayWait<TUpdateKind>(executeEvent));
+	}
+	
+	/* 記録の開始 */
+	private function startRecord():Void
+	{
+		recorder = gear.addChild(new ReproduceRecord());
 	}
 	
 	/**
@@ -93,10 +107,13 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	public function update():Void
 	{
 		if (!canProgress) return;
-		// TODO:<<尾野>>ここに、bookを確認して、切り替える処理を入れるので、frameを-1にしなくてよくなる
+		// フレームの進行
 		frame++;
+		// replayerの進行
 		state.update(frame);
 	}
+	
+	// TODO:<<尾野>>implを使わないことでstateの名称を正しく
 	
 	/**
 	 * フレーム間のフェーズ切り替え
@@ -162,35 +179,58 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 			case Option.None : throw '開始していないフェーズを終了しようとしました $phase';
 			case Option.Some(value) : value;
 		}
-		// meanTimeの時は、ここから再生モードに移行する可能性を調べる
-		var phaseIsOutFrame:Bool = switch (phaseValue)
+		
+		// ここから再生モードに移行する可能性を調べる
+		if (Type.enumEq(phaseValue, ReproducePhase.OutFrame))
 		{
-			case ReproducePhase.OutFrame : true;
-			case ReproducePhase.InFrame : false;
-		}
-		if (phaseIsOutFrame)
-		{
-			// 必要ならReplayへ以降
-			var stateSwitchWay:ReproduceSwitchWay<TUpdateKind> = state.getChangeWay();
-			switch (stateSwitchWay)
+			switch(bookReplay)
 			{
-				case ReproduceSwitchWay.None :
-				case ReproduceSwitchWay.ToReplay(log) : stateSwitcherGear.changeState(new ReproduceReplay(log));
+				case BookReplay.None:
+				case BookReplay.Book(log): startReplay_(log);
 			}
 		}
+		// OutFrameの時は、ここから再生モードに移行する可能性を調べる
+//		if (phaseIsOutFrame)
+//		{
+//			// 必要ならReplayへ以降
+//			var stateSwitchWay:ReproduceSwitchWay<TUpdateKind> = state.getChangeWay();
+//			switch (stateSwitchWay)
+//			{
+//				case ReproduceSwitchWay.None :
+//				case ReproduceSwitchWay.ToReplay(log) : stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent));
+//			}
+//		}
+// startRecord
 		// メイン処理
 		state.endPhase(phaseValue, canProgress);
 		// フェーズを無しに
 		phase = Option.None;
 	}
-	
+	/* 再生を開始 */
+	private function startReplay_(log:ReplayLog<TUpdateKind>):Void
+	{
+		// 予約を消す
+		bookReplay = BookReplay.None;
+		// 記録ログをリセットして記録しなおし
+		startRecord();
+		// 再生を開始
+		stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent));
+	}
+	/* イベントを実際に実行する処理 */
+	private function executeEvent(part:LogPart<TUpdateKind>):Void
+	{
+		// 保存
+		recorder.saveLog(part);
+		// 実行
+		hook.executeEvent(part.logway, part.factorPos);
+	}
 	
 	/**
 	 * ログを返す
 	 */
 	public function getRecordLog():RecordLog<TUpdateKind>
 	{
-		return state.getRecordLog();
+		return recorder.getRecordLog();
 	}
 	
 	/**
@@ -198,10 +238,13 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	 */
 	public function startReplay(log:ReplayLog<TUpdateKind>, logIndex:Int):Void
 	{
-		note.log('replayStart($logIndex) $log');
+		frame = 0;
 		log.setPosition(logIndex);
-		frame = -1;
-		stateSwitcherGear.changeState(new ReproduceReplay(log));
+		bookReplay = BookReplay.Book(log);
+//		note.log('replayStart($logIndex) $log');
+//		log.setPosition(logIndex);
+//		frame = -1;
+//		stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent));
 	}
 }
 interface ReproduceState<TUpdateKind> extends StateGearHolder
@@ -222,22 +265,12 @@ interface ReproduceState<TUpdateKind> extends StateGearHolder
 	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void;
 	
 	/**
-	 * 切り替えの問い合わせ
-	 */
-	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>;
-	
-	/**
 	 * フェーズ終了
 	 */
 	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void;
-	
-	/**
-	 * RecordLogを得る（記録状態の時のみ）
-	 */
-	public function getRecordLog():RecordLog<TUpdateKind>;
 }
-enum ReproduceSwitchWay<TUpdateKind>
+enum BookReplay<TUpdateKind>
 {
 	None;
-	ToReplay(replayLog:ReplayLog<TUpdateKind>);
+	Book(replayLog:ReplayLog<TUpdateKind>);
 }

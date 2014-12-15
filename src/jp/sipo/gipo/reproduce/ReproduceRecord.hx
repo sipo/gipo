@@ -11,7 +11,7 @@ import jp.sipo.gipo.reproduce.LogPart;
 import haxe.PosInfos;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.util.Note;
-class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
+class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl
 {
 	@:absorb
 	private var operationHook:OperationHookForReproduce;
@@ -29,12 +29,6 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		note = new Note([GearNoteTag.Reproduce]);
 	}
 	
-	/**
-	 * 更新処理
-	 */
-	public function update(frame:Int):Void
-	{
-	}
 	
 	/**
 	 * 進行可能かどうかチェックする
@@ -45,9 +39,9 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	}
 	
 	/**
-	 * ログ発生の通知
+	 * ログの保存
 	 */
-	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void
+	public function saveLog(logPart:LogPart<TUpdateKind>):Void
 	{
 		// 準備イベントが、updatePhase内で発生したら警告
 		if (logPart.isReadyLogway() && !logPart.isOutFramePhase()) throw "準備イベントは、updateタイミングで発生してはいけません。（再現時の待機に問題が出るため）。meantimeUpdate等の関数で発生するようにしてください。";
@@ -55,29 +49,11 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		recordLog.add(logPart);
 		// 記録が更新されたことをOperationの表示へ通知
 		operationHook.noticeReproduceEvent(ReproduceEvent.LogUpdate);
-		// 実行する
-		hook.executeEvent(logPart.logway, logPart.factorPos);
-	}
-	
-	/**
-	 * 切り替えの問い合わせ
-	 */
-	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>
-	{
-		return ReproduceSwitchWay.None;
-	}
-	
-	/**
-	 * フェーズ終了
-	 */
-	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void
-	{
-		// 特になし
 	}
 	
 	
 	/**
-	 * RecordLogを得る（記録状態の時のみ）
+	 * RecordLogを得る
 	 */
 	public function getRecordLog():RecordLog<TUpdateKind>
 	{
