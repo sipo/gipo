@@ -9,7 +9,7 @@ import jp.sipo.gipo.reproduce.Reproduce;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
-class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
+class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements ReproduceReplayState<TUpdateKind>
 {
 	
 	/* フレームカウント */

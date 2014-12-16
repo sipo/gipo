@@ -8,10 +8,9 @@ import jp.sipo.gipo.reproduce.Reproduce;
 import jp.sipo.gipo.core.config.GearNoteTag;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
-import haxe.PosInfos;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.util.Note;
-class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl
+class ReproduceRecordImpl<TUpdateKind> extends StateGearHolderImpl implements ReproduceRecord<TUpdateKind>
 {
 	@:absorb
 	private var operationHook:OperationHookForReproduce;
@@ -27,15 +26,6 @@ class ReproduceRecord<TUpdateKind> extends StateGearHolderImpl
 	{
 		super();
 		note = new Note([GearNoteTag.Reproduce]);
-	}
-	
-	
-	/**
-	 * 進行可能かどうかチェックする
-	 */
-	public function checkCanProgress():Bool
-	{
-		return true;
 	}
 	
 	/**

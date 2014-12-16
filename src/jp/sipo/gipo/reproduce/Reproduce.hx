@@ -4,6 +4,7 @@ package jp.sipo.gipo.reproduce;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.state.StateSwitcherGearHolderLowLevelImpl;
 import jp.sipo.gipo.core.config.GearNoteTag;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
@@ -43,12 +44,14 @@ enum ReproduceEvent
 /* ================================================================
  * 実装
  * ===============================================================*/
-class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<TUpdateKind>>
+class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 {
 	@:absorb
 	private var operationHook:OperationHookForReproduce;
 	@:absorb
 	private var hook:HookForReproduce;
+	/* 再生担当（切り替わる） */
+	private var replayer:ReproduceReplayState<TUpdateKind>;
 	/* 記録担当 */
 	private var recorder:ReproduceRecord<TUpdateKind>;
 	/* 再生フェーズ */
@@ -63,11 +66,36 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	
 	private var note:Note;
 	
+	/* ================================================================
+	 * StateSwitcherの実装
+	 * ===============================================================*/
+	
 	/** コンストラクタ */
 	public function new() 
 	{
 		super();
+		stateSwitcherGear.addStateAssignmentHandler(stateAssignment);
 	}
+	
+	/**
+	 * Stateの切り替え
+	 */
+	public function changeState(nextState:ReproduceReplayState<TUpdateKind>, ?pos:PosInfos):Void
+	{
+		stateSwitcherGear.changeState(nextState, pos);
+	}
+	
+	/**
+	 * Stateの型変換
+	 */
+	inline private function stateAssignment(state:StateGearHolder):Void
+	{
+		this.replayer = cast(state);
+	}
+	
+	/* ================================================================
+	 * 本処理
+	 * ===============================================================*/
 	
 	@:handler(GearDispatcherKind.Diffusible)
 	private function diffusible(tool:GearDiffuseTool):Void
@@ -89,7 +117,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	/* 記録の開始 */
 	private function startRecord():Void
 	{
-		recorder = gear.addChild(new ReproduceRecord());
+		recorder = gear.addChild(new ReproduceRecordImpl<TUpdateKind>());
 	}
 	
 	/**
@@ -97,7 +125,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 	 */
 	public function checkCanProgress():Bool
 	{
-		canProgress = state.checkCanProgress();
+		canProgress = replayer.checkCanProgress();
 		return canProgress;
 	}
 	
@@ -110,10 +138,8 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 		// フレームの進行
 		frame++;
 		// replayerの進行
-		state.update(frame);
+		replayer.update(frame);
 	}
-	
-	// TODO:<<尾野>>implを使わないことでstateの名称を正しく
 	
 	/**
 	 * フレーム間のフェーズ切り替え
@@ -154,7 +180,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 		// メイン処理
 		Note.temporal('replay update $frame $canProgress');
 		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phaseValue, frame, logway, factorPos);
-		state.noticeLog(logPart, canProgress);
+		replayer.noticeLog(logPart, canProgress);
 	}
 	
 	// MEMO:フェーズ終了で実行されるのはリプレイの時のみで、通常動作時は、即実行される
@@ -189,20 +215,8 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 				case BookReplay.Book(log): startReplay_(log);
 			}
 		}
-		// OutFrameの時は、ここから再生モードに移行する可能性を調べる
-//		if (phaseIsOutFrame)
-//		{
-//			// 必要ならReplayへ以降
-//			var stateSwitchWay:ReproduceSwitchWay<TUpdateKind> = state.getChangeWay();
-//			switch (stateSwitchWay)
-//			{
-//				case ReproduceSwitchWay.None :
-//				case ReproduceSwitchWay.ToReplay(log) : stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent));
-//			}
-//		}
-// startRecord
 		// メイン処理
-		state.endPhase(phaseValue, canProgress);
+		replayer.endPhase(phaseValue, canProgress);
 		// フェーズを無しに
 		phase = Option.None;
 	}
@@ -241,13 +255,9 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderImpl<ReproduceState<
 		frame = 0;
 		log.setPosition(logIndex);
 		bookReplay = BookReplay.Book(log);
-//		note.log('replayStart($logIndex) $log');
-//		log.setPosition(logIndex);
-//		frame = -1;
-//		stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent));
 	}
 }
-interface ReproduceState<TUpdateKind> extends StateGearHolder
+interface ReproduceReplayState<TUpdateKind> extends StateGearHolder
 {
 	/**
 	 * 進行可能かどうかチェックする
@@ -273,4 +283,16 @@ enum BookReplay<TUpdateKind>
 {
 	None;
 	Book(replayLog:ReplayLog<TUpdateKind>);
+}
+interface ReproduceRecord<TUpdateKind>
+{
+	/**
+	 * ログの保存
+	 */
+	public function saveLog(logPart:LogPart<TUpdateKind>):Void;
+	
+	/**
+	 * RecordLogを得る
+	 */
+	public function getRecordLog():RecordLog<TUpdateKind>;
 }

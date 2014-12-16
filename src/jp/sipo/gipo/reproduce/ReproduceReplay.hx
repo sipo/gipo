@@ -13,7 +13,7 @@ import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import flash.Vector;
 import jp.sipo.util.Note;
 import jp.sipo.gipo.reproduce.Reproduce;
-class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
+class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements ReproduceReplayState<TUpdateKind>
 {
 	/* 再生ログ */
 	private var replayLog:ReplayLog<TUpdateKind>;
