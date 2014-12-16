@@ -178,7 +178,6 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 			case Option.Some(v) : v;
 		}
 		// メイン処理
-		Note.temporal('replay update $frame $canProgress');
 		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phaseValue, frame, logway, factorPos);
 		replayer.noticeLog(logPart, canProgress);
 	}
@@ -228,7 +227,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 		// 記録ログをリセットして記録しなおし
 		startRecord();
 		// 再生を開始
-		stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent));
+		stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent, replayEnd));
 	}
 	/* イベントを実際に実行する処理 */
 	private function executeEvent(part:LogPart<TUpdateKind>):Void
@@ -238,6 +237,13 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 		// 実行
 		hook.executeEvent(part.logway, part.factorPos);
 	}
+	/* 終了処理 */
+	private function replayEnd():Void
+	{
+		stateSwitcherGear.changeState(new ReproduceReplayWait(executeEvent));
+	}
+	
+	
 	
 	/**
 	 * ログを返す

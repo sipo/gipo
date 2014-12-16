@@ -19,6 +19,8 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	private var replayLog:ReplayLog<TUpdateKind>;
 	/* 実行関数 */
 	private var executeEvent:LogPart<TUpdateKind> -> Void;
+	/* 終了通知関数 */
+	private var endCallback:Void -> Void;
 	
 	/* 現在フレームで再現実行されるPart */
 	private var nextLogPartList:Vector<LogPart<TUpdateKind>> = new Vector<LogPart<TUpdateKind>>();
@@ -30,15 +32,13 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	@:absorb
 	private var note:Note;
 	
-	/* comment */
-	private var isEnd:Bool = false;
-	
 	/** コンストラクタ */
-	public function new(replayLog:ReplayLog<TUpdateKind>, executeEvent:LogPart<TUpdateKind> -> Void) 
+	public function new(replayLog:ReplayLog<TUpdateKind>, executeEvent:LogPart<TUpdateKind> -> Void, endCallback:Void -> Void) 
 	{
 		super();
 		this.replayLog = replayLog;
 		this.executeEvent = executeEvent;
+		this.endCallback = endCallback;
 	}
 	
 	
@@ -64,7 +64,6 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	 */
 	public function update(frame:Int):Void
 	{
-		if (isEnd) return;	// TODO:<<尾野>>いらなくなる
 		// ここに来た時は前フレームのリストは全て解消されているはず
 		if (nextLogPartList.length != 0) throw '解消されていないLogPartが残っています $nextLogPartList';
 		// 発生するイベントをリストアップする
@@ -146,8 +145,8 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 			// 終了のチェック
 			if (nextLogPartList.length == 0 && !replayLog.hasNext())
 			{
-				isEnd = true;
 				note.log('再現が終了しました');
+				endCallback();
 			}
 		}
 	}

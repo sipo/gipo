@@ -4,9 +4,7 @@ package jp.sipo.gipo.reproduce;
  * 
  * @auther sipo
  */
-import haxe.PosInfos;
 import jp.sipo.gipo.reproduce.Reproduce;
-import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements ReproduceReplayState<TUpdateKind>
@@ -17,7 +15,7 @@ class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements Re
 	/* フレーム処理実行可能かどうかの判定 */
 	public var canProgress:Bool = true;
 	/* 実行関数 */
-	private var executeEvent:LogPart<TUpdateKind> -> Void;	// TODO:<<尾野>>共通化？
+	private var executeEvent:LogPart<TUpdateKind> -> Void;
 	
 	/** コンストラクタ */
 	public function new(executeEvent:LogPart<TUpdateKind> -> Void) 
