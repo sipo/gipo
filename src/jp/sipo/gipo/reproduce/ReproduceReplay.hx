@@ -90,18 +90,25 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	/* 対象の再生Partがリスト内と同じものがあるか確認し、あれば相殺してtrueを返す */
 	private function compensate(logPart:LogPart<TUpdateKind>, list:Vector<LogPart<TUpdateKind>>):Bool
 	{
-		for (i in 0...list.length)
+		var index:Int = sameLogIndex(logPart, list);
+		if (index != -1)
 		{
-			var target:LogPart<TUpdateKind> = list[i];
-			if (target.isSame(logPart))
-			{
-				note.log('準備イベントが待機リストと相殺して解決しました $target');
-				list.splice(i, 1);	// リストから削除
-				return true;
-			}
+			note.log('準備イベントが待機リストと相殺して解決しました ${list[index]}');
+			list.splice(i, 1);	// リストから削除
+			return true;
 		}
 		// 対象が無ければfalse
 		return false;
+	}
+	/* 同じイベントがあるかどうか */
+	private function sameLogIndex(logPart:LogPart<TUpdateKind>, list:Vector<LogPart<TUpdateKind>>):Int
+	{
+		for (i in 0...list.length)
+		{
+			var target:LogPart<TUpdateKind> = list[i];
+			if (target.isSame(logPart)) return i;
+		}
+		return -1;
 	}
 	
 	/**
@@ -120,9 +127,14 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 			if (setoff) return;
 		}
 		// 相殺出来なかった場合は、aheadリストへ追加
+		// 同一Logは、誤動作を起こすため警告
+		if (sameLogIndex(logPart, aheadReadyList) != -1)
+		{
+			note.warning('準備イベントの実際の発生が２重に発生しました。２つ以上の同じ準備イベントは、処理が前後してしまう可能性があるため回避するようにしてください。最も簡単な回避方法は、イベントEnumにid引数を持たせることです。 $logPart');
+		}
+		// 追加
 		note.log('準備イベントの実際の発生が再現タイミングより先に到達しました。再現タイミングを待ちます。 $logPart');
 		aheadReadyList.push(logPart);
-		// TODO:<<尾野>>余計なイベントが発生した場合、aheadに溜め込まれてしまう問題があるので、対策を検討→複数の同じイベントがAheadに入ったら警告
 	}
 	
 	
