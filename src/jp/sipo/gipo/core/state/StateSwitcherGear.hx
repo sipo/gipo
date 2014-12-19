@@ -1,4 +1,8 @@
 package jp.sipo.gipo.core.state;
+import jp.sipo.gipo.core.handler.GearDispatcherHandler;
+import jp.sipo.gipo.core.handler.GenericGearDispatcher;
+import jp.sipo.gipo.core.handler.AddBehaviorPreset;
+import jp.sipo.gipo.core.handler.GearDispatcher;
 import haxe.PosInfos;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.ListCall;
@@ -20,14 +24,18 @@ class StateSwitcherGear
 	 * -------------------------------*/
 	
 	/* 代入が確定した際にstateを引数に取って呼び出される関数 */
+	// TODO:<<尾野>>GenericGearDispatcherに
 	private var stateAssignmentList:Array<StateGearHolder -> Void>;
 	/* 前回シーンの扱いに関する関数（単体） */
 	private var lastStateTreatment:StateGearHolder -> Void;
+	/* stateの切り替え直前イベント */
+	private var enterStateChangeDispatcher:GenericGearDispatcher<StateGearHolder -> Void>;
 	
 	public function new(holder:StateSwitcherGearHolder, gear:Gear)
 	{
 		this.gear = gear;
 		changeNote = new Note([GearNoteTag.GearSystem, GearNoteTag.StateChange]);
+		enterStateChangeDispatcher = new GenericGearDispatcher<StateGearHolder -> Void>(AddBehaviorPreset.addTail, false);
 		// HandlerListの初期化
 		stateAssignmentList = new Array<StateGearHolder -> Void>();
 		gear.disposeTask(function (){
@@ -51,6 +59,11 @@ class StateSwitcherGear
 		changeNote.log('ChangeState state=${nextStateHolder} (from ${this})', pos);	
 		// ２重呼び出しをロック
 		changeLock = true;
+		// State変更直前イベント
+		enterStateChangeDispatcher.genericExecute(function (handler:GearDispatcherHandler<StateGearHolder -> Void>)
+		{
+			handler.func(nextStateHolder); 
+		}, pos);
 		// １つ前のStateをremove処理
 		var lastStateHolder:StateGearHolder = stateHolder;
 		if (lastStateHolder != null){
@@ -101,5 +114,13 @@ class StateSwitcherGear
 	{
 		if (this.lastStateTreatment != null) throw new SipoError('既にlastStateTreatmentが登録されています ${lastStateTreatment}');
 		this.lastStateTreatment = lastStateTreatment;
+	}
+	
+	/**
+	 * 切替時のハンドラを登録
+	 */
+	public function addEnterStateChangeHandler(func:StateGearHolder -> Void, ?pos:PosInfos):Void
+	{
+		enterStateChangeDispatcher.genericAdd(func, pos);
 	}
 }

@@ -94,7 +94,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		if (index != -1)
 		{
 			note.log('準備イベントが待機リストと相殺して解決しました ${list[index]}');
-			list.splice(i, 1);	// リストから削除
+			list.splice(index, 1);	// リストから削除
 			return true;
 		}
 		// 対象が無ければfalse
