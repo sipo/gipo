@@ -32,18 +32,15 @@ class LogWrapper<TUpdateKind>
  */
 class RecordLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 {
-	/* Partに割り振るID */
-	private var nextId:Int = 0;
-	
 	/** コンストラクタ */
 	public function new() { super(); }
 	
 	/**
 	 * 追加する
 	 */
-	public function add(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos):Void
+	public function add(logPart:LogPart<TUpdateKind>):Void
 	{
-		var logPart:LogPart<TUpdateKind> = new LogPart<TUpdateKind>(phase, frame, logway, nextId++, factorPos);
+		logPart.setId(list.length);
 		list.push(logPart);
 	}
 	
@@ -101,7 +98,7 @@ class ReplayLog<TUpdateKind> extends LogWrapper<TUpdateKind>
 			// snapshotだけを配列へ
 			switch (part.logway)
 			{
-				case LogwayKind.Instant(_), LogwayKind.Async(_) : continue;
+				case LogwayKind.Instant(_), LogwayKind.Ready(_) : continue;
 				case LogwayKind.Snapshot(value) : 
 				{
 					var snapshot:Snapshot = value;

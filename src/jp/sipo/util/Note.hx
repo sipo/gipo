@@ -28,6 +28,7 @@ class Note
 	// 表示タグ
 	public static inline var TAG_LOG:String = "[Note]";
 	public static inline var TAG_DEBUG:String = "[debug]";
+	public static inline var TAG_WARNING:String = "[Warning!]";
 	
 	/* ================================================================
 	 * 全体タグ設定処理
@@ -214,6 +215,14 @@ class Note
 			return;
 		}
 		displayMessage(TAG_DEBUG, message, debugFunction, posInfos);
+	}
+	
+	/**
+	 * 警告表示
+	 */
+	public function warning(message:Dynamic, ?posInfos:PosInfos):Void
+	{
+		displayMessage(TAG_WARNING, message, debugFunction, posInfos);
 	}
 	
 	

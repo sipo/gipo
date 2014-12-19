@@ -36,19 +36,20 @@ class GenericGearDispatcher<TFunc>
 		list = new Array<GearDispatcherHandler<TFunc>>();
 	}
 	
-	/*
+	/**
 	 * ハンドラを追加する
 	 */
-	inline private function genericAdd(func:TFunc, ?addPos:PosInfos):Void
+	inline public function genericAdd(func:TFunc, ?addPos:PosInfos):Void
 	{
 		var handler:GearDispatcherHandler<TFunc> = new GearDispatcherHandler<TFunc>(func, addPos);
 		addBehavior(list, handler);
 	}
 	
-	/*
+	// TODO:<<尾野>>GearDispatcherを移譲にして、継承を回避。この名称を、GenericDispatcherにする
+	/**
 	 * 登録されたハンドラを実行する
 	 */
-	inline private function genericExecute(treat:GearDispatcherHandler<TFunc> -> Void, ?executePos:PosInfos):Void
+	inline public function genericExecute(treat:GearDispatcherHandler<TFunc> -> Void, ?executePos:PosInfos):Void
 	{
 		// 実行ロックのチェック
 		if (executeLock) throw new SipoError("実行関数が入れ子になっています");

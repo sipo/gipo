@@ -4,10 +4,11 @@ package jp.sipo.gipo.core.state;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.handler.GearDispatcher;
 import haxe.PosInfos;
 class StateSwitcherGearHolderImpl<TState/*:StateGearHolder*/> extends StateSwitcherGearHolderLowLevelImpl
 {
-	/** State */
+	/** 切り替わる子要素 */
 	public var state(default, null):TState;
 	
 	/** コンストラクタ */

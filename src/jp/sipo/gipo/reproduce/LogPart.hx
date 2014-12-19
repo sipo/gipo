@@ -9,25 +9,32 @@ package jp.sipo.gipo.reproduce;
 import haxe.PosInfos;
 class LogPart<TUpdateKind>
 {
-	/** 再現フェーズ */
-	public var phase:ReproducePhase<TUpdateKind>;
+	/* 再現フェーズ */
+	private var phase:ReproducePhase<TUpdateKind>;
 	/** 発生フレーム */
-	public var frame:Int;
+	public var frame(default, null):Int;
 	/** ログ情報 */
-	public var logway:LogwayKind;
-	/** 通し番号 */
-	public var id:Int;
+	public var logway(default, null):LogwayKind;
 	/** 要因となったコードの場所情報 */
-	public var factorPos:PosInfos;
+	public var factorPos(default, null):PosInfos;
+	/* 通し番号 */
+	private var id:Int = -1; // MEMO:Optionを使用したいところだが速度優先で、無しは-1に
 	
 	/** コンストラクタ */
-	public function new(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, id:Int, factorPos:PosInfos) 
+	public function new(phase:ReproducePhase<TUpdateKind>, frame:Int, logway:LogwayKind, factorPos:PosInfos) 
 	{
 		this.phase = phase;
 		this.frame = frame;
 		this.logway = logway;
-		this.id = id;
 		this.factorPos = factorPos;
+	}
+	
+	/**
+	 * デバッグのためのIDを追加
+	 */
+	public function setId(id:Int):Void
+	{
+		this.id = id;
 	}
 	
 	/**
@@ -36,21 +43,17 @@ class LogPart<TUpdateKind>
 	 */
 	public function isSame(target:LogPart<TUpdateKind>):Bool
 	{
-		return isSameParam(target.phase, target.logway);
-	}
-	public function isSameParam(phase:ReproducePhase<TUpdateKind>, logway:LogwayKind):Bool
-	{
-		return Type.enumEq(this.phase, phase) && Type.enumEq(this.logway, logway);
+		return Type.enumEq(this.phase, target.phase) && Type.enumEq(this.logway, target.logway);
 	}
 	
 	/**
-	 * 対象のLogwayがAsyncかどうか判別する
+	 * 対象のLogwayがReadyかどうか判別する
 	 */
-	public static inline function isAsyncLogway(logway:LogwayKind):Bool
+	public function isReadyLogway():Bool
 	{
 		return switch(logway)
 		{
-			case LogwayKind.Async(_) : true;
+			case LogwayKind.Ready(_) : true;
 			case LogwayKind.Instant(_), LogwayKind.Snapshot(_): false;
 		}
 	}
@@ -58,13 +61,21 @@ class LogPart<TUpdateKind>
 	/**
 	 * 対象のPhaseがフレーム外かどうか判別する
 	 */
-	public static inline function isOutFramePhase<TUpdateKind>(phase:ReproducePhase<TUpdateKind>):Bool
+	public function isOutFramePhase<TUpdateKind>():Bool
 	{
 		return switch(phase)
 		{
 			case ReproducePhase.OutFrame : true;
 			case ReproducePhase.InFrame(_): false;
 		}
+	}
+	
+	/**
+	 * 対象と同じフェーズかどうかチェック
+	 */
+	public function equalPhase(phase:ReproducePhase<TUpdateKind>):Bool
+	{
+		return Type.enumEq(this.phase, phase);
 	}
 	
 	/**
@@ -94,8 +105,8 @@ enum LogwayKind
 {
 	/** 対象タイミングで実行 */
 	Instant(command:EnumValue);
-	/** 対象タイミングで準備が整うまで全体を待たせる（処理時間が不明瞭な動作） */
-	Async(command:EnumValue);
+	/** 対象タイミングで準備が整うまで全体を待たせる（再現時に、ダミーの値だけではなく、実際にリソースを用意したりする必要がある場合） */
+	Ready(command:EnumValue);
 	/** Logicを生成するのに必要。再生の最初のほか、途中再開にも使用できる */
 	Snapshot(value:Snapshot);
 }

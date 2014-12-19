@@ -21,3 +21,4 @@ class GearDispatcherHandler<TFunc>
 		return '[Handler ${addPos} ${func}]';
 	}
 }
+// TODO:<<尾野>>名称変更

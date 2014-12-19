@@ -5,31 +5,37 @@ package jp.sipo.gipo.reproduce;
  * @auther sipo
  */
 import jp.sipo.gipo.reproduce.Reproduce;
-import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
-class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements ReproduceState<TUpdateKind>
+class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements ReproduceReplayState<TUpdateKind>
 {
 	
 	/* フレームカウント */
 	public var frame:Int = 0;
 	/* フレーム処理実行可能かどうかの判定 */
 	public var canProgress:Bool = true;
-	/* 再生ログ */
-	private var replayLog:ReplayLog<TUpdateKind>;
+	/* 実行関数 */
+	private var executeEvent:LogPart<TUpdateKind> -> Void;
 	
 	/** コンストラクタ */
-	public function new(replayLog:ReplayLog<TUpdateKind>) 
+	public function new(executeEvent:LogPart<TUpdateKind> -> Void) 
 	{
 		super();
-		this.replayLog = replayLog;
+		this.executeEvent = executeEvent;
 	}
 	
+	/**
+	 * 進行可能かどうかチェックする
+	 */
+	public function checkCanProgress():Bool
+	{
+		return true;
+	}
 	
 	/**
 	 * 更新処理
 	 */
-	public function update():Void
+	public function update(frame:Int):Void
 	{
 		// 特になし
 	}
@@ -37,31 +43,17 @@ class ReproduceReplayWait<TUpdateKind> extends StateGearHolderImpl implements Re
 	/**
 	 * ログ発生の通知
 	 */
-	public function noticeLog(phaseValue:ReproducePhase<TUpdateKind>, logway:LogwayKind):Void
+	public function noticeLog(logPart:LogPart<TUpdateKind>, canProgress:Bool):Void
 	{
-		// 特になし
+		// そのまま実行
+		executeEvent(logPart);
 	}
 	
-	/**
-	 * 切り替えの問い合わせ
-	 */
-	public function getChangeWay():ReproduceSwitchWay<TUpdateKind>
-	{
-		return ReproduceSwitchWay.ToReplay(replayLog);
-	}
 	
 	/**
 	 * フェーズ終了
 	 */
-	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>):Void
-	{
-		// 特になし
-	}
-	
-	/**
-	 * RecordLogを得る（記録状態の時のみ）
-	 */
-	public function getRecordLog():RecordLog<TUpdateKind>
+	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void
 	{
 		// 特になし
 	}
