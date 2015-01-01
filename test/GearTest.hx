@@ -19,7 +19,7 @@ class GearTest
 	* とりあえずGearを生成し、その要素のchildGearListの長さが0であることをテスト
 	**/
 
-	@Test("初期状態")
+	@Test("GearにinitializeTopをしたとき、そのGearのchildGearListの長さが0である")
 	public function testInitialize():Void
 	{
 		var parent:GearHolderImpl = new GearHolderImpl();
@@ -33,7 +33,7 @@ class GearTest
 	* 初期状態では0,addChild後は1であるはず
 	**/
 
-	@Test("addChildが成功したパターン")
+	@Test("addChildしたとき、親GearのchildGearListの長さが1である")
 	public function testaddChild():Void
 	{
 		/*最上位GearHolder*/
@@ -56,7 +56,7 @@ class GearTest
 	* removeChild後は0のはずである
 	**/
 
-	@Test("removeChildが成功したパターン")
+	@Test("removeChildしたとき、親GearのchildGearListの長さが0である")
 	public function testremoveChild():Void
 	{
 		var parent:GearHolderImpl = new GearHolderImpl();
