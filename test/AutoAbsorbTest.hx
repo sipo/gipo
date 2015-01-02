@@ -1,11 +1,11 @@
 package ;
 
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import jp.sipo.gipo.core.GearHolderImpl;
-
 import massive.munit.Assert;
 
+@:access(jp.sipo.gipo.core.Gear)
+@:access(jp.sipo.gipo.core.GearHolderImpl)
 class AutoAbsorbTest
 {
 	public function new() { }
@@ -13,13 +13,23 @@ class AutoAbsorbTest
 	@Test("ChildGearで@:absorbを指定したSomethingは自動的にabsorbされる")
 	private function childGearAbsorbSomething():Void 
 	{
-		var top:Top = new Top();
-		top.gearOutside().initializeTop(null);
+		var parent = new Parent();
+		var child = new Child();
 		
-		var child:Child = top.child;
+		parent.gear.diffusibleHandlerList.add(function (tool:GearDiffuseTool):Void
+		{
+			parent.something = new Something("John Doe");
+			tool.diffuse(parent.something, Something);
+			tool.bookChild(child);
+		});
 		
-		Assert.isNotNull(child.something);
-		Assert.areEqual(child.something.name, "John Doe");
+		child.gear.runHandlerList.add(function ():Void 
+		{
+			Assert.isNotNull(child.something);
+			Assert.areEqual(child.something.name, "John Doe");
+		});
+		
+		parent.gearOutside().initializeTop(null);
 	}
 	
 }
@@ -34,23 +44,11 @@ private class Something {
 	}
 }
 
-/* TopGear */
-private class Top extends GearHolderImpl 
+/* ParentGear */
+private class Parent extends GearHolderImpl 
 {
 	public var something:Something;
-	public var child:Child;
-	
 	public function new() { super(); }
-	
-	@:handler(GearDispatcherKind.Diffusible)
-	private function diffusible(tool:GearDiffuseTool):Void 
-	{
-		this.something = new Something("John Doe");
-		tool.diffuse(something, Something);
-		
-		this.child = new Child();
-		tool.bookChild(child);
-	}
 }
 
 /* ChildGear */
@@ -58,12 +56,5 @@ private class Child extends GearHolderImpl
 {
 	@:absorb
 	public var something:Something;
-	
 	public function new() { super(); }
-	
-	@:handler(GearDispatcherKind.Run)
-	private function run():Void 
-	{
-		
-	}
 }
