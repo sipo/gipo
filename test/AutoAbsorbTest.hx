@@ -23,7 +23,7 @@ class AutoAbsorbTest
 			tool.bookChild(child);
 		});
 		
-		child.gear.runHandlerList.add(function ():Void 
+		child.gear.diffusibleHandlerList.add(function (tool:GearDiffuseTool):Void 
 		{
 			Assert.isNotNull(child.something);
 			Assert.areEqual(child.something.name, "John Doe");
