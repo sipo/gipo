@@ -4,3 +4,8 @@
 .idea
 *.hxproj
 /out
+
+## MUnit
+/report
+test/TestMain.hx
+test/TestSuite.hx
