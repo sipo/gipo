@@ -15,12 +15,13 @@ class GearTest
 	{}
 
 	/**
+	* initializeTopメソッドのテスト
 	* 正しい初期状態かをテスト
 	* とりあえずGearを生成し、その要素のchildGearListの長さが0であることをテスト
 	**/
 
 	@Test("GearにinitializeTopをしたとき、そのGearのchildGearListの長さが0である")
-	public function test_initializeTop():Void
+	public function testInitializeTop():Void
 	{
 		var parent:GearHolderImpl = new GearHolderImpl();
 		parent.gearOutside().initializeTop(null);
@@ -28,13 +29,14 @@ class GearTest
 	}
 
 	/**
+	* addChildメソッドのテスト
 	* addChildの確認のため、最も単純に親と子を1つずつ作成し、
 	* addChildしたときの親の持つ子の配列childGearListの長さを取得する
 	* 初期状態では0,addChild後は1であるはず
 	**/
 
 	@Test("最初にaddChildしたとき、親GearのchildGearListの長さが1である")
-	public function test_addChild():Void
+	public function testAddChild():Void
 	{
 		/*最上位GearHolder*/
 		var parent:GearHolderImpl = new GearHolderImpl();
@@ -50,6 +52,7 @@ class GearTest
 	}
 
 	/**
+	* removeChildメソッドのテスト
 	* 正しくGearをchildGearListからremoveChildできているか
 	* まずはtestaddChild()と同じように要素をaddChildし、そこからremoveChildを適用する
 	* childGearListの長さを取得しテストしている
@@ -57,7 +60,7 @@ class GearTest
 	**/
 
 	@Test("最初にremoveChildしたとき、親GearのchildGearListの長さが0である")
-	public function test_removeChild():Void
+	public function testRemoveChild():Void
 	{
 		var parent:GearHolderImpl = new GearHolderImpl();
 		var child:GearHolderImpl = new GearHolderImpl();
