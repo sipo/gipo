@@ -20,7 +20,7 @@ class GearTest
 	**/
 
 	@Test("GearにinitializeTopをしたとき、そのGearのchildGearListの長さが0である")
-	public function testInitialize():Void
+	public function test_initializeTop():Void
 	{
 		var parent:GearHolderImpl = new GearHolderImpl();
 		parent.gearOutside().initializeTop(null);
@@ -34,7 +34,7 @@ class GearTest
 	**/
 
 	@Test("最初にaddChildしたとき、親GearのchildGearListの長さが1である")
-	public function testaddChild():Void
+	public function test_addChild():Void
 	{
 		/*最上位GearHolder*/
 		var parent:GearHolderImpl = new GearHolderImpl();
@@ -57,7 +57,7 @@ class GearTest
 	**/
 
 	@Test("最初にremoveChildしたとき、親GearのchildGearListの長さが0である")
-	public function testremoveChild():Void
+	public function test_removeChild():Void
 	{
 		var parent:GearHolderImpl = new GearHolderImpl();
 		var child:GearHolderImpl = new GearHolderImpl();
