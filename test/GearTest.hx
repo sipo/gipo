@@ -49,6 +49,18 @@ class GearTest
 		pgear.addChild(child);
 		//addChildしたので、parentのchildGearListにある要素数を見る
 		Assert.areEqual(1, pgear.childGearList.length);
+		
+		/*
+		配列の最初の1つがchildと同一であることをテスト
+		childGearListはGear型配型で、childはGearHolderImpl型だが
+		GearHolderImplクラスは内部ではGearを生成しているので、gearOutside()メソッドで
+		実際に使用されているGear型のchildを取得できる
+		 */
+		Assert.areEqual(child.gearOutside(), pgear.childGearList[0]);
+		
+		/*
+		子の親が意図したものであることをテスト
+		 */
 	}
 
 	/**
