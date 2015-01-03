@@ -60,7 +60,10 @@ class GearTest
 		
 		/*
 		子の親が意図したものであることをテスト
+		parent.gearOutside()は上記の理由と同じで、Gear型のparentを取得している
+		pgear.childGearList[0].parentで、子の親を取得している
 		 */
+		 Assert.areEqual(parent.gearOutside(), pgear.childGearList[0].parent);
 	}
 
 	/**
