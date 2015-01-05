@@ -9,7 +9,7 @@ import massive.munit.Assert;
 
 @:access(jp.sipo.gipo.core.Gear)
 @:access(jp.sipo.gipo.core.GearHolderImpl)
-class GearAddChildTest
+class GearStructureTest
 {
 	public function new()
 	{}
@@ -35,7 +35,7 @@ class GearAddChildTest
 	* 初期状態では0,addChild後は1であるはず
 	**/
 
-	@Test("最初にaddChildしたとき、親GearのchildGearListの長さが1である")
+	@Test("最初にaddChildしたとき、正しく構造が生成されている")
 	public function testAddChild():Void
 	{
 		/*最上位GearHolder*/
@@ -45,8 +45,10 @@ class GearAddChildTest
 		parent.gearOutside().initializeTop(null);
 
 		var pgear = parent.gear;
-
+		
+		//addChildを実行する
 		pgear.addChild(child);
+		
 		//addChildしたので、parentのchildGearListにある要素数を見る
 		Assert.areEqual(1, pgear.childGearList.length);
 		
