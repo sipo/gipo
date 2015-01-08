@@ -67,4 +67,28 @@ class GearStructureTest
 		 */
 		 Assert.areEqual(parent.gearOutside(), pgear.childGearList[0].parent);
 	}
+	
+	/**
+	* removeChildメソッドのテスト
+	* 正しくGearをchildGearListからremoveChildできているか
+	* まずはtestaddChild()と同じように要素をaddChildし、そこからremoveChildを適用する
+	* childGearListの長さを取得しテストしている
+	* removeChild後は0のはずである
+	**/
+
+	@Test("最初にremoveChildしたとき、親GearのchildGearListの長さが0である")
+	public function testRemoveChild():Void
+	{
+		var parent:GearHolderImpl = new GearHolderImpl();
+		var child:GearHolderImpl = new GearHolderImpl();
+		//根を初期化。動き出す
+		parent.gearOutside().initializeTop(null);
+
+		var pgear = parent.gear;
+		pgear.addChild(child);
+
+		//removeChildして、parentのchildGearListにある要素数が0であることをテスト
+		pgear.removeChild(child);
+		Assert.areEqual(0, pgear.childGearList.length);
+	}
 }
