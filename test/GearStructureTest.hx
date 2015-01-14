@@ -76,7 +76,7 @@ class GearStructureTest
 	* removeChild後は0のはずである
 	**/
 
-	@Test("最初にremoveChildしたとき、親GearのchildGearListの長さが0である")
+	@Test("addChild後にremoveChildしたとき、親GearのchildGearListの長さが0である")
 	public function testRemoveChild():Void
 	{
 		var parent:GearHolderImpl = new GearHolderImpl();
