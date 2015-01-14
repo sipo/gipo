@@ -31,6 +31,8 @@ class GearStructureTest
 	public function setup():Void{
 		parent = new GearHolderImpl();
 		child = new GearHolderImpl();
+		//根を初期化
+		parent.gearOutside().initializeTop(null);
 	}
 	
 	@Test("setupが正しく行われている")
@@ -56,8 +58,7 @@ class GearStructureTest
 	@Test("GearにinitializeTopをしたとき、そのGearのchildGearListの長さが0である")
 	public function testInitializeTop():Void
 	{
-		var parent:GearHolderImpl = new GearHolderImpl();
-		parent.gearOutside().initializeTop(null);
+		//TODO initializeTop特有のものでチェックするようにする
 		Assert.areEqual(0, parent.gear.childGearList.length);
 	}
 
@@ -72,12 +73,6 @@ class GearStructureTest
 	@Test("最初にaddChildしたとき、正しく構造が生成されている")
 	public function testAddChild():Void
 	{
-		/*最上位GearHolder*/
-		var parent:GearHolderImpl = new GearHolderImpl();
-		var child:GearHolderImpl = new GearHolderImpl();
-		//根を初期化。動き出す
-		parent.gearOutside().initializeTop(null);
-
 		var pgear = parent.gear;
 		
 		//addChildを実行する
@@ -114,11 +109,6 @@ class GearStructureTest
 	@Test("addChild後にremoveChildしたとき、親GearのchildGearListの長さが0である")
 	public function testRemoveChild():Void
 	{
-		var parent:GearHolderImpl = new GearHolderImpl();
-		var child:GearHolderImpl = new GearHolderImpl();
-		//根を初期化。動き出す
-		parent.gearOutside().initializeTop(null);
-
 		var pgear = parent.gear;
 		pgear.addChild(child);
 
