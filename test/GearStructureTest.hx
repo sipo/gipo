@@ -1,5 +1,7 @@
 package;
 
+import Type;
+import jp.sipo.gipo.core.GearHolder;
 import jp.sipo.gipo.core.Gear;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -25,9 +27,23 @@ class GearStructureTest
 	*parent,childを作成するsetup
 	**/
 	
-	override public function setup():Void{
+	@Before
+	public function setup():Void{
 		parent = new GearHolderImpl();
 		child = new GearHolderImpl();
+	}
+	
+	@Test("setupが正しく行われている")
+	public function testSetup():Void{
+		//型チェック
+		Assert.areEqual(GearHolderImpl,Type.getClass(parent));
+		Assert.areEqual(GearHolderImpl,Type.getClass(parent));
+		Assert.areEqual(Gear,Type.getClass(parent.gear));
+		Assert.areEqual(Gear,Type.getClass(child.gear));
+		
+		//正しく生成されているかどうかをGearのchildGearListの長さが0であることで確認
+		Assert.areEqual(0, parent.gear.childGearList.length);
+		Assert.areEqual(0, child.gear.childGearList.length);
 	}
 	
 	///////////////////////////////////////////////////////////////////////
