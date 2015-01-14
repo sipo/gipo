@@ -13,7 +13,24 @@ class GearStructureTest
 {
 	public function new()
 	{}
-
+	
+	/**
+	*テストに共通するparentとchildをフィールド変数にした
+	**/
+	
+	var parent:GearHolderImpl;
+	var child: GearHolderImpl;
+	
+	/**
+	*parent,childを作成するsetup
+	**/
+	
+	override public function setup():Void{
+		parent = new GearHolderImpl();
+		child = new GearHolderImpl();
+	}
+	
+	///////////////////////////////////////////////////////////////////////
 	/**
 	* initializeTopメソッドのテスト
 	* 正しい初期状態かをテスト
@@ -28,6 +45,7 @@ class GearStructureTest
 		Assert.areEqual(0, parent.gear.childGearList.length);
 	}
 
+	///////////////////////////////////////////////////////////////////////
 	/**
 	* addChildメソッドのテスト
 	* addChildの確認のため、最も単純に親と子を1つずつ作成し、
@@ -68,6 +86,7 @@ class GearStructureTest
 		 Assert.areEqual(parent.gearOutside(), pgear.childGearList[0].parent);
 	}
 	
+	///////////////////////////////////////////////////////////////////////
 	/**
 	* removeChildメソッドのテスト
 	* 正しくGearをchildGearListからremoveChildできているか
