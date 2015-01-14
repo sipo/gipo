@@ -1,5 +1,7 @@
 package;
 
+import Type;
+import jp.sipo.gipo.core.GearHolder;
 import jp.sipo.gipo.core.Gear;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -13,21 +15,54 @@ class GearStructureTest
 {
 	public function new()
 	{}
-
+	
+	/**
+	*テストに共通するparentとchildをフィールド変数にした
+	**/
+	
+	var parent:GearHolderImpl;
+	var child: GearHolderImpl;
+	
+	/**
+	*parent,childを作成するsetup
+	**/
+	
+	@Before
+	public function setup():Void{
+		parent = new GearHolderImpl();
+		child = new GearHolderImpl();
+		//根を初期化
+		parent.gearOutside().initializeTop(null);
+	}
+	
+	@Test("setupが正しく行われている")
+	public function testSetup():Void{
+		//型チェック
+		Assert.areEqual(GearHolderImpl,Type.getClass(parent));
+		Assert.areEqual(GearHolderImpl,Type.getClass(parent));
+		Assert.areEqual(Gear,Type.getClass(parent.gear));
+		Assert.areEqual(Gear,Type.getClass(child.gear));
+		
+		//正しく生成されているかどうかをGearのchildGearListの長さが0であることで確認
+		Assert.areEqual(0, parent.gear.childGearList.length);
+		Assert.areEqual(0, child.gear.childGearList.length);
+	}
+	
+	///////////////////////////////////////////////////////////////////////
 	/**
 	* initializeTopメソッドのテスト
 	* 正しい初期状態かをテスト
 	* とりあえずGearを生成し、その要素のchildGearListの長さが0であることをテスト
 	**/
 
-	@Test("GearにinitializeTopをしたとき、そのGearのchildGearListの長さが0である")
+	@Test("initializeTop後、正しいphaseとなっている")
 	public function testInitializeTop():Void
 	{
-		var parent:GearHolderImpl = new GearHolderImpl();
-		parent.gearOutside().initializeTop(null);
-		Assert.areEqual(0, parent.gear.childGearList.length);
+		//initializeTop後、phaseはMiddleになっている
+		Assert.areEqual(Type.enumConstructor(Middle), parent.gear.phase);
 	}
 
+	///////////////////////////////////////////////////////////////////////
 	/**
 	* addChildメソッドのテスト
 	* addChildの確認のため、最も単純に親と子を1つずつ作成し、
@@ -38,12 +73,6 @@ class GearStructureTest
 	@Test("最初にaddChildしたとき、正しく構造が生成されている")
 	public function testAddChild():Void
 	{
-		/*最上位GearHolder*/
-		var parent:GearHolderImpl = new GearHolderImpl();
-		var child:GearHolderImpl = new GearHolderImpl();
-		//根を初期化。動き出す
-		parent.gearOutside().initializeTop(null);
-
 		var pgear = parent.gear;
 		
 		//addChildを実行する
@@ -68,6 +97,7 @@ class GearStructureTest
 		 Assert.areEqual(parent.gearOutside(), pgear.childGearList[0].parent);
 	}
 	
+	///////////////////////////////////////////////////////////////////////
 	/**
 	* removeChildメソッドのテスト
 	* 正しくGearをchildGearListからremoveChildできているか
@@ -79,11 +109,6 @@ class GearStructureTest
 	@Test("addChild後にremoveChildしたとき、親GearのchildGearListの長さが0である")
 	public function testRemoveChild():Void
 	{
-		var parent:GearHolderImpl = new GearHolderImpl();
-		var child:GearHolderImpl = new GearHolderImpl();
-		//根を初期化。動き出す
-		parent.gearOutside().initializeTop(null);
-
 		var pgear = parent.gear;
 		pgear.addChild(child);
 
