@@ -55,11 +55,11 @@ class GearStructureTest
 	* とりあえずGearを生成し、その要素のchildGearListの長さが0であることをテスト
 	**/
 
-	@Test("GearにinitializeTopをしたとき、そのGearのchildGearListの長さが0である")
+	@Test("initializeTop後、正しいphaseとなっている")
 	public function testInitializeTop():Void
 	{
-		//TODO initializeTop特有のものでチェックするようにする
-		Assert.areEqual(0, parent.gear.childGearList.length);
+		//initializeTop後、phaseはMiddleになっている
+		Assert.areEqual(Type.enumConstructor(Middle), parent.gear.phase);
 	}
 
 	///////////////////////////////////////////////////////////////////////
