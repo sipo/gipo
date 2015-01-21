@@ -15,6 +15,7 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *
 	 * top diffuses DiffuseData.
+	 * nodeA and nodeAA can absorb that.
 	 */
 	@Test
 	public function testDiffuseStraight():Void
@@ -46,6 +47,7 @@ class DiffuseTest
 	 *     `- nodeB -- nodeBB
 	 *
 	 * top diffuses DiffuseData.
+	 * nodeA, nodeAA, nodeB and nodeBB can absorb that.
 	 */
 	@Test
 	public function testDiffuseFork():Void
@@ -87,7 +89,12 @@ class DiffuseTest
 	 *     `- nodeB -- nodeBB
 	 *
 	 * top diffuses DiffuseData.
+	 * nodeB and nodeBB can absorb that.
+	 * nodeA can absorb that before diffuse self.
+	 *
 	 * nodeA diffuses another DiffuseData.
+	 * nodeAA can absorb that.
+	 * nodeA can absorb that after diffuse self.
 	 */
 	@Test
 	public function testDiffusePartial():Void
@@ -130,6 +137,7 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *
 	 * top diffuses DiffuseDataSub.
+	 * nodeA and nodeAA can absorb that.
 	 */
 	@Test
 	public function testDiffuseSubclass():Void
@@ -160,6 +168,7 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *
 	 * top diffuses DiffuseData with key.
+	 * nodeA and nodeAA can absorb that.
 	 */
 	@Test
 	public function testDiffuseStraightWithKey():Void
@@ -191,6 +200,7 @@ class DiffuseTest
 	 *     `- nodeB -- nodeBB
 	 *
 	 * top diffuses DiffuseData with key.
+	 * nodeA, nodeAA, nodeB and nodeBB can absorb that.
 	 */
 	@Test
 	public function testDiffuseForkWithKey():Void
@@ -232,7 +242,12 @@ class DiffuseTest
 	 *     `- nodeB -- nodeBB
 	 *
 	 * top diffuses DiffuseData.
+	 * nodeB and nodeBB can absorb that.
+	 * nodeA can absorb that before diffuse self.
+	 *
 	 * nodeA diffuses another DiffuseData with key.
+	 * nodeAA can absorb that.
+	 * nodeA can absorb that after diffuse self.
 	 */
 	@Test
 	public function testDiffusePartialWithKey():Void
@@ -275,6 +290,7 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *
 	 * top diffuses DiffuseDataSub with key.
+	 * nodeA and nodeAA can absorb that.
 	 */
 	@Test
 	public function testDiffuseSubclassWithKey():Void
