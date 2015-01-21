@@ -14,25 +14,25 @@ class DiffuseTest
 	/*
 	 * top -- nodeA -- nodeAA
 	 *
-	 * top diffuses Data.
+	 * top diffuses DiffuseData.
 	 */
 	@Test
 	public function testDiffuseStraight():Void
 	{
-		var data = new Data();
+		var data = new DiffuseData();
 		
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 		
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 		
 		// build gear tree
-		var top = new Top(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseTop(top);
+		topGear.gearOutside().initializeTop(null);
 		
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -45,31 +45,31 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *     `- nodeB -- nodeBB
 	 *
-	 * top diffuses Data.
+	 * top diffuses DiffuseData.
 	 */
 	@Test
 	public function testDiffuseFork():Void
 	{
-		var data = new Data();
+		var data = new DiffuseData();
 
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 
-		var nodeB = new TreeInfo();
+		var nodeB = new DiffuseTreeInfo();
 		top.children.push(nodeB);
 
-		var nodeBB = new TreeInfo();
+		var nodeBB = new DiffuseTreeInfo();
 		nodeB.children.push(nodeBB);
 
 		// build gear tree
-		var top = new Top(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseTop(top);
+		topGear.gearOutside().initializeTop(null);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -86,34 +86,34 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *     `- nodeB -- nodeBB
 	 *
-	 * top diffuses Data.
-	 * nodeA diffuses another Data.
+	 * top diffuses DiffuseData.
+	 * nodeA diffuses another DiffuseData.
 	 */
 	@Test
 	public function testDiffusePartial():Void
 	{
-		var data = new Data();
-		var dataA = new Data();
+		var data = new DiffuseData();
+		var dataA = new DiffuseData();
 
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		nodeA.diffuseData = dataA;
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 
-		var nodeB = new TreeInfo();
+		var nodeB = new DiffuseTreeInfo();
 		top.children.push(nodeB);
 
-		var nodeBB = new TreeInfo();
+		var nodeBB = new DiffuseTreeInfo();
 		nodeB.children.push(nodeBB);
 
 		// build gear tree
-		var top = new Top(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseTop(top);
+		topGear.gearOutside().initializeTop(null);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData); // absorbed before diffuse dataA
@@ -129,25 +129,25 @@ class DiffuseTest
 	/*
 	 * top -- nodeA -- nodeAA
 	 *
-	 * top diffuses DataSub.
+	 * top diffuses DiffuseDataSub.
 	 */
 	@Test
 	public function testDiffuseSubclass():Void
 	{
-		var data = new DataSub();
+		var data = new DiffuseDataSub();
 
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 
 		// build gear tree
-		var top = new Top(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseTop(top);
+		topGear.gearOutside().initializeTop(null);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -159,25 +159,25 @@ class DiffuseTest
 	/*
 	 * top -- nodeA -- nodeAA
 	 *
-	 * top diffuses Data with key.
+	 * top diffuses DiffuseData with key.
 	 */
 	@Test
 	public function testDiffuseStraightWithKey():Void
 	{
-		var data = new Data();
+		var data = new DiffuseData();
 
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 
 		// build gear tree
-		var top = new TopWithKey(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseWithKeyTop(top);
+		topGear.gearOutside().initializeTop(null);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -190,31 +190,31 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *     `- nodeB -- nodeBB
 	 *
-	 * top diffuses Data with key.
+	 * top diffuses DiffuseData with key.
 	 */
 	@Test
 	public function testDiffuseForkWithKey():Void
 	{
-		var data = new Data();
+		var data = new DiffuseData();
 
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 
-		var nodeB = new TreeInfo();
+		var nodeB = new DiffuseTreeInfo();
 		top.children.push(nodeB);
 
-		var nodeBB = new TreeInfo();
+		var nodeBB = new DiffuseTreeInfo();
 		nodeB.children.push(nodeBB);
 
 		// build gear tree
-		var top = new TopWithKey(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseWithKeyTop(top);
+		topGear.gearOutside().initializeTop(null);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -231,34 +231,34 @@ class DiffuseTest
 	 * top -- nodeA -- nodeAA
 	 *     `- nodeB -- nodeBB
 	 *
-	 * top diffuses Data.
-	 * nodeA diffuses another Data with key.
+	 * top diffuses DiffuseData.
+	 * nodeA diffuses another DiffuseData with key.
 	 */
 	@Test
 	public function testDiffusePartialWithKey():Void
 	{
-		var data = new Data();
-		var dataA = new Data();
+		var data = new DiffuseData();
+		var dataA = new DiffuseData();
 
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		nodeA.diffuseData = dataA;
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 
-		var nodeB = new TreeInfo();
+		var nodeB = new DiffuseTreeInfo();
 		top.children.push(nodeB);
 
-		var nodeBB = new TreeInfo();
+		var nodeBB = new DiffuseTreeInfo();
 		nodeB.children.push(nodeBB);
 
 		// build gear tree
-		var top = new TopWithKey(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseWithKeyTop(top);
+		topGear.gearOutside().initializeTop(null);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData); // absorbed before diffuse dataA
@@ -274,25 +274,25 @@ class DiffuseTest
 	/*
 	 * top -- nodeA -- nodeAA
 	 *
-	 * top diffuses DataSub with key.
+	 * top diffuses DiffuseDataSub with key.
 	 */
 	@Test
 	public function testDiffuseSubclassWithKey():Void
 	{
-		var data = new DataSub();
+		var data = new DiffuseDataSub();
 
-		var top = new TreeInfo();
+		var top = new DiffuseTreeInfo();
 		top.diffuseData = data;
 
-		var nodeA = new TreeInfo();
+		var nodeA = new DiffuseTreeInfo();
 		top.children.push(nodeA);
 
-		var nodeAA = new TreeInfo();
+		var nodeAA = new DiffuseTreeInfo();
 		nodeA.children.push(nodeAA);
 
 		// build gear tree
-		var top = new TopWithKey(top);
-		top.gearOutside().initializeTop(null);
+		var topGear = new DiffuseWithKeyTop(top);
+		topGear.gearOutside().initializeTop(null);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -302,11 +302,11 @@ class DiffuseTest
 	}
 }
 
-class Top extends GearHolderImpl
+class DiffuseTop extends GearHolderImpl
 {
-	var info:TreeInfo;
+	var info:DiffuseTreeInfo;
 
-	public function new(info:TreeInfo)
+	public function new(info:DiffuseTreeInfo)
 	{
 		super();
 		this.info = info;
@@ -316,21 +316,21 @@ class Top extends GearHolderImpl
 	function diffusible(tool:GearDiffuseTool):Void
 	{
 		if(info.diffuseData != null) {
-			tool.diffuse(info.diffuseData, Data);
+			tool.diffuse(info.diffuseData, DiffuseData);
 		}
 
 		for(child in info.children) {
-			tool.bookChild(new Node(child));
+			tool.bookChild(new DiffuseNode(child));
 		}
 	}
 }
 
-class Node extends Top
+class DiffuseNode extends DiffuseTop
 {
 	@:absorb
-	public var autoData:Data;
+	public var autoData:DiffuseData;
 	
-	public function new(info:TreeInfo)
+	public function new(info:DiffuseTreeInfo)
 	{
 		super(info);
 	}
@@ -339,15 +339,15 @@ class Node extends Top
 	function run():Void
 	{
 		info.autoData = autoData;
-		info.manualData = gear.absorb(Data);
+		info.manualData = gear.absorb(DiffuseData);
 	}
 }
 
-class TopWithKey extends GearHolderImpl
+class DiffuseWithKeyTop extends GearHolderImpl
 {
-	var info:TreeInfo;
+	var info:DiffuseTreeInfo;
 
-	public function new(info:TreeInfo)
+	public function new(info:DiffuseTreeInfo)
 	{
 		super();
 		this.info = info;
@@ -357,21 +357,21 @@ class TopWithKey extends GearHolderImpl
 	function diffusible(tool:GearDiffuseTool):Void
 	{
 		if(info.diffuseData != null) {
-			tool.diffuseWithKey(info.diffuseData, DataKey.Key1);
+			tool.diffuseWithKey(info.diffuseData, DiffuseDataKey.Key1);
 		}
 
 		for(child in info.children) {
-			tool.bookChild(new NodeWithKey(child));
+			tool.bookChild(new DiffuseWithKeyNode(child));
 		}
 	}
 }
 
-class NodeWithKey extends TopWithKey
+class DiffuseWithKeyNode extends DiffuseWithKeyTop
 {
-	@:absorbWithKey(DataKey.Key1)
-	public var autoData:Data;
+	@:absorbWithKey(DiffuseDataKey.Key1)
+	public var autoData:DiffuseData;
 
-	public function new(info:TreeInfo)
+	public function new(info:DiffuseTreeInfo)
 	{
 		super(info);
 	}
@@ -380,17 +380,17 @@ class NodeWithKey extends TopWithKey
 	function run():Void
 	{
 		info.autoData = autoData;
-		info.manualData = gear.absorbWithKey(DataKey.Key1);
+		info.manualData = gear.absorbWithKey(DiffuseDataKey.Key1);
 	}
 }
 
-class TreeInfo
+class DiffuseTreeInfo
 {
-	public var children:Array<TreeInfo>;
-	public var diffuseData:Data;
+	public var children:Array<DiffuseTreeInfo>;
+	public var diffuseData:DiffuseData;
 
-	public var autoData:Data;
-	public var manualData:Data;
+	public var autoData:DiffuseData;
+	public var manualData:DiffuseData;
 
 	public function new()
 	{
@@ -398,17 +398,17 @@ class TreeInfo
 	}
 }
 
-class Data
+class DiffuseData
 {
 	public function new() {}
 }
 
-class DataSub extends Data
+class DiffuseDataSub extends DiffuseData
 {
 	public function new() { super(); }
 }
 
-enum DataKey
+enum DiffuseDataKey
 {
 	Key1;
 	Key2;
