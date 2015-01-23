@@ -82,30 +82,47 @@ class RemoveTest
 	 *
 	 * nodeAA will be removed.
 	 */
-	@Test
-	public function testRemoveSingleNode():Void
+	function doRemoveSingleNode():Void
 	{
 		prepareStraightTree();
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
 		topGear.gearOutside().initializeTop(null);
-		
+
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isTrue(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
-		
+
 		// remove node
 		nodeA.self.gear.removeChild(nodeAA.self);
+	}
+
+	@Test
+	public function testRemoveSingleNode_disposeTask():Void
+	{
+		doRemoveSingleNode();
 
 		// verify: removed or not
 		Assert.isFalse(top.isRemoved);
 		Assert.isFalse(nodeA.isRemoved);
 		Assert.isTrue(nodeAA.isRemoved);
+	}
+
+	@Test
+	public function testRemoveSingleNode_detach():Void
+	{
+		doRemoveSingleNode();
 
 		// verify: detached from tree
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
+	}
+
+	@Test
+	public function testRemoveSingleNode_removingOrder():Void
+	{
+		doRemoveSingleNode();
 
 		// verify: removed in order
 		Assert.areEqual(0, nodeAA.removedTimeCode);
@@ -116,8 +133,7 @@ class RemoveTest
 	 *
 	 * nodeA will be removed.
 	 */
-	@Test
-	public function testRemoveWithGrandchild():Void
+	function doRemoveWithGrandchild():Void
 	{
 		prepareStraightTree();
 
@@ -131,15 +147,33 @@ class RemoveTest
 
 		// remove node
 		top.self.gear.removeChild(nodeA.self);
+	}
+
+	@Test
+	public function testRemoveWithGrandchild_disposeTask():Void
+	{
+		doRemoveWithGrandchild();
 
 		// verify: removed or not
 		Assert.isFalse(top.isRemoved);
 		Assert.isTrue(nodeA.isRemoved);
 		Assert.isTrue(nodeAA.isRemoved);
+	}
+
+	@Test
+	public function testRemoveWithGrandchild_detach():Void
+	{
+		doRemoveWithGrandchild();
 
 		// verify: detached from tree
 		Assert.isFalse(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
+	}
+
+	@Test
+	public function testRemoveWithGrandchild_removingOrder():Void
+	{
+		doRemoveWithGrandchild();
 
 		// verify: removed in order
 		Assert.areEqual(0, nodeAA.removedTimeCode);
@@ -151,8 +185,7 @@ class RemoveTest
 	 *
 	 * top will be removed.
 	 */
-	@Test
-	public function testRemoveTop():Void
+	function doRemoveTop():Void
 	{
 		prepareStraightTree();
 
@@ -166,15 +199,33 @@ class RemoveTest
 
 		// remove node
 		topGear.gearOutside().disposeTop();
+	}
+
+	@Test
+	public function testRemoveTop_disposeTask():Void
+	{
+		doRemoveTop();
 
 		// verify: removed or not
 		Assert.isTrue(top.isRemoved);
 		Assert.isTrue(nodeA.isRemoved);
 		Assert.isTrue(nodeAA.isRemoved);
+	}
+
+	@Test
+	public function testRemoveTop_detach():Void
+	{
+		doRemoveTop();
 
 		// verify: detached from tree
 		Assert.isFalse(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
+	}
+
+	@Test
+	public function testRemoveTop_removingOrder():Void
+	{
+		doRemoveTop();
 
 		// verify: removed in order
 		Assert.areEqual(0, nodeAA.removedTimeCode);
@@ -188,8 +239,7 @@ class RemoveTest
 	 *
 	 * nodeAA will be removed.
 	 */
-	@Test
-	public function testRemoveForkSingleNode():Void
+	function doRemoveForkSingleNode():Void
 	{
 		prepareForkTree1();
 
@@ -205,6 +255,12 @@ class RemoveTest
 
 		// remove node
 		nodeA.self.gear.removeChild(nodeAA.self);
+	}
+
+	@Test
+	public function testRemoveForkSingleNode_disposeTask():Void
+	{
+		doRemoveForkSingleNode();
 
 		// verify: removed or not
 		Assert.isFalse(top.isRemoved);
@@ -212,13 +268,25 @@ class RemoveTest
 		Assert.isTrue(nodeAA.isRemoved);
 		Assert.isFalse(nodeB.isRemoved);
 		Assert.isFalse(nodeBB.isRemoved);
-		
+	}
+
+	@Test
+	public function testRemoveForkSingleNode_detach():Void
+	{
+		doRemoveForkSingleNode();
+
 		// verify: detached from tree
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
 		Assert.isTrue(top.self.gear.childGearList.has(nodeB.self.gear));
 		Assert.isTrue(nodeB.self.gear.childGearList.has(nodeBB.self.gear));
-		
+	}
+
+	@Test
+	public function testRemoveForkSingleNode_removingOrder():Void
+	{
+		doRemoveForkSingleNode();
+
 		// verify: removed in order
 		Assert.areEqual(0, nodeAA.removedTimeCode);
 	}
@@ -229,8 +297,7 @@ class RemoveTest
 	 *
 	 * nodeA will be removed.
 	 */
-	@Test
-	public function testRemoveForkWithGrandchild():Void
+	function doRemoveForkWithGrandchild():Void
 	{
 		prepareForkTree1();
 
@@ -246,6 +313,12 @@ class RemoveTest
 
 		// remove node
 		top.self.gear.removeChild(nodeA.self);
+	}
+
+	@Test
+	public function testRemoveForkWithGrandchild_disposeTask():Void
+	{
+		doRemoveForkWithGrandchild();
 
 		// verify: removed or not
 		Assert.isFalse(top.isRemoved);
@@ -253,12 +326,24 @@ class RemoveTest
 		Assert.isTrue(nodeAA.isRemoved);
 		Assert.isFalse(nodeB.isRemoved);
 		Assert.isFalse(nodeBB.isRemoved);
+	}
+
+	@Test
+	public function testRemoveForkWithGrandchild_detach():Void
+	{
+		doRemoveForkWithGrandchild();
 
 		// verify: detached from tree
 		Assert.isFalse(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
 		Assert.isTrue(top.self.gear.childGearList.has(nodeB.self.gear));
 		Assert.isTrue(nodeB.self.gear.childGearList.has(nodeBB.self.gear));
+	}
+
+	@Test
+	public function testRemoveForkWithGrandchild_removingOrder():Void
+	{
+		doRemoveForkWithGrandchild();
 
 		// verify: removed in order
 		Assert.areEqual(0, nodeAA.removedTimeCode);
@@ -271,8 +356,7 @@ class RemoveTest
 	 *
 	 * top will be removed.
 	 */
-	@Test
-	public function testRemoveForkTop():Void
+	function doRemoveForkTop():Void
 	{
 		prepareForkTree1();
 
@@ -288,6 +372,12 @@ class RemoveTest
 
 		// remove node
 		topGear.gearOutside().disposeTop();
+	}
+
+	@Test
+	public function testRemoveForkTop_disposeTask():Void
+	{
+		doRemoveForkTop();
 
 		// verify: removed or not
 		Assert.isTrue(top.isRemoved);
@@ -295,12 +385,24 @@ class RemoveTest
 		Assert.isTrue(nodeAA.isRemoved);
 		Assert.isTrue(nodeB.isRemoved);
 		Assert.isTrue(nodeBB.isRemoved);
+	}
+
+	@Test
+	public function testRemoveForkTop_detach():Void
+	{
+		doRemoveForkTop();
 
 		// verify: detached from tree
 		Assert.isFalse(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
 		Assert.isFalse(top.self.gear.childGearList.has(nodeB.self.gear));
 		Assert.isFalse(nodeB.self.gear.childGearList.has(nodeBB.self.gear));
+	}
+
+	@Test
+	public function testRemoveForkTop_removingOrder():Void
+	{
+		doRemoveForkTop();
 
 		// verify: removed in order
 		Assert.areEqual(0, nodeBB.removedTimeCode);
@@ -316,8 +418,7 @@ class RemoveTest
 	 *
 	 * nodeA will be removed.
 	 */
-	@Test
-	public function testRemoveForkMiddle():Void
+	function doRemoveForkMiddle():Void
 	{
 		prepareForkTree2();
 
@@ -332,17 +433,35 @@ class RemoveTest
 
 		// remove node
 		top.self.gear.removeChild(nodeA.self);
+	}
+
+	@Test
+	public function testRemoveForkMiddle_disposeTask():Void
+	{
+		doRemoveForkMiddle();
 
 		// verify: removed or not
 		Assert.isFalse(top.isRemoved);
 		Assert.isTrue(nodeA.isRemoved);
 		Assert.isTrue(nodeAA.isRemoved);
 		Assert.isTrue(nodeBB.isRemoved);
+	}
+
+	@Test
+	public function testRemoveForkMiddle_detach():Void
+	{
+		doRemoveForkMiddle();
 
 		// verify: detached from tree
 		Assert.isFalse(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeBB.self.gear));
+	}
+
+	@Test
+	public function testRemoveForkMiddle_removingOrder():Void
+	{
+		doRemoveForkMiddle();
 
 		// verify: removed in order
 		Assert.areEqual(0, nodeBB.removedTimeCode);
@@ -356,8 +475,7 @@ class RemoveTest
 	 * nodeA will be removed.
 	 * Each nodes has multiple disposeTasks.
 	 */
-	@Test
-	public function testRemoveDisposeTaskTwice():Void
+	function doRemoveDisposeTaskTwice():Void
 	{
 		prepareStraightTree();
 
@@ -371,6 +489,12 @@ class RemoveTest
 
 		// remove node
 		top.self.gear.removeChild(nodeA.self);
+	}
+
+	@Test
+	public function testRemoveDisposeTaskTwice_disposeTask():Void
+	{
+		doRemoveDisposeTaskTwice();
 
 		// verify: removed or not
 		Assert.isFalse(top.isRemoved);
@@ -379,10 +503,22 @@ class RemoveTest
 		Assert.isTrue(nodeA.isRemoved2nd);
 		Assert.isTrue(nodeAA.isRemoved);
 		Assert.isTrue(nodeAA.isRemoved2nd);
+	}
+
+	@Test
+	public function testRemoveDisposeTaskTwice_detach():Void
+	{
+		doRemoveDisposeTaskTwice();
 
 		// verify: detached from tree
 		Assert.isFalse(top.self.gear.childGearList.has(nodeA.self.gear));
 		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
+	}
+
+	@Test
+	public function testRemoveDisposeTaskTwice_removingOrder():Void
+	{
+		doRemoveDisposeTaskTwice();
 
 		// verify: removed in order
 		Assert.areEqual(0, nodeAA.removedTimeCode2nd);
