@@ -349,6 +349,47 @@ class RemoveTest
 		Assert.areEqual(1, nodeAA.removedTimeCode);
 		Assert.areEqual(2, nodeA.removedTimeCode);
 	}
+
+	/*
+	 * top -- nodeA -- nodeAA
+	 *
+	 * nodeA will be removed.
+	 * Each nodes has multiple disposeTasks.
+	 */
+	@Test
+	public function testRemoveDisposeTaskTwice():Void
+	{
+		prepareStraightTree();
+
+		// build gear tree
+		var topGear = new DisposeTaskTwiceNode(top);
+		topGear.gearOutside().initializeTop(null);
+
+		// check before removing
+		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
+		Assert.isTrue(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
+
+		// remove node
+		top.self.gear.removeChild(nodeA.self);
+
+		// verify: removed or not
+		Assert.isFalse(top.isRemoved);
+		Assert.isFalse(top.isRemoved2nd);
+		Assert.isTrue(nodeA.isRemoved);
+		Assert.isTrue(nodeA.isRemoved2nd);
+		Assert.isTrue(nodeAA.isRemoved);
+		Assert.isTrue(nodeAA.isRemoved2nd);
+
+		// verify: detached from tree
+		Assert.isFalse(top.self.gear.childGearList.has(nodeA.self.gear));
+		Assert.isFalse(nodeA.self.gear.childGearList.has(nodeAA.self.gear));
+
+		// verify: removed in order
+		Assert.areEqual(0, nodeAA.removedTimeCode2nd);
+		Assert.areEqual(1, nodeAA.removedTimeCode);
+		Assert.areEqual(2, nodeA.removedTimeCode2nd);
+		Assert.areEqual(3, nodeA.removedTimeCode);
+	}
 }
 
 class RemoveNode extends GearHolderImpl
@@ -375,13 +416,43 @@ class RemoveNode extends GearHolderImpl
 	}
 }
 
+class DisposeTaskTwiceNode extends GearHolderImpl
+{
+	var info:RemoveTreeInfo;
+
+	public function new(info:RemoveTreeInfo)
+	{
+		super();
+		this.info = info;
+		info.self = this;
+		gear.disposeTask(function() { // first disposeTask
+			info.removedTimeCode = RemoveTest.currentTimeCode();
+			info.isRemoved = true;
+		});
+		gear.disposeTask(function() { // second disposeTask
+			info.removedTimeCode2nd = RemoveTest.currentTimeCode();
+			info.isRemoved2nd = true;
+		});
+	}
+
+	@:handler(GearDispatcherKind.Diffusible)
+	function diffusible(tool:GearDiffuseTool):Void
+	{
+		for(child in info.children) {
+			tool.bookChild(new DisposeTaskTwiceNode(child));
+		}
+	}
+}
+
 class RemoveTreeInfo
 {
 	public var children:Array<RemoveTreeInfo>;
 
-	public var self:RemoveNode;
+	public var self:GearHolderImpl;
 	public var isRemoved:Bool = false;
+	public var isRemoved2nd:Bool = false;
 	public var removedTimeCode:Int = -1;
+	public var removedTimeCode2nd:Int = -1;
 
 	public function new()
 	{
