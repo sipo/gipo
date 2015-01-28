@@ -523,6 +523,77 @@ class EventTest
 
 	/*
 	 * top -- nodeA -- nodeAA
+	 * (removeChild in nodeA's run handler)
+	 *
+	 * removeChild can be called from run handler.
+	 */
+	@Test
+	public function testEventRunCall_removeChild():Void
+	{
+		prepareStraightTree();
+
+		nodeA.runProc = function() {
+			nodeA.node.gear.removeChild(nodeAA.node);
+		}
+
+		// build gear tree
+		var topGear = new EventNode(top);
+		topGear.gearOutside().initializeTop(null);
+
+		// verify: handler is called and API called successfully
+		Assert.isFalse(nodeA.node.gear.childGearList.has(nodeAA.node.gear));
+	}
+
+	/*
+	 * top -- nodeA -- nodeAA
+	 * (removeChild in nodeA's bubble handler)
+	 *
+	 * removeChild can be called from bubble handler.
+	 */
+	@Test
+	public function testEventBubbleCall_removeChild():Void
+	{
+		prepareStraightTree();
+
+		nodeA.bubbleProc = function() {
+			nodeA.node.gear.removeChild(nodeAA.node);
+		}
+
+		// build gear tree
+		var topGear = new EventNode(top);
+		topGear.gearOutside().initializeTop(null);
+
+		// verify: handler is called and API called successfully
+		Assert.isFalse(nodeA.node.gear.childGearList.has(nodeAA.node.gear));
+	}
+
+	/*
+	 * top -- nodeA -- nodeAA
+	 * (removeChild after initialized)
+	 *
+	 * removeChild can be called after initialized.
+	 */
+	@Test
+	public function testEventMiddleCall_removeChild():Void
+	{
+		prepareStraightTree();
+
+		// build gear tree
+		var topGear = new EventNode(top);
+		topGear.gearOutside().initializeTop(null);
+
+		// verify: before call
+		Assert.isTrue(nodeA.node.gear.childGearList.has(nodeAA.node.gear));
+
+		// call
+		nodeA.node.gear.removeChild(nodeAA.node);
+
+		// verify: API called successfully
+		Assert.isFalse(nodeA.node.gear.childGearList.has(nodeAA.node.gear));
+	}
+
+	/*
+	 * top -- nodeA -- nodeAA
 	 * (diffuse in top's diffusible handler, absorb in nodeAA's diffusible handler)
 	 *
 	 * diffuse can be called from diffusible handler.
