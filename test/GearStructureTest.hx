@@ -48,7 +48,6 @@ class GearStructureTest
 		Assert.areEqual(0, child.gear.childGearList.length);
 	}
 	
-	///////////////////////////////////////////////////////////////////////
 	/**
 	* initializeTopメソッドのテスト
 	* 正しい状態かをテスト
@@ -60,8 +59,7 @@ class GearStructureTest
 		//initializeTop後、phaseはMiddleになっている
 		Assert.areEqual(Type.enumConstructor(Middle), parent.gear.phase);
 	}
-
-	///////////////////////////////////////////////////////////////////////
+	
 	/**
 	* addChildメソッドのテスト
 	* addChildの確認のため、最も単純に親と子を1つずつ作成し、
@@ -96,13 +94,40 @@ class GearStructureTest
 		 Assert.areEqual(parent.gearOutside(), pgear.childGearList[0].parent);
 	}
 	
-	///////////////////////////////////////////////////////////////////////
+	/**
+	* before
+	* parent -- child
+	* 
+	* after
+	* parent -- child
+	*        `- child2
+	**/
+	@Test("親に2度目のaddChildをしたとき、正しく構造が生成されている")
+	public function testAddChild2():Void
+	{
+		var child2:GearHolderImpl = new GearHolderImpl();
+		
+		var pgear = parent.gear;
+		pgear.addChild(child);
+		pgear.addChild(child2);
+		
+		Assert.areEqual(2, pgear.childGearList.length);
+		Assert.areEqual(child.gearOutside(), pgear.childGearList[0]);
+		Assert.areEqual(child2.gearOutside(), pgear.childGearList[1]);
+	}
+	
 	/**
 	* removeChildメソッドのテスト
 	* 正しくGearをchildGearListからremoveChildできているか
 	* まずはtestaddChild()と同じように要素をaddChildし、そこからremoveChildを適用する
 	* childGearListの長さを取得しテストしている
 	* removeChild後は0のはずである
+	* 
+	* before
+	* parent -- child
+	* 
+	* after
+	* parent
 	**/
 
 	@Test("addChild後にremoveChildしたとき、親GearのchildGearListの長さが0である")
@@ -114,5 +139,64 @@ class GearStructureTest
 		//removeChildして、parentのchildGearListにある要素数が0であることをテスト
 		pgear.removeChild(child);
 		Assert.areEqual(0, pgear.childGearList.length);
+	}
+	
+	/**
+	* before
+	* parent -- child -- childChild
+	* 
+	* after
+	* parent
+	**/
+	
+	@Test("childも子をもつとき、childをremoveChildするとchildとchildの子が削除される")
+	public function testRemoveChild2():Void
+	{
+		var pgear = parent.gear;
+		pgear.addChild(child);
+		
+		var childChild:GearHolderImpl = new GearHolderImpl();
+		child.gear.addChild(childChild);
+		
+		pgear.removeChild(child);
+		
+		Assert.areEqual(0, pgear.childGearList.length);
+	}
+	
+	/**
+	* before 
+	* parent -- child -- childChild
+	* 		`- child2 -- childChild2
+	* 
+	* after
+	* parent -- child -- childChild
+	**/
+	
+	@Test("parentが2つの子を持つとき片方をremoveChildすると、した方のGearとその子が削除される")
+	public function testRemoveChild3():Void
+	{
+		var pgear = parent.gear;
+		pgear.addChild(child);
+		
+		var childChild:GearHolderImpl = new GearHolderImpl();
+		child.gear.addChild(childChild);
+		
+		var child2:GearHolderImpl = new GearHolderImpl();
+		parent.gear.addChild(child2);
+		
+		var childChild2:GearHolderImpl = new GearHolderImpl();
+		child2.gear.addChild(childChild2);
+		
+		Assert.areEqual(2, pgear.childGearList.length);
+		Assert.areEqual(1, child.gear.childGearList.length);
+		Assert.areEqual(0, childChild.gear.childGearList.length);
+		Assert.areEqual(1, child2.gear.childGearList.length);
+		Assert.areEqual(0, childChild2.gear.childGearList.length);
+		
+		pgear.removeChild(child2);
+		
+		Assert.areEqual(1, pgear.childGearList.length);
+		Assert.areEqual(1, child.gear.childGearList.length);
+		Assert.areEqual(0, childChild.gear.childGearList.length);
 	}
 }
