@@ -100,15 +100,12 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        var canProgress = reproduce.checkCanProgress();
-
         // get record log
         var log = reproduce.getRecordLog();
 
         // verify
         Assert.areEqual(0, reproduce.frame);
         Assert.areEqual(Option.None, reproduce.phase);
-        Assert.isTrue(canProgress);
         Assert.isNotNull(log);
         Assert.areEqual(0, log.getLength());
     }
@@ -122,8 +119,8 @@ class ReproduceTest
         // operate Reproduce
         reproduce.startOutFramePhase();
         reproduce.endPhase();
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
 
         // get record log
         var log = reproduce.getRecordLog();
@@ -144,8 +141,8 @@ class ReproduceTest
         // operate Reproduce
         reproduce.startOutFramePhase();
         reproduce.endPhase();
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
 
         // get record log
@@ -167,8 +164,8 @@ class ReproduceTest
         // operate Reproduce
         reproduce.startOutFramePhase();
         reproduce.endPhase();
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -192,16 +189,16 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -225,8 +222,8 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -236,8 +233,8 @@ class ReproduceTest
         var time2 = currentTimeCode();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -286,16 +283,16 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         var time1 = currentTimeCode();
         reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event1), null); // record log
@@ -346,8 +343,8 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -357,8 +354,8 @@ class ReproduceTest
         var time2 = currentTimeCode();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -406,8 +403,8 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -417,8 +414,8 @@ class ReproduceTest
         var time2 = currentTimeCode();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -465,16 +462,16 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         var time1 = currentTimeCode();
         reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event2)), null); // record log
@@ -524,8 +521,8 @@ class ReproduceTest
         reproduce.startOutFramePhase();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
 
@@ -539,8 +536,8 @@ class ReproduceTest
         var time4 = currentTimeCode();
         reproduce.endPhase();
 
-        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.update();
+        Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         var time5 = currentTimeCode();
         reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event4), null); // record log
@@ -604,6 +601,913 @@ class ReproduceTest
         Assert.isTrue(time6 < operationHook.events[4].timeCode);
         Assert.isTrue(time7 > operationHook.events[4].timeCode);
         Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[4].data);
+    }
+
+    /*
+	 * replay instant input in out-frame
+	 */
+    @Test
+    public function testReplay_instantInput_outFrame():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time3 = currentTimeCode();
+        reproduce.endPhase();
+        var time4 = currentTimeCode();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway = LogwayKind.Instant(ReproduceInput.Event1);
+        Assert.areEqual(2, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.areEqual(expectLogway, hook.events[0].data);
+        Assert.isTrue(time3 < hook.events[1].timeCode);
+        Assert.isTrue(time4 > hook.events[1].timeCode);
+        Assert.areEqual(expectLogway, hook.events[1].data);
+
+        // verify: operation hook
+        Assert.areEqual(2, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time3 < operationHook.events[1].timeCode);
+        Assert.isTrue(time4 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+    }
+
+    /*
+	 * replay instant input in in-frame
+	 */
+    @Test
+    public function testReplay_instantInput_inFrame():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time3 = currentTimeCode();
+        reproduce.endPhase();
+        var time4 = currentTimeCode();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway = LogwayKind.Instant(ReproduceInput.Event1);
+        Assert.areEqual(2, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.areEqual(expectLogway, hook.events[0].data);
+        Assert.isTrue(time3 < hook.events[1].timeCode);
+        Assert.isTrue(time4 > hook.events[1].timeCode);
+        Assert.areEqual(expectLogway, hook.events[1].data);
+
+        // verify: operation hook
+        Assert.areEqual(2, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time3 < operationHook.events[1].timeCode);
+        Assert.isTrue(time4 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+    }
+
+    /*
+	 * replay ready input in out-frame, same frame
+	 */
+    @Test
+    public function testReplay_readyInput_sameFrame():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isFalse(reproduce.checkCanProgress());
+
+        reproduce.startOutFramePhase();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event1), null); // re-ready log
+        reproduce.endPhase();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 1 again with replaying
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event1), null); // re-ready log
+        var time3 = currentTimeCode();
+        reproduce.endPhase();
+        var time4 = currentTimeCode();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway = LogwayKind.Ready(ReproduceInput.Event1);
+        Assert.areEqual(2, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.areEqual(expectLogway, hook.events[0].data);
+        Assert.isTrue(time3 < hook.events[1].timeCode);
+        Assert.isTrue(time4 > hook.events[1].timeCode);
+        Assert.areEqual(expectLogway, hook.events[1].data);
+
+        // verify: operation hook
+        Assert.areEqual(2, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time3 < operationHook.events[1].timeCode);
+        Assert.isTrue(time4 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+    }
+
+    /*
+	 * replay ready input in out-frame, early frame
+	 */
+    @Test
+    public function testReplay_readyInput_earlyFrame():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 3
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(3, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event1), null); // re-ready log
+        reproduce.endPhase();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time3 = currentTimeCode();
+        reproduce.endPhase();
+        var time4 = currentTimeCode();
+
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.update(); // frame 3
+        Assert.areEqual(3, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // verify
+        Assert.areEqual(3, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway = LogwayKind.Ready(ReproduceInput.Event1);
+        Assert.areEqual(2, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.areEqual(expectLogway, hook.events[0].data);
+        Assert.isTrue(time3 < hook.events[1].timeCode);
+        Assert.isTrue(time4 > hook.events[1].timeCode);
+        Assert.areEqual(expectLogway, hook.events[1].data);
+
+        // verify: operation hook
+        Assert.areEqual(2, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time3 < operationHook.events[1].timeCode);
+        Assert.isTrue(time4 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+    }
+
+    /*
+	 * replay ready input in out-frame, late frame
+	 */
+    @Test
+    public function testReplay_readyInput_lateFrame():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isFalse(reproduce.checkCanProgress());
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 1 again waiting for sync
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isFalse(reproduce.checkCanProgress());
+
+        reproduce.startOutFramePhase();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event1), null); // re-ready log
+        reproduce.endPhase();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 1 again with replaying
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time3 = currentTimeCode();
+        reproduce.endPhase();
+        var time4 = currentTimeCode();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway = LogwayKind.Ready(ReproduceInput.Event1);
+        Assert.areEqual(2, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.areEqual(expectLogway, hook.events[0].data);
+        Assert.isTrue(time3 < hook.events[1].timeCode);
+        Assert.isTrue(time4 > hook.events[1].timeCode);
+        Assert.areEqual(expectLogway, hook.events[1].data);
+
+        // verify: operation hook
+        Assert.areEqual(2, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time3 < operationHook.events[1].timeCode);
+        Assert.isTrue(time4 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+    }
+
+    /*
+	 * replay snapshot in out-frame
+	 */
+    @Test
+    public function testReplay_snapshot_outFrame():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event1)), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time3 = currentTimeCode();
+        reproduce.endPhase();
+        var time4 = currentTimeCode();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event1));
+        Assert.areEqual(2, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway, hook.events[0].data));
+        Assert.isTrue(time3 < hook.events[1].timeCode);
+        Assert.isTrue(time4 > hook.events[1].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway, hook.events[1].data));
+
+        // verify: operation hook
+        Assert.areEqual(2, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time3 < operationHook.events[1].timeCode);
+        Assert.isTrue(time4 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+    }
+
+    /*
+	 * replay snapshot in in-frame
+	 */
+    @Test
+    public function testReplay_snapshot_inFrame():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event1)), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time3 = currentTimeCode();
+        reproduce.endPhase();
+        var time4 = currentTimeCode();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event1));
+        Assert.areEqual(2, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway, hook.events[0].data));
+        Assert.isTrue(time3 < hook.events[1].timeCode);
+        Assert.isTrue(time4 > hook.events[1].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway, hook.events[1].data));
+
+        // verify: operation hook
+        Assert.areEqual(2, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time3 < operationHook.events[1].timeCode);
+        Assert.isTrue(time4 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+    }
+
+    /*
+	 * replay multiple log
+	 */
+    @Test
+    public function testReplayMultiple():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event2), null); // record log
+        var time3 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event3)), null); // record log
+        var time4 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time5 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event4), null); // record log
+        var time6 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event5)), null); // record log
+        var time7 = currentTimeCode();
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 0);
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isFalse(reproduce.checkCanProgress());
+
+        reproduce.startOutFramePhase();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event2), null); // re-ready log
+        reproduce.endPhase();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 1 again with replaying
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time8 = currentTimeCode();
+        reproduce.endPhase();
+        var time9 = currentTimeCode();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time10 = currentTimeCode();
+        reproduce.endPhase();
+        var time11 = currentTimeCode();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway0 = LogwayKind.Instant(ReproduceInput.Event1);
+        var expectLogway1 = LogwayKind.Ready(ReproduceInput.Event2);
+        var expectLogway2 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event3));
+        var expectLogway3 = LogwayKind.Instant(ReproduceInput.Event4);
+        var expectLogway4 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event5));
+        Assert.areEqual(10, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway0, hook.events[0].data));
+        Assert.isTrue(time2 < hook.events[1].timeCode);
+        Assert.isTrue(time3 > hook.events[1].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway1, hook.events[1].data));
+        Assert.isTrue(time3 < hook.events[2].timeCode);
+        Assert.isTrue(time4 > hook.events[2].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway2, hook.events[2].data));
+        Assert.isTrue(time5 < hook.events[3].timeCode);
+        Assert.isTrue(time6 > hook.events[3].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway3, hook.events[3].data));
+        Assert.isTrue(time6 < hook.events[4].timeCode);
+        Assert.isTrue(time7 > hook.events[4].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway4, hook.events[4].data));
+        Assert.isTrue(time8 < hook.events[5].timeCode);
+        Assert.isTrue(time9 > hook.events[5].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway0, hook.events[5].data));
+        Assert.isTrue(time8 < hook.events[6].timeCode);
+        Assert.isTrue(time9 > hook.events[6].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway1, hook.events[6].data));
+        Assert.isTrue(time8 < hook.events[7].timeCode);
+        Assert.isTrue(time9 > hook.events[7].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway2, hook.events[7].data));
+        Assert.isTrue(time10 < hook.events[8].timeCode);
+        Assert.isTrue(time11 > hook.events[8].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway3, hook.events[8].data));
+        Assert.isTrue(time10 < hook.events[9].timeCode);
+        Assert.isTrue(time11 > hook.events[9].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway4, hook.events[9].data));
+
+        // verify: operation hook
+        Assert.areEqual(10, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time2 < operationHook.events[1].timeCode);
+        Assert.isTrue(time3 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+        Assert.isTrue(time3 < operationHook.events[2].timeCode);
+        Assert.isTrue(time4 > operationHook.events[2].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[2].data);
+        Assert.isTrue(time5 < operationHook.events[3].timeCode);
+        Assert.isTrue(time6 > operationHook.events[3].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[3].data);
+        Assert.isTrue(time6 < operationHook.events[4].timeCode);
+        Assert.isTrue(time7 > operationHook.events[4].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[4].data);
+        Assert.isTrue(time8 < operationHook.events[5].timeCode);
+        Assert.isTrue(time9 > operationHook.events[5].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[5].data);
+        Assert.isTrue(time8 < operationHook.events[6].timeCode);
+        Assert.isTrue(time9 > operationHook.events[6].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[6].data);
+        Assert.isTrue(time8 < operationHook.events[7].timeCode);
+        Assert.isTrue(time9 > operationHook.events[7].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[7].data);
+        Assert.isTrue(time10 < operationHook.events[8].timeCode);
+        Assert.isTrue(time11 > operationHook.events[8].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[8].data);
+        Assert.isTrue(time10 < operationHook.events[9].timeCode);
+        Assert.isTrue(time11 > operationHook.events[9].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[9].data);
+    }
+
+    /*
+	 * replay multiple log, start with offset
+	 */
+    @Test
+    public function testReplayMultipleOffset():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event2), null); // record log
+        var time3 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event3)), null); // record log
+        var time4 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time5 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event4), null); // record log
+        var time6 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event5)), null); // record log
+        var time7 = currentTimeCode();
+        reproduce.endPhase();
+
+        // get record log
+        var replayLog = reproduce.getRecordLog().convertReplay();
+        Assert.isNotNull(replayLog);
+
+        // replay
+        reproduce.startOutFramePhase();
+        Assert.areEqual(2, reproduce.frame);
+        reproduce.startReplay(replayLog, 2); // start from first snapshot
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        Assert.areEqual(0, reproduce.frame);
+        reproduce.update(); // frame 1
+        Assert.areEqual(1, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time8 = currentTimeCode();
+        reproduce.endPhase();
+        var time9 = currentTimeCode();
+
+        Assert.areEqual(1, reproduce.frame);
+        reproduce.update(); // frame 2
+        Assert.areEqual(2, reproduce.frame);
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time10 = currentTimeCode();
+        reproduce.endPhase();
+        var time11 = currentTimeCode();
+
+        // verify
+        Assert.areEqual(2, reproduce.frame);
+        Assert.areEqual(Option.None, reproduce.phase);
+
+        // verify: hook
+        var expectLogway0 = LogwayKind.Instant(ReproduceInput.Event1);
+        var expectLogway1 = LogwayKind.Ready(ReproduceInput.Event2);
+        var expectLogway2 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event3));
+        var expectLogway3 = LogwayKind.Instant(ReproduceInput.Event4);
+        var expectLogway4 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event5));
+        Assert.areEqual(8, hook.events.length);
+        Assert.isTrue(time1 < hook.events[0].timeCode);
+        Assert.isTrue(time2 > hook.events[0].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway0, hook.events[0].data));
+        Assert.isTrue(time2 < hook.events[1].timeCode);
+        Assert.isTrue(time3 > hook.events[1].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway1, hook.events[1].data));
+        Assert.isTrue(time3 < hook.events[2].timeCode);
+        Assert.isTrue(time4 > hook.events[2].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway2, hook.events[2].data));
+        Assert.isTrue(time5 < hook.events[3].timeCode);
+        Assert.isTrue(time6 > hook.events[3].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway3, hook.events[3].data));
+        Assert.isTrue(time6 < hook.events[4].timeCode);
+        Assert.isTrue(time7 > hook.events[4].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway4, hook.events[4].data));
+        Assert.isTrue(time8 < hook.events[5].timeCode);
+        Assert.isTrue(time9 > hook.events[5].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway2, hook.events[5].data));
+        Assert.isTrue(time10 < hook.events[6].timeCode);
+        Assert.isTrue(time11 > hook.events[6].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway3, hook.events[6].data));
+        Assert.isTrue(time10 < hook.events[7].timeCode);
+        Assert.isTrue(time11 > hook.events[7].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway4, hook.events[7].data));
+
+        // verify: operation hook
+        Assert.areEqual(8, operationHook.events.length);
+        Assert.isTrue(time1 < operationHook.events[0].timeCode);
+        Assert.isTrue(time2 > operationHook.events[0].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
+        Assert.isTrue(time2 < operationHook.events[1].timeCode);
+        Assert.isTrue(time3 > operationHook.events[1].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[1].data);
+        Assert.isTrue(time3 < operationHook.events[2].timeCode);
+        Assert.isTrue(time4 > operationHook.events[2].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[2].data);
+        Assert.isTrue(time5 < operationHook.events[3].timeCode);
+        Assert.isTrue(time6 > operationHook.events[3].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[3].data);
+        Assert.isTrue(time6 < operationHook.events[4].timeCode);
+        Assert.isTrue(time7 > operationHook.events[4].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[4].data);
+        Assert.isTrue(time8 < operationHook.events[5].timeCode);
+        Assert.isTrue(time9 > operationHook.events[5].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[5].data);
+        Assert.isTrue(time10 < operationHook.events[6].timeCode);
+        Assert.isTrue(time11 > operationHook.events[6].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[6].data);
+        Assert.isTrue(time10 < operationHook.events[7].timeCode);
+        Assert.isTrue(time11 > operationHook.events[7].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[7].data);
     }
 
     public static function logwayEquals(log1:LogwayKind, log2:LogwayKind):Bool
