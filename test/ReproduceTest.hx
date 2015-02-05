@@ -1,5 +1,7 @@
 package;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import Type.ValueType;
 import jp.sipo.gipo.reproduce.Snapshot;
 import haxe.ds.Option;
@@ -18,6 +20,7 @@ using Lambda;
 
 @:access(jp.sipo.gipo.reproduce.Reproduce)
 @:access(jp.sipo.gipo.reproduce.LogWrapper)
+@:access(jp.sipo.gipo.reproduce.ReplayLog)
 @:access(jp.sipo.gipo.reproduce.LogPart)
 class ReproduceTest
 {
@@ -1092,9 +1095,6 @@ class ReproduceTest
         Assert.areEqual(0, reproduce.frame);
         reproduce.endPhase();
 
-        reproduce.startOutFramePhase();
-        reproduce.endPhase();
-
         Assert.areEqual(0, reproduce.frame);
         reproduce.update(); // frame 1
         Assert.areEqual(1, reproduce.frame);
@@ -1173,9 +1173,6 @@ class ReproduceTest
         Assert.areEqual(2, reproduce.frame);
         reproduce.startReplay(replayLog, 0);
         Assert.areEqual(0, reproduce.frame);
-        reproduce.endPhase();
-
-        reproduce.startOutFramePhase();
         reproduce.endPhase();
 
         Assert.areEqual(0, reproduce.frame);
@@ -1265,9 +1262,6 @@ class ReproduceTest
         Assert.areEqual(2, reproduce.frame);
         reproduce.startReplay(replayLog, 0);
         Assert.areEqual(0, reproduce.frame);
-        reproduce.endPhase();
-
-        reproduce.startOutFramePhase();
         reproduce.endPhase();
 
         Assert.areEqual(0, reproduce.frame);
@@ -1422,9 +1416,6 @@ class ReproduceTest
         Assert.areEqual(0, reproduce.frame);
         reproduce.endPhase();
 
-        reproduce.startOutFramePhase();
-        reproduce.endPhase();
-
         Assert.areEqual(0, reproduce.frame);
         reproduce.update(); // frame 1
         Assert.areEqual(1, reproduce.frame);
@@ -1508,6 +1499,67 @@ class ReproduceTest
         Assert.isTrue(time10 < operationHook.events[7].timeCode);
         Assert.isTrue(time11 > operationHook.events[7].timeCode);
         Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[7].data);
+    }
+
+    /*
+	 * serialize/unserialize
+	 */
+    @Test
+    public function testSeriarizeLogData():Void
+    {
+        // operate Reproduce
+        reproduce.startOutFramePhase();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 1
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        reproduce.endPhase();
+
+        reproduce.startOutFramePhase();
+        var time1 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event1), null); // record log
+        var time2 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event2), null); // record log
+        var time3 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event3)), null); // record log
+        var time4 = currentTimeCode();
+        reproduce.endPhase();
+
+        reproduce.update(); // frame 2
+        Assert.isTrue(reproduce.checkCanProgress());
+        reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
+        var time5 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Instant(ReproduceInput.Event4), null); // record log
+        var time6 = currentTimeCode();
+        reproduce.noticeLog(LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event5)), null); // record log
+        var time7 = currentTimeCode();
+        reproduce.endPhase();
+
+        // get record log
+        var log = reproduce.getRecordLog();
+
+        // serialize/unserialize
+        var serializedLog = Serializer.run(log);
+        var unserializedLog = Unserializer.run(serializedLog);
+
+        // verify
+        Assert.isType(unserializedLog, RecordLog);
+
+        var replayLog = unserializedLog.convertReplay();
+        Assert.isNotNull(replayLog);
+        Assert.areEqual(5, replayLog.length);
+
+        var expectLogway0 = LogwayKind.Instant(ReproduceInput.Event1);
+        var expectLogway1 = LogwayKind.Ready(ReproduceInput.Event2);
+        var expectLogway2 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event3));
+        var expectLogway3 = LogwayKind.Instant(ReproduceInput.Event4);
+        var expectLogway4 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event5));
+        Assert.isTrue(logPartEquals(replayLog.list[0], 1, ReproducePhase.OutFrame, expectLogway0));
+        Assert.isTrue(logPartEquals(replayLog.list[1], 1, ReproducePhase.OutFrame, expectLogway1));
+        Assert.isTrue(logPartEquals(replayLog.list[2], 1, ReproducePhase.OutFrame, expectLogway2));
+        Assert.isTrue(logPartEquals(replayLog.list[3], 2, ReproducePhase.InFrame(ReproduceUpdateKind.Input1), expectLogway3));
+        Assert.isTrue(logPartEquals(replayLog.list[4], 2, ReproducePhase.InFrame(ReproduceUpdateKind.Input1), expectLogway4));
     }
 
     public static function logwayEquals(log1:LogwayKind, log2:LogwayKind):Bool
