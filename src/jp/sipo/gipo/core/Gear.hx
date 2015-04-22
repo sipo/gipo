@@ -592,7 +592,7 @@ class Gear implements GearOutside
 		disposeTaskStack.execute();// 逆順で実行する
 		disposeTaskStack = null;
 		// 切断処理
-		for (childGear in childGearList) removeChild(childGear.holder);	// 下位層をすべて切断
+		while(childGearList.length != 0) removeChild(childGearList[0].holder);	// 下位層をすべて切断
 		parent = null;	// 上位層を切断
 		// diffuserを消去
 		diffuser.dispose();
