@@ -39,10 +39,21 @@ class GenericGearDispatcher<TFunc>
 	/**
 	 * ハンドラを追加する
 	 */
-	inline public function genericAdd(func:TFunc, ?addPos:PosInfos):Void
+	inline public function genericAdd(func:TFunc, ?addPos:PosInfos):CancelKey
 	{
 		var handler:GearDispatcherHandler<TFunc> = new GearDispatcherHandler<TFunc>(func, addPos);
 		addBehavior(list, handler);
+		return handler;
+	}
+	
+	/**
+	 * ハンドラを削除する
+	 */
+	public function genericRemove(key:CancelKey):Void
+	{
+		// 実行ロックのチェック
+		if (executeLock) throw new SipoError("実行最中の削除はできません");
+		list.remove(cast(key));
 	}
 	
 	// TODO:<<尾野>>GearDispatcherを移譲にして、継承を回避。この名称を、GenericDispatcherにする

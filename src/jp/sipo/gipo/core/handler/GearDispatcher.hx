@@ -20,9 +20,17 @@ class GearDispatcher extends GenericGearDispatcher<TFunc> implements AutoHandler
 	/**
 	 * ハンドラを登録する
 	 */
-	public function add(func:TFunc, ?addPos:PosInfos):Void
+	public function add(func:TFunc, ?addPos:PosInfos):CancelKey
 	{
-		genericAdd(func, addPos);
+		return genericAdd(func, addPos);
+	}
+	
+	/**
+	 * ハンドラを削除する
+	 */
+	public function remove(key:CancelKey):Void
+	{
+		genericRemove(key);
 	}
 	
 	/**

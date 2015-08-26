@@ -5,7 +5,7 @@ package jp.sipo.gipo.core.handler;
  * @auther sipo
  */
 import haxe.PosInfos;
-class GearDispatcherHandler<TFunc>
+class GearDispatcherHandler<TFunc> implements CancelKey
 {
 	public var func:TFunc;
 	public var addPos:PosInfos;

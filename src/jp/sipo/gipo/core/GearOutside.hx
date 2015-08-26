@@ -4,6 +4,7 @@ package jp.sipo.gipo.core;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.handler.CancelKey;
 import haxe.PosInfos;
 interface GearOutside
 {
@@ -22,7 +23,7 @@ interface GearOutside
 	/**
 	 * 消去処理の追加。実行は追加の逆順で行われる
 	 */
-	public function disposeTask(func:Void -> Void, ?pos:PosInfos):Void;
+	public function disposeTask(func:Void -> Void, ?pos:PosInfos):CancelKey;
 	
 	/**
 	 * 外部からDiffuseを行なう

@@ -5,6 +5,7 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import jp.sipo.gipo.core.handler.CancelKey;
 import haxe.ds.ObjectMap;
 import Type;
 import jp.sipo.util.SipoError;
@@ -50,6 +51,8 @@ class Gear implements GearOutside
 	private var parent:Gear;
 	/** インスタンス保持機能 */
 	private var diffuser:Diffuser;
+	/* 削除キャンセルキー */
+	private var removeCancelKey:CancelKey;
 	
 	/* --------------------------------
 	 * 処理順序整理
@@ -229,11 +232,11 @@ class Gear implements GearOutside
 	/**
 	 * 消去処理の追加。実行は追加の逆順で行われる
 	 */
-	public function disposeTask(func:Void -> Void, ?pos:PosInfos):Void
+	public function disposeTask(func:Void -> Void, ?pos:PosInfos):CancelKey
 	{
 		if (!checkPhaseBeforeDispose()) throw new SipoError('既に消去処理が開始されているため、消去時のハンドラを登録できません phase=$phase');
 		// 消去処理リストに保持しておく
-		disposeTaskStack.add(func, pos);
+		return disposeTaskStack.add(func, pos);
 	}
 	
 	/* ================================================================
@@ -252,6 +255,12 @@ class Gear implements GearOutside
 		if (!checkPhaseCreate()) throw new SipoError('既に親子関係が生成されたインスタンス(${this})をtopに設定しようとしました');
 		// 初期化
 		initializeCommon(parentDiffuser);
+	}
+	
+	/* 削除キャンセルのキーを登録 */
+	private function setRemoveCancelKey(key:CancelKey):Void
+	{
+		this.removeCancelKey = key;
 	}
 	
 	/* 子として追加された場合の動作 */
@@ -548,7 +557,12 @@ class Gear implements GearOutside
 		}
 		// 追加
 		childGearList.push(childGear);
+		// 削除処理
+		var key:CancelKey = disposeTask(function (){
+			removeChildGear(childGear);
+		});
 		// 追加後の初期化処理
+		childGear.setRemoveCancelKey(key);
 		childGear.setParent(this);
 	}
 	
@@ -558,7 +572,11 @@ class Gear implements GearOutside
 	 */
 	public function removeChild(child:GearHolderLow):Void
 	{
-		removeChildGear(getGear(child));
+		var childGear:Gear = getGear(child);
+		// 登録されている削除のキャンセル
+		disposeTaskStack.remove(childGear.removeCancelKey);
+		// 削除の本処理
+		removeChildGear(childGear);
 	}
 	inline private function removeChildGear(childGear:Gear):Void
 	{

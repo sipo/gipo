@@ -16,10 +16,12 @@ class GearDispatcherFlexible<TFunc> extends GenericGearDispatcher<TFunc> impleme
 	/**
 	 * ハンドラを登録する
 	 */
-	public function add(func:TFunc, ?addPos:PosInfos):Void
+	public function add(func:TFunc, ?addPos:PosInfos):CancelKey
 	{
-		genericAdd(func, addPos);
+		return genericAdd(func, addPos);
 	}
+	
+	
 	
 	/**
 	 * 自動登録用
