@@ -1415,10 +1415,15 @@ class ReproduceTest
         reproduce.startReplay(replayLog, 2); // start from first snapshot
         Assert.areEqual(0, reproduce.frame);
         reproduce.endPhase();
+        
+        reproduce.startOutFramePhase();
+        reproduce.noticeLog(LogwayKind.Ready(ReproduceInput.Event2), null);
+        reproduce.endPhase();
 
         Assert.areEqual(0, reproduce.frame);
         reproduce.update(); // frame 1
         Assert.areEqual(1, reproduce.frame);
+        
         Assert.isTrue(reproduce.checkCanProgress());
         reproduce.startInFramePhase(ReproduceUpdateKind.Input1);
         reproduce.endPhase();
@@ -1447,7 +1452,7 @@ class ReproduceTest
         var expectLogway2 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event3));
         var expectLogway3 = LogwayKind.Instant(ReproduceInput.Event4);
         var expectLogway4 = LogwayKind.Snapshot(new ReproduceSnapshot(ReproduceInput.Event5));
-        Assert.areEqual(8, hook.events.length);
+        Assert.areEqual(10, hook.events.length);
         Assert.isTrue(time1 < hook.events[0].timeCode);
         Assert.isTrue(time2 > hook.events[0].timeCode);
         Assert.isTrue(logwayEquals(expectLogway0, hook.events[0].data));
@@ -1465,16 +1470,22 @@ class ReproduceTest
         Assert.isTrue(logwayEquals(expectLogway4, hook.events[4].data));
         Assert.isTrue(time8 < hook.events[5].timeCode);
         Assert.isTrue(time9 > hook.events[5].timeCode);
-        Assert.isTrue(logwayEquals(expectLogway2, hook.events[5].data));
-        Assert.isTrue(time10 < hook.events[6].timeCode);
-        Assert.isTrue(time11 > hook.events[6].timeCode);
-        Assert.isTrue(logwayEquals(expectLogway3, hook.events[6].data));
-        Assert.isTrue(time10 < hook.events[7].timeCode);
-        Assert.isTrue(time11 > hook.events[7].timeCode);
-        Assert.isTrue(logwayEquals(expectLogway4, hook.events[7].data));
+        Assert.isTrue(logwayEquals(expectLogway0, hook.events[5].data));
+        Assert.isTrue(time8 < hook.events[6].timeCode);
+        Assert.isTrue(time9 > hook.events[6].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway1, hook.events[6].data));
+        Assert.isTrue(time8 < hook.events[7].timeCode);
+        Assert.isTrue(time9 > hook.events[7].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway2, hook.events[7].data));
+        Assert.isTrue(time10 < hook.events[8].timeCode);
+        Assert.isTrue(time11 > hook.events[8].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway3, hook.events[8].data));
+        Assert.isTrue(time10 < hook.events[9].timeCode);
+        Assert.isTrue(time11 > hook.events[9].timeCode);
+        Assert.isTrue(logwayEquals(expectLogway4, hook.events[9].data));
 
         // verify: operation hook
-        Assert.areEqual(8, operationHook.events.length);
+        Assert.areEqual(10, operationHook.events.length);
         Assert.isTrue(time1 < operationHook.events[0].timeCode);
         Assert.isTrue(time2 > operationHook.events[0].timeCode);
         Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[0].data);
@@ -1493,12 +1504,18 @@ class ReproduceTest
         Assert.isTrue(time8 < operationHook.events[5].timeCode);
         Assert.isTrue(time9 > operationHook.events[5].timeCode);
         Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[5].data);
-        Assert.isTrue(time10 < operationHook.events[6].timeCode);
-        Assert.isTrue(time11 > operationHook.events[6].timeCode);
+        Assert.isTrue(time8 < operationHook.events[6].timeCode);
+        Assert.isTrue(time9 > operationHook.events[6].timeCode);
         Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[6].data);
-        Assert.isTrue(time10 < operationHook.events[7].timeCode);
-        Assert.isTrue(time11 > operationHook.events[7].timeCode);
+        Assert.isTrue(time8 < operationHook.events[7].timeCode);
+        Assert.isTrue(time9 > operationHook.events[7].timeCode);
         Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[7].data);
+        Assert.isTrue(time10 < operationHook.events[8].timeCode);
+        Assert.isTrue(time11 > operationHook.events[8].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[8].data);
+        Assert.isTrue(time10 < operationHook.events[9].timeCode);
+        Assert.isTrue(time11 > operationHook.events[9].timeCode);
+        Assert.areEqual(ReproduceEvent.LogUpdate, operationHook.events[9].data);
     }
 
     /*
