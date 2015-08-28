@@ -46,8 +46,7 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	private function run():Void
 	{
 		note.log('再現の開始');
-		replayLog.setPosition(0);
-		update(0);
+		// TODO:<<尾野>>snapshotから開始していない場合に警告等を行う
 	}
 	
 	/**
