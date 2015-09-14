@@ -8,7 +8,6 @@ import haxe.PosInfos;
 import jp.sipo.gipo.core.handler.GearDispatcher;
 import jp.sipo.gipo_framework_example.context.ViewForLogic.ViewSceneOrder;
 import jp.sipo.gipo_framework_example.pilotView.PilotView.PilotViewDiffuseKey;
-import jp.sipo.gipo_framework_example.context.View;
 import jp.sipo.gipo_framework_example.context.Hook.HookForView;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
@@ -35,10 +34,10 @@ class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 	public function new() 
 	{
 		super();
-		asyncUpdateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, PilotViewSceneDispatcherKind.AsyncUpdate);
-		updateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, PilotViewSceneDispatcherKind.Update);
-		inputUpdateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, PilotViewSceneDispatcherKind.InputUpdate);
-		drawDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, PilotViewSceneDispatcherKind.Draw);
+		asyncUpdateDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
+		updateDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
+		inputUpdateDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
+		drawDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
 	}
 	
 	/**
@@ -49,15 +48,4 @@ class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 		this.factorPos = factorPos;
 	}
 	
-}
-enum PilotViewSceneDispatcherKind
-{
-	/** フレーム間の更新 */
-	AsyncUpdate;
-	/** ドラッグなどの入力状態の更新 */
-	Update;
-	/** 情報やカウンタの更新 */
-	InputUpdate;
-	/** 表示の更新（特に、必須ではない重い処理に使用する） */
-	Draw;
 }

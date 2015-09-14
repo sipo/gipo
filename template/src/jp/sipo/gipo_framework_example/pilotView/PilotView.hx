@@ -8,7 +8,6 @@ package jp.sipo.gipo_framework_example.pilotView;
 import haxe.PosInfos;
 import jp.sipo.gipo_framework_example.scene.mock2.Mock2ReadyPilotView;
 import jp.sipo.gipo_framework_example.scene.mock2.Mock2PilotView;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo_framework_example.scene.mock1.Mock1PilotView;
 import jp.sipo.gipo_framework_example.scene.mock0.Mock0PilotView;
 import jp.sipo.gipo_framework_example.context.ViewForLogic;
@@ -27,7 +26,11 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	private var gameLayer:Sprite;
 	
 	/** コンストラクタ */
-	public function new() { super(); }
+	public function new() 
+	{
+		super();
+		gear.addDiffusibleHandler(diffusible);
+	}
 	
 	/**
 	 * 必要設定
@@ -41,7 +44,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	/**
 	 * 必要素材をdiffuse
 	 */
-	@:handler(GearDispatcherKind.Diffusible)
+	/* gearHandler */
 	public function diffusible(tool:GearDiffuseTool):Void
 	{
 		gameLayer = new Sprite();

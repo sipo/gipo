@@ -5,7 +5,7 @@ package jp.sipo.gipo.core.state;
  * 
  * @author sipo
  */
-interface StateGearHolder extends GearHolderLow
+interface StateGearHolder extends GearHolder
 {
 	function getStateGear():StateGear;
 }

@@ -4,7 +4,6 @@ package jp.sipo.gipo_framework_example.scene.mock1;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import jp.sipo.gipo_framework_example.pilotView.PilotViewScene;
@@ -29,9 +28,12 @@ class Mock1PilotView extends PilotViewScene implements Mock1ViewOrder
 	{
 		super();
 		this.peek = peek;
+		// ハンドラの登録
+		gear.addRunHandler(run);
+		drawDispatcher.add(draw);
 	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* 開始処理 */
 	private function run():Void
 	{
 		// UIの配置準備
@@ -62,11 +64,8 @@ class Mock1PilotView extends PilotViewScene implements Mock1ViewOrder
 		hook.viewInstantInput(Mock1Input.DemoChangeSceneButton);
 	}
 	
-	/**
-	 * 表示の更新
-	 */
-	@:handler(PilotViewSceneDispatcherKind.Draw)
-	public function draw():Void
+	/* 表示の更新 */
+	private function draw():Void
 	{
 		countDraw();
 	}

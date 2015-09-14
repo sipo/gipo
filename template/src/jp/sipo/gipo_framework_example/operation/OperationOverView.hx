@@ -8,7 +8,6 @@ import jp.sipo.gipo_framework_example.operation.OperationView;
 import jp.sipo.gipo.reproduce.LogWrapper.DisplaySnapshot;
 import flash.Vector;
 import com.bit101.components.PushButton;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import com.bit101.components.Label;
 import com.bit101.components.ComboBox;
 import flash.display.Sprite;
@@ -39,6 +38,7 @@ class OperationOverView extends GearHolderImpl implements OperationView
 	public function new() 
 	{
 		super();
+		gear.addRunHandler(run);
 	}
 	
 	/** 必要データの付与 */
@@ -55,7 +55,7 @@ class OperationOverView extends GearHolderImpl implements OperationView
 		return sprite;
 	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* gearHandler */
 	private function run():Void
 	{
 		var uiContainerConfig:Config = MinimalcompsGipoContainer.getDefaultConfig().clone();

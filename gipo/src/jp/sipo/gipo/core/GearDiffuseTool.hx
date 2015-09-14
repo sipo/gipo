@@ -38,30 +38,10 @@ class GearDiffuseTool
 	 * 
 	 * @gearDispose
 	 */
-	public function bookChild<T:(GearHolderLow)>(child:T, ?pos:PosInfos):T
+	public function bookChild<T:(GearHolder)>(child:T, ?pos:PosInfos):T
 	{
 		return gear.bookChild(child, pos);
 	}
-	
-	
-//	/**
-//	 * 対象Gearに限定してdiffuseを行う
-//	 * @gearDispose
-//	 */
-//	public function childDiffuse(target:IGearHolder, diffuseInstance:Dynamic, clazz:Class<Dynamic>, ?overwrite:Bool = false):Void
-//	{
-//		gear.childDiffuse(target, diffuseInstance, clazz, overwrite);
-//	}
-//	
-//	/**
-//	 * 対象Gearに限定してキーによるdiffuseを行う
-//	 * 
-//	 * @gearDispose
-//	 */
-//	public function childDiffuseWithKey(target:IGearHolder, diffuseInstance:Dynamic, key:EnumValue, ?overwrite:Bool = false):Void
-//	{
-//		gear.childDiffuseWithKey(target, diffuseInstance, key, overwrite);
-//	}
 	
 	/* 消去処理 */
 	@:allow(jp.sipo.gipo.core.Gear)

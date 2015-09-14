@@ -4,7 +4,6 @@ package jp.sipo.gipo_framework_example.scene.mock0;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo_framework_example.scene.mock0.Mock0;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
@@ -21,9 +20,13 @@ class Mock0PilotView extends PilotViewScene implements Mock0ViewOrder
 	private var uiContainer:MinimalcompsGipoContainer;
 	
 	/** コンストラクタ */
-	public function new() { super(); }
+	public function new() 
+	{
+		super();
+		gear.addRunHandler(run);
+	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* gearHandler */
 	private function run():Void
 	{
 		// UIの配置準備

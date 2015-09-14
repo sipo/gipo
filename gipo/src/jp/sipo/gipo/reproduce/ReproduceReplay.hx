@@ -4,11 +4,8 @@ package jp.sipo.gipo.reproduce;
  * 
  * @auther sipo
  */
-import haxe.PosInfos;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
-import Type;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import flash.Vector;
 import jp.sipo.util.Note;
@@ -39,10 +36,11 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 		this.replayLog = replayLog;
 		this.executeEvent = executeEvent;
 		this.endCallback = endCallback;
+		// ハンドラの登録
+		gear.addRunHandler(run);
 	}
 	
-	
-	@:handler(GearDispatcherKind.Run)
+	/* gearHandler */
 	private function run():Void
 	{
 		note.log('再現の開始');
