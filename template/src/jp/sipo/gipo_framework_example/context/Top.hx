@@ -5,10 +5,9 @@ package jp.sipo.gipo_framework_example.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.GearHolder;
 import jp.sipo.gipo_framework_example.context.reproduce.UpdateKind;
 import jp.sipo.gipo.reproduce.Reproduce;
-import jp.sipo.gipo.core.GearHolderLow;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo_framework_example.context.Logic;
 import jp.sipo.util.GlobalDispatcher;
 import jp.sipo.gipo_framework_example.context.Hook;
@@ -45,9 +44,12 @@ class Top extends GearHolderImpl
 		super();
 		this.current = current;
 		this.devConfig = devConfig;
+		// handler
+		gear.addDiffusibleHandler(diffusible);
+		gear.addRunHandler(run);
 	}
 	
-	@:handler(GearDispatcherKind.Diffusible)
+	/* gearHandler */
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		globalStatus = new GlobalContext();
@@ -103,17 +105,17 @@ class Top extends GearHolderImpl
 		globalDispatcher.addFrameHandler(frame);	// フレームイベント
 	}
 	/* child以下にtargetをdiffuseする */
-	inline private function childDiffuse(child:GearHolderLow, target:GearHolderLow, clazz:Class<Dynamic>):Void
+	inline private function childDiffuse(child:GearHolder, target:GearHolder, clazz:Class<Dynamic>):Void
 	{
 		child.gearOutside().otherDiffuse(target, clazz);
 	}
 	/* child以下にtargetをenumでdiffuseする */
-	inline private function childDiffuseWithKey(child:GearHolderLow, target:GearHolderLow, key:TopDiffuseKey):Void
+	inline private function childDiffuseWithKey(child:GearHolder, target:GearHolder, key:TopDiffuseKey):Void
 	{
 		child.gearOutside().otherDiffuseWithKey(target, key);
 	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* gearHandler */
 	private function run():Void
 	{
 		// reproduseの準備（このrun自体も非同期である）

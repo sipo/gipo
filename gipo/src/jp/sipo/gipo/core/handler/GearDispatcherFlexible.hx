@@ -6,7 +6,7 @@ package jp.sipo.gipo.core.handler;
  */
 import haxe.PosInfos;
 import jp.sipo.gipo.core.handler.GenericGearDispatcher;
-class GearDispatcherFlexible<TFunc> extends GenericGearDispatcher<TFunc> implements AutoHandlerDispatcher
+class GearDispatcherFlexible<TFunc> extends GenericGearDispatcher<TFunc>
 {
 	public function new(addBehavior:GearDispatcherAddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
 	{

@@ -1,4 +1,4 @@
 package jp.sipo.gipo.core.state;
-interface StateSwitcherGearHolder extends GearHolderLow
+interface StateSwitcherGearHolder extends GearHolder
 {
 }

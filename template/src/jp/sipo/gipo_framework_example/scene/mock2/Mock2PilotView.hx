@@ -5,7 +5,6 @@ package jp.sipo.gipo_framework_example.scene.mock2;
  * @auther sipo
  */
 import jp.sipo.gipo_framework_example.scene.mock2.Mock2;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import jp.sipo.gipo_framework_example.pilotView.PilotViewScene;
@@ -18,9 +17,14 @@ class Mock2PilotView extends PilotViewScene implements Mock2ViewOrder
 	private var uiContainer:MinimalcompsGipoContainer;
 	
 	/** コンストラクタ */
-	public function new() { super(); }
+	public function new() 
+	{
+		super();
+		// ハンドラの登録
+		gear.addRunHandler(run);
+	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* 開始処理 */
 	private function run():Void
 	{
 		// UIの配置準備

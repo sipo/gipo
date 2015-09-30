@@ -12,7 +12,6 @@ import jp.sipo.gipo_framework_example.context.reproduce.SnapshotImpl;
 import jp.sipo.gipo_framework_example.context.reproduce.SnapshotKind;
 import haxe.PosInfos;
 import jp.sipo.gipo_framework_example.context.reproduce.LogicStatus;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo_framework_example.scene.mock1.Mock1;
 import jp.sipo.gipo_framework_example.context.Hook.HookForLogic;
 import jp.sipo.gipo.reproduce.Snapshot;
@@ -31,9 +30,14 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 	private var afterChangeInputBlock:Bool = false;
 	
 	/** コンストラクタ */
-	public function new() { super(); }
+	public function new() 
+	{
+		super();
+		// ハンドラの登録
+		gear.addDiffusibleHandler(diffusible);
+	}
 	
-	@:handler(GearDispatcherKind.Diffusible)
+	/* gearHandler */
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		logicStatus = new LogicStatus();

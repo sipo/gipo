@@ -24,7 +24,7 @@ class GearDispatcherRedTape
 	}
 	
 	/** ハンドラの登録 */
-	public function set(role:Enum<Dynamic>, handler:TFunc, ?addPos:PosInfos):Void
+	public function set(handler:TFunc, role:Enum<Dynamic>, ?addPos:PosInfos):Void
 	{
 		setFromName(Type.getEnumName(role), handler, addPos);
 	}

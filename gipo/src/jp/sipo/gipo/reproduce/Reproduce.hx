@@ -11,8 +11,6 @@ import jp.sipo.gipo.reproduce.LogPart;
 import haxe.PosInfos;
 import jp.sipo.gipo.core.GearDiffuseTool;
 import jp.sipo.gipo.core.state.StateGearHolder;
-import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.util.Note;
 import haxe.ds.Option;
 /* ================================================================
@@ -75,6 +73,9 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 	{
 		super();
 		stateSwitcherGear.addStateAssignmentHandler(stateAssignment);
+		// ハンドラの登録
+		gear.addDiffusibleHandler(diffusible);
+		gear.addRunHandler(run);
 	}
 	
 	/**
@@ -97,7 +98,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 	 * 本処理
 	 * ===============================================================*/
 	
-	@:handler(GearDispatcherKind.Diffusible)
+	/* gearHandler */
 	private function diffusible(tool:GearDiffuseTool):Void
 	{
 		// 下位層にNoteを渡す
@@ -105,7 +106,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 		tool.diffuse(note, Note);
 	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* gearHandler */
 	private function run():Void
 	{
 		// 記録開始

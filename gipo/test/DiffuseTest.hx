@@ -326,9 +326,11 @@ class DiffuseTop extends GearHolderImpl
 	{
 		super();
 		this.info = info;
+		// ハンドラの登録
+		gear.addDiffusibleHandler(diffusible);
 	}
 
-	@:handler(GearDispatcherKind.Diffusible)
+	/* 準備処理*/
 	function diffusible(tool:GearDiffuseTool):Void
 	{
 		if(info.diffuseData != null) {

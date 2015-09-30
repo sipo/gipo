@@ -7,7 +7,6 @@ package jp.sipo.gipo_framework_example.context;
 import haxe.PosInfos;
 import jp.sipo.gipo.core.handler.GearDispatcherRedTape;
 import jp.sipo.gipo.core.handler.GearDispatcher;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo_framework_example.context.ViewForLogic;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
@@ -28,8 +27,10 @@ class LogicScene extends StateGearHolderImpl
 	public function new() 
 	{
 		super();
-		viewInputRedTape = gear.dispatcherRedTape(LogicSceneDispatcherKind.ViewInput);
-		updateDispatcher = gear.dispatcher(AddBehaviorPreset.addTail, false, LogicSceneDispatcherKind.Update);
+		viewInputRedTape = new GearDispatcherRedTape();
+		updateDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
+		// ハンドラの登録
+		gear.addBubbleHandler(bubble);
 	}
 	
 	/* 表示ViewSceneを変更をする。返ってきた値は、ViewSceneであり、各ScenOrderにcastして使う */
@@ -41,7 +42,6 @@ class LogicScene extends StateGearHolderImpl
 	}
 	
 	/* run後チェック処理 */
-	@:handler(GearDispatcherKind.Bubble)
 	private function bubble():Void
 	{
 		// runのあと、ちゃんとchangeViewSceneが実行されているかチェックする
@@ -65,11 +65,4 @@ class LogicScene extends StateGearHolderImpl
 	{
 		updateDispatcher.execute();
 	}
-}
-enum LogicSceneDispatcherKind
-{
-	/** 更新処理 */
-	Update;
-	/** 入力処理 */
-	ViewInput;
 }

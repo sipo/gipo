@@ -4,7 +4,6 @@ package jp.sipo.gipo_framework_example.scene.mock1;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo_framework_example.context.reproduce.LogicStatus;
 import jp.sipo.gipo_framework_example.context.ViewForLogic;
 import jp.sipo.gipo_framework_example.context.LogicScene;
@@ -43,9 +42,16 @@ class Mock1 extends LogicScene implements Mock1ViewPeek
 	private var viewSceneOrder:Mock1ViewOrder;
 	
 	/** コンストラクタ */
-	public function new() { super(); }
+	public function new() 
+	{
+		super();
+		// ハンドラの登録
+		gear.addRunHandler(run);
+		updateDispatcher.add(update);
+		viewInputRedTape.set(viewInput, Mock1Input);
+	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* gearHandler */
 	private function run():Void
 	{
 		// 表示回数のカウントアップ
@@ -55,18 +61,14 @@ class Mock1 extends LogicScene implements Mock1ViewPeek
 		viewSceneOrder = changeViewScene(ViewSceneKind.Mock1Scene(this));
 	}
 	
-	/**
-	 * 更新処理
-	 */
-	@:handler(LogicSceneDispatcherKind.Update)
-	public function update():Void
+	/* 更新処理*/
+	private function update():Void
 	{
 		// テストのために適当な変数をカウントアップする
 		count++;
 	}
 	
 	/* Viewからの入力 */
-	@:redTapeHandler(LogicSceneDispatcherKind.ViewInput)
 	private function viewInput(command:Mock1Input):Void
 	{
 		switch(command)

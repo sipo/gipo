@@ -4,8 +4,6 @@ package jp.sipo.gipo_framework_example.scene.mock2;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
-import jp.sipo.gipo_framework_example.context.reproduce.LogicStatus;
 import jp.sipo.gipo_framework_example.context.ViewForLogic;
 import jp.sipo.gipo_framework_example.context.LogicScene;
 import jp.sipo.gipo_framework_example.scene.mock0.Mock0;
@@ -34,9 +32,15 @@ class Mock2Ready extends LogicScene implements Mock2ReadyViewPeek
 	private var viewSceneOrder:Mock2ReadyViewOrder;
 	
 	/** コンストラクタ */
-	public function new() { super(); }
+	public function new() 
+	{
+		super();
+		// ハンドラの登録
+		gear.addRunHandler(run);
+		viewInputRedTape.set(viewInput, Mock2ReadyInput);
+	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* 開始処理 */
 	private function run():Void
 	{
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
@@ -45,7 +49,6 @@ class Mock2Ready extends LogicScene implements Mock2ReadyViewPeek
 	
 	
 	/* Viewからの入力 */
-	@:redTapeHandler(LogicSceneDispatcherKind.ViewInput)
 	private function viewInput(command:Mock2ReadyInput):Void
 	{
 		switch(command)

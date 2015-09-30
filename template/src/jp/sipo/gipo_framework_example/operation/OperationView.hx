@@ -4,9 +4,9 @@ package jp.sipo.gipo_framework_example.operation;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.GearHolder;
 import jp.sipo.gipo.reproduce.LogWrapper.DisplaySnapshot;
 import flash.Vector;
-import jp.sipo.gipo.core.GearHolderLow;
 import flash.display.Sprite;
 /* ================================================================
  * OperationHookに要求する機能
@@ -33,7 +33,7 @@ enum OperationViewEvent
 /* ================================================================
  * インターフェース
  * ===============================================================*/
-interface OperationView extends GearHolderLow
+interface OperationView extends GearHolder
 {
 	/** 必要データの付与 */
 	public function setContext(operationViewLayer:Sprite):Void;

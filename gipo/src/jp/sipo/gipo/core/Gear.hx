@@ -6,17 +6,12 @@ package jp.sipo.gipo.core;
  * @author sipo
  */
 import jp.sipo.gipo.core.handler.CancelKey;
-import haxe.ds.ObjectMap;
 import Type;
 import jp.sipo.util.SipoError;
 import jp.sipo.util.SipoError;
-import jp.sipo.gipo.core.handler.GearDispatcherAddBehavior;
 import jp.sipo.gipo.core.handler.GearDispatcherHandler;
-import jp.sipo.gipo.core.handler.AutoHandlerDispatcher;
 import jp.sipo.gipo.core.handler.GearDispatcherFlexible;
-import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 import jp.sipo.gipo.core.handler.GearDispatcher;
-import jp.sipo.gipo.core.handler.GearDispatcherRedTape;
 import haxe.rtti.Meta;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.PosWrapper;
@@ -44,7 +39,7 @@ private typedef EnumName = String;
 class Gear implements GearOutside
 {
 	/* 保持クラス */
-	private var holder:GearHolderLow;
+	private var holder:GearHolder;
 	/** 子 */
 	private var childGearList:Array<Gear>;
 	/** 親 */
@@ -59,12 +54,12 @@ class Gear implements GearOutside
 	 * -------------------------------*/
 	
 	/* absorbとhandlerの自動化が無効かされているか */
-	private var autoInitializerDisabled:Bool;
+	private var autoInitializerDisabled:Bool = false;
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
 	private var diffusibleHandlerList:GearDispatcherFlexible<GearDiffuseTool -> Void>;
-	private var runHandlerList:GearDispatcher;
+	private var runDispatcher:GearDispatcher;
 	private var bubbleHandlerList:GearDispatcher;
 	private var disposeTaskStack:GearDispatcher;
 	
@@ -72,13 +67,8 @@ class Gear implements GearOutside
 	 * 処理リスト
 	 * -------------------------------*/
 	
-	/* 自動登録対象のHandler登録を保持する */
-	private var dispatcherMap:ObjectMap<Dynamic, AutoHandlerDispatcher> = new ObjectMap<Dynamic, AutoHandlerDispatcher>();
-	/* 自動登録対象のRedTapeHandler登録を保持する */
-	private var dispatcherRedTapeMap:ObjectMap<Dynamic, GearDispatcherRedTape> = new ObjectMap<Dynamic, GearDispatcherRedTape>();
-	
 	/* 子の追加処理の遅延保持 */
-	private var bookChildList:Array<PosWrapper<GearHolderLow>>;
+	private var bookChildList:Array<PosWrapper<GearHolder>>;
 	
 	/* 初期化完了に必要なタスク。このタスクリストが全て解除された時に、runが呼び出される。*/
 	private var needTasks:Array<EnumValue>;
@@ -99,16 +89,15 @@ class Gear implements GearOutside
 	/**
 	 * コンストラクタ
 	 */
-	public function new(holder:GearHolderLow)
+	public function new(holder:GearHolder)
 	{
 		this.holder = holder;
-		autoInitializerDisabled = false;
 		// 初期状態の設定
 		phase = GearPhase.Create;
 		// HandlerListの初期化
-		diffusibleHandlerList = dispatcherFlexible(AddBehaviorPreset.addTail, true, GearDispatcherKind.Diffusible);
-		runHandlerList = dispatcher(AddBehaviorPreset.addTail, true, GearDispatcherKind.Run);
-		bubbleHandlerList = dispatcher(AddBehaviorPreset.addHead, true, GearDispatcherKind.Bubble);
+		diffusibleHandlerList = new GearDispatcherFlexible(AddBehaviorPreset.addTail, true);
+		runDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, true);
+		bubbleHandlerList = new GearDispatcher(AddBehaviorPreset.addHead, true);
 		disposeTaskStack = new GearDispatcher(AddBehaviorPreset.addHead, true);
 		// 変数初期化
 		childGearList = new Array();
@@ -178,51 +167,6 @@ class Gear implements GearOutside
 			case GearPhase.Create, GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle: true;
 			case GearPhase.Dispose, GearPhase.Invalid: false;
 		}
-	}
-	
-	/* ================================================================
-	 * 自動登録可能なハンドラのリストを生成する
-	 * ===============================================================*/
-	
-	/**
-	 * 通常の、引数なし関数を呼び出す
-	 */
-	public function dispatcher(addBehavior:GearDispatcherAddBehavior<Void -> Void>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcher
-	{
-		var dispatcher:GearDispatcher = new GearDispatcher(addBehavior, once, pos);
-		setDispatcher(key, dispatcher);
-		return dispatcher;
-	}
-	public function dispatcherFlexible<ArgumentsHandler>(addBehavior:GearDispatcherAddBehavior<ArgumentsHandler>, once:Bool, key:EnumValue, ?pos:PosInfos):GearDispatcherFlexible<ArgumentsHandler>
-	{
-		var dispatcher:GearDispatcherFlexible<ArgumentsHandler> = new GearDispatcherFlexible<ArgumentsHandler>(addBehavior, once, pos);
-		setDispatcher(key, dispatcher);
-		return dispatcher; 
-	}
-	public function dispatcherRedTape(key:EnumValue, ?pos:PosInfos):GearDispatcherRedTape
-	{
-		var dispatcher:GearDispatcherRedTape = new GearDispatcherRedTape(pos);
-		setRedTapeDispatcher(key, dispatcher);
-		return dispatcher;
-	}
-	
-	/* 自動登録するDispatcherとそのキーを登録 */
-	private function setDispatcher(key:EnumValue, dispatcher:AutoHandlerDispatcher):Void
-	{
-		if (dispatcherMap.exists(key)) throw 'Dispatcherが２重登録されました。$key';
-		dispatcherMap.set(key, dispatcher);
-	}
-	/* EnumValueを生成する（引数なし） */
-	inline private function createEnumValue(enumName:EnumName, enumConstractor:String):EnumValue
-	{
-		return Type.createEnum(Type.resolveEnum(enumName), enumConstractor);
-	}
-	
-	/* 自動登録するRedTapeDispatcherとそのキー、ロールを登録 */
-	private function setRedTapeDispatcher(key:EnumValue, dispatcher:GearDispatcherRedTape):Void
-	{
-		if (dispatcherRedTapeMap.exists(key)) throw 'RedTapeDispatcherが２重登録されました。$key';
-		dispatcherRedTapeMap.set(key, dispatcher);
 	}
 	
 	/* ================================================================
@@ -296,6 +240,7 @@ class Gear implements GearOutside
 		phase = GearPhase.Middle;
 		endNeedTask(GearNeedTask.Core);
 	}
+	
 	/* AbsorbとHandlerの自動化を禁止する */
 	private function disableAutoInitialize():Void
 	{
@@ -308,9 +253,8 @@ class Gear implements GearOutside
 		if (autoInitializerDisabled) { return; }
 		// 各フラグ用インターフェースを実装しているかチェックする
 		var isAutoAbsorb:Bool = Std.is(holder, AutoAbsorb);
-		var isAutoHandler:Bool = Std.is(holder, AutoHandler);
-		// どちらもなければ対応しない
-		if (!isAutoAbsorb && !isAutoHandler) return;
+		// 実装していなければ対応しない
+		if (!isAutoAbsorb) return;
 		// 設定の開始
 		var holderClass:Class<Dynamic> = Type.getClass(holder);
 		while(holderClass != null)	// 継承元もチェックするためループが必要
@@ -327,13 +271,6 @@ class Gear implements GearOutside
 					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_TAG, metaTags, name, lastGearTag, holderClass);
 					// @:absorbWithKeyへの対応
 					trim(AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG, metaTags, name, lastGearTag, holderClass);
-				}
-				// Handlerのチェック
-				if (isAutoHandler){
-					// @:handlerへの対応
-					trim(AutoHandler.AutoHandlerTag.HANDLER_TAG, metaTags, name, lastGearTag, holderClass);
-					// @:redTapeHandlerへの対応
-					trim(AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG, metaTags, name, lastGearTag, holderClass);
 				}
 			}
 			holderClass = Type.getSuperClass(holderClass);	// 継承元もチェック
@@ -353,10 +290,6 @@ class Gear implements GearOutside
 					initializeAbsorbTag(keyArguments, name);
 				case AutoAbsorb.AutoAbsorbTag.ABSORB_WITH_KEY_TAG :
 					initializeAbsorbWithKeyTag(keyArguments, name);
-				case AutoHandler.AutoHandlerTag.HANDLER_TAG :
-					initializeHandlerTag(keyArguments, name, holderClass);
-				case AutoHandler.AutoHandlerTag.RED_TAPE_HANDLER_TAG :
-					initializeRedTapeHandlerTag(keyArguments, name, holderClass);
 				default :
 					throw '予期していないタグ ${tag} が検出されました。';
 			}
@@ -381,33 +314,30 @@ class Gear implements GearOutside
 		absorbWithKeyLogList.push(new AbsorbLog(name, '$enumName # $enumConstractorName', target));
 	}
 	
-	private function initializeHandlerTag(keyArguments:Array<Dynamic>, name:String, holderClass:Class<Dynamic>)
+	/**
+	 * Diffusibleハンドラの追加
+	 */
+	public function addDiffusibleHandler(func:GearDiffuseTool -> Void, ?pos:PosInfos):Void
 	{
-		var enumValue:EnumValue = createEnumValue(keyArguments[0], keyArguments[1]);
-		var dispatcher:AutoHandlerDispatcher = dispatcherMap.get(enumValue);
-		dispatcher.autoAdd(Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
+		diffusibleHandlerList.add(func, pos);
+	}
+	// TODO:<<尾野>>diffusible→preparation
+	
+	/**
+	 * Runハンドラの追加
+	 */
+	public function addRunHandler(func:Void->Void, ?pos:PosInfos):Void
+	{
+		runDispatcher.autoAdd(func, pos);
 	}
 	
-	private function initializeRedTapeHandlerTag(keyArguments:Array<Dynamic>, name:String, holderClass:Class<Dynamic>)
+	/**
+	 * Bubbleハンドラの追加
+	 */
+	public function addBubbleHandler(func:Void->Void, ?pos:PosInfos):Void
 	{
-		var enumValue:EnumValue = createEnumValue(keyArguments[0], keyArguments[1]);
-		var roleName:EnumName = keyArguments[2];
-		var dispatcher:GearDispatcherRedTape = dispatcherRedTapeMap.get(enumValue);
-		dispatcher.setFromName(roleName, Reflect.field(holder, name), createDummyPosInfos(holderClass, name));
+		bubbleHandlerList.autoAdd(func, pos);
 	}
-	
-	
-	private function createDummyPosInfos(holderClass:Class<Dynamic>, methodName:String):PosInfos
-	{
-		return {
-			fileName:"",
-			lineNumber:0,
-			className:Type.getClassName(holderClass),
-			methodName:methodName
-		}
-	}
-	
-	
 	
 	/* 予約の履行 */
 	private function fulfill():Void
@@ -441,8 +371,8 @@ class Gear implements GearOutside
 		needTasks.remove(key);
 		if (needTasks.length != 0) return;	
 		// タスクが無くなったら、runへ進む
-		runHandlerList.execute();
-		runHandlerList = null;
+		runDispatcher.execute();
+		runDispatcher = null;
 		bubbleHandlerList.execute();
 		bubbleHandlerList = null;
 	}
@@ -525,11 +455,11 @@ class Gear implements GearOutside
 	 * @gearDispose
 	 */
 	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
-	private function bookChild<T:(GearHolderLow)>(child:T, ?pos:PosInfos):T
+	private function bookChild<T:(GearHolder)>(child:T, ?pos:PosInfos):T
 	{
 		if (!checkPhaseCanDiffuseTool()) throw new SipoError('処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません');
 		// 後で追加するリストに入れる
-		bookChildList.push(new PosWrapper<GearHolderLow>(child, pos)); // posを引き継いで、追加された箇所がわかるように
+		bookChildList.push(new PosWrapper<GearHolder>(child, pos)); // posを引き継いで、追加された箇所がわかるように
 		return child;
 	}
 	
@@ -542,7 +472,7 @@ class Gear implements GearOutside
 	 * 
 	 * @gearDispose
 	 */
-	public function addChild<T:(GearHolderLow)>(child:T, ?pos:PosInfos):T
+	public function addChild<T:(GearHolder)>(child:T, ?pos:PosInfos):T
 	{
 		addChildGear(getGear(child), pos);
 		return child;
@@ -570,7 +500,7 @@ class Gear implements GearOutside
 	 * 子を削除する
 	 * 削除した子は再利用できない
 	 */
-	public function removeChild(child:GearHolderLow):Void
+	public function removeChild(child:GearHolder):Void
 	{
 		var childGear:Gear = getGear(child);
 		// 登録されている削除のキャンセル
@@ -587,7 +517,7 @@ class Gear implements GearOutside
 	}
 	
 	/* Gear内部専用の特殊処理。IGearOutをGearに戻す */
-	inline private function getGear(gearHolder:GearHolderLow):Gear
+	inline private function getGear(gearHolder:GearHolder):Gear
 	{
 		return gearHolder.gearOutside().getImplement();
 	}
@@ -658,12 +588,6 @@ class Gear implements GearOutside
 enum GearNeedTask
 {
 	Core;
-}
-enum GearDispatcherKind
-{
-	Run;
-	Diffusible;
-	Bubble;
 }
 class AbsorbLog
 {

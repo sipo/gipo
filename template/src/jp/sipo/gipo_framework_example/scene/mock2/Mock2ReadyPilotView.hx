@@ -6,8 +6,6 @@ package jp.sipo.gipo_framework_example.scene.mock2;
  */
 import haxe.PosInfos;
 import jp.sipo.gipo_framework_example.scene.mock2.Mock2Ready;
-import jp.sipo.gipo_framework_example.scene.mock2.Mock2;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import flash.display.Sprite;
 import jp.sipo.wrapper.MinimalcompsGipoContainer;
 import jp.sipo.gipo_framework_example.pilotView.PilotViewScene;
@@ -35,9 +33,13 @@ class Mock2ReadyPilotView extends PilotViewScene implements Mock2ReadyViewOrder
 	public function new() 
 	{
 		super();
+		// ハンドラの登録
+		gear.addRunHandler(run);
+		asyncUpdateDispatcher.add(asyncUpdate);
+		updateDispatcher.add(update);
 	}
 	
-	@:handler(GearDispatcherKind.Run)
+	/* 開始処理 */
 	private function run():Void
 	{
 		// UIの配置準備
@@ -62,7 +64,7 @@ class Mock2ReadyPilotView extends PilotViewScene implements Mock2ReadyViewOrder
 		drawAsyncLabel();
 	}
 	
-	@:handler(PilotViewSceneDispatcherKind.AsyncUpdate)
+	/* 非同期更新処理 */
 	private function asyncUpdate():Void
 	{
 		asyncCount++;
@@ -75,7 +77,7 @@ class Mock2ReadyPilotView extends PilotViewScene implements Mock2ReadyViewOrder
 		}
 	}
 	
-	@:handler(PilotViewSceneDispatcherKind.Update)
+	/* 更新処理 */
 	private function update():Void
 	{
 		syncCount++;
