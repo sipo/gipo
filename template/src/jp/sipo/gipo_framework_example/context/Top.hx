@@ -11,7 +11,7 @@ import jp.sipo.gipo.reproduce.Reproduce;
 import jp.sipo.gipo_framework_example.context.Logic;
 import jp.sipo.util.GlobalDispatcher;
 import jp.sipo.gipo_framework_example.context.Hook;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo_framework_example.operation.OperationView;
 import jp.sipo.gipo_framework_example.operation.OperationHook;
 import jp.sipo.gipo_framework_example.operation.OperationLogic;
@@ -45,12 +45,12 @@ class Top extends GearHolderImpl
 		this.current = current;
 		this.devConfig = devConfig;
 		// handler
-		gear.addDiffusibleHandler(diffusible);
+		gear.addPreparationHandler(preparation);
 		gear.addRunHandler(run);
 	}
 	
 	/* gearHandler */
-	private function diffusible(tool:GearDiffuseTool):Void
+	private function preparation(tool:GearPreparationTool):Void
 	{
 		globalStatus = new GlobalContext();
 		

@@ -1,7 +1,7 @@
 package;
 
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
 
@@ -544,7 +544,7 @@ class RemoveNode extends GearHolderImpl
 	}
 
 	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearDiffuseTool):Void
+	function diffusible(tool:GearPreparationTool):Void
 	{
 		for(child in info.children) {
 			tool.bookChild(new RemoveNode(child));
@@ -572,7 +572,7 @@ class DisposeTaskTwiceNode extends GearHolderImpl
 	}
 
 	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearDiffuseTool):Void
+	function diffusible(tool:GearPreparationTool):Void
 	{
 		for(child in info.children) {
 			tool.bookChild(new DisposeTaskTwiceNode(child));

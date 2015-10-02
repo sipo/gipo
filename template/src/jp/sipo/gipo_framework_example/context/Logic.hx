@@ -15,7 +15,7 @@ import jp.sipo.gipo_framework_example.context.reproduce.LogicStatus;
 import jp.sipo.gipo_framework_example.scene.mock1.Mock1;
 import jp.sipo.gipo_framework_example.context.Hook.HookForLogic;
 import jp.sipo.gipo.reproduce.Snapshot;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo_framework_example.scene.initialize.LogicInitialize;
 import jp.sipo.ds.Point;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
@@ -34,11 +34,11 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 	{
 		super();
 		// ハンドラの登録
-		gear.addDiffusibleHandler(diffusible);
+		gear.addPreparationHandler(preparation);
 	}
 	
 	/* gearHandler */
-	private function diffusible(tool:GearDiffuseTool):Void
+	private function preparation(tool:GearPreparationTool):Void
 	{
 		logicStatus = new LogicStatus();
 		

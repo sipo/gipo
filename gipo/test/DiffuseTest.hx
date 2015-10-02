@@ -1,7 +1,7 @@
 package;
 
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
 
@@ -327,11 +327,11 @@ class DiffuseTop extends GearHolderImpl
 		super();
 		this.info = info;
 		// ハンドラの登録
-		gear.addDiffusibleHandler(diffusible);
+		gear.addPreparationHandler(preparation);
 	}
 
 	/* 準備処理*/
-	function diffusible(tool:GearDiffuseTool):Void
+	function preparation(tool:GearPreparationTool):Void
 	{
 		if(info.diffuseData != null) {
 			tool.diffuse(info.diffuseData, DiffuseData);
@@ -372,7 +372,7 @@ class DiffuseWithKeyTop extends GearHolderImpl
 	}
 
 	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearDiffuseTool):Void
+	function diffusible(tool:GearPreparationTool):Void
 	{
 		if(info.diffuseData != null) {
 			tool.diffuseWithKey(info.diffuseData, DiffuseDataKey.Key1);

@@ -3,7 +3,7 @@ package ;
 import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 import jp.sipo.gipo.core.state.StateGearHolder;
 import jp.sipo.gipo.core.state.StateSwitcherGear;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
@@ -166,7 +166,7 @@ class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>
 
 	/* 初期化処理 */
 	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearDiffuseTool):Void
+	function diffusible(tool:GearPreparationTool):Void
 	{
 		tool.diffuse(this, TopSwitcher); // この階層以下で、このインスタンスを取得できるようにする
 	}

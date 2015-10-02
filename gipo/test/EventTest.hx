@@ -1,7 +1,7 @@
 package;
 
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
 
@@ -419,7 +419,7 @@ class EventTest
 	{
 		prepareStraightTree();
 
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.bookChild(new EventNode(nodeB));
 		}
 
@@ -605,12 +605,12 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuse(data, Array);
 		}
 
 		var absorbedData:Array<Int> = null;
-		nodeAA.diffusibleProc = function(tool:GearDiffuseTool) {
+		nodeAA.diffusibleProc = function(tool:GearPreparationTool) {
 			absorbedData = nodeAA.node.gear.absorb(Array);
 		}
 
@@ -640,7 +640,7 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuse(data, Array);
 		}
 
@@ -675,7 +675,7 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuse(data, Array);
 		}
 
@@ -710,7 +710,7 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuse(data, Array);
 		}
 
@@ -744,12 +744,12 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuseWithKey(data, EventDataKey.Key1);
 		}
 
 		var absorbedData:Array<Int> = null;
-		nodeAA.diffusibleProc = function(tool:GearDiffuseTool) {
+		nodeAA.diffusibleProc = function(tool:GearPreparationTool) {
 			absorbedData = nodeAA.node.gear.absorbWithKey(EventDataKey.Key1);
 		}
 
@@ -779,7 +779,7 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuseWithKey(data, EventDataKey.Key1);
 		}
 
@@ -814,7 +814,7 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuseWithKey(data, EventDataKey.Key1);
 		}
 
@@ -849,7 +849,7 @@ class EventTest
 		prepareStraightTree();
 
 		var data = [ 1, 2, 3 ];
-		top.diffusibleProc = function(tool:GearDiffuseTool) {
+		top.diffusibleProc = function(tool:GearPreparationTool) {
 			tool.diffuseWithKey(data, EventDataKey.Key1);
 		}
 
@@ -917,7 +917,7 @@ class EventTest
 		prepareStraightTree();
 
 		var isCalled = false;
-		nodeA.diffusibleProc = function(tool:GearDiffuseTool) {
+		nodeA.diffusibleProc = function(tool:GearPreparationTool) {
 			nodeA.node.gear.disposeTask(function() { isCalled = true; });
 		}
 
@@ -1056,7 +1056,7 @@ class EventNode extends GearHolderImpl
 	}
 
 	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearDiffuseTool):Void
+	function diffusible(tool:GearPreparationTool):Void
 	{
 		info.diffusibleTimeCode = EventTest.currentTimeCode();
 		if(info.diffusibleProc != null) {
@@ -1092,7 +1092,7 @@ class EventTreeInfo
 	public var children:Array<EventTreeInfo>;
 
 	public var constructorProc:Void->Void = null;
-	public var diffusibleProc:GearDiffuseTool->Void = null;
+	public var diffusibleProc:GearPreparationTool->Void = null;
 	public var runProc:Void->Void = null;
 	public var bubbleProc:Void->Void = null;
 

@@ -12,7 +12,7 @@ import jp.sipo.gipo.reproduce.LogPart.ReproducePhase;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.Reproduce;
 import jp.sipo.gipo.core.Gear.GearDispatcherKind;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
 
@@ -1594,7 +1594,7 @@ class ReproduceTop extends GearHolderImpl
 	}
 
 	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearDiffuseTool):Void
+	function diffusible(tool:GearPreparationTool):Void
 	{
         reproduce = tool.bookChild(new Reproduce<ReproduceUpdateKind>());
         hook = tool.bookChild(new ReproduceHook());
