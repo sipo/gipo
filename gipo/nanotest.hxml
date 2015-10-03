@@ -1,0 +1,21 @@
+## Flash 9+
+#-main TestMain
+#-lib munit
+#-lib hamcrest
+#-cp src
+
+#-cp test
+#-swf-version 11
+#-swf out/as3_test.swf
+
+
+#　MUnit
+-cmd haxelib run munit test -as3
+--next
+
+# NanoTest
+
+# Flash
+-lib nanotest
+--macro nanotest.NanoTestRunner.readResult('report/test/simple/as3/output.txt', ['src', 'test'], "Flash")
+--next

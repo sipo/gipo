@@ -4,11 +4,11 @@ package jp.sipo.gipo.reproduce;
  * 
  * @auther sipo
  */
+import flash.Vector;
 import jp.sipo.gipo.reproduce.Snapshot;
 import haxe.PosInfos;
 import Type;
 import jp.sipo.gipo.reproduce.LogPart;
-import flash.Vector;
 class LogWrapper<TUpdateKind>
 {
 	private var list = new Array<LogPart<TUpdateKind>>();
