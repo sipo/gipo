@@ -9,7 +9,7 @@ import jp.sipo.gipo.core.config.GearNoteTag;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.LogPart;
 import haxe.PosInfos;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.state.StateGearHolder;
 import jp.sipo.util.Note;
 import haxe.ds.Option;
@@ -74,7 +74,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 		super();
 		stateSwitcherGear.addStateAssignmentHandler(stateAssignment);
 		// ハンドラの登録
-		gear.addDiffusibleHandler(diffusible);
+		gear.addPreparationHandler(preparation);
 		gear.addRunHandler(run);
 	}
 	
@@ -99,7 +99,7 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 	 * ===============================================================*/
 	
 	/* gearHandler */
-	private function diffusible(tool:GearDiffuseTool):Void
+	private function preparation(tool:GearPreparationTool):Void
 	{
 		// 下位層にNoteを渡す
 		note = new Note([GearNoteTag.Reproduce]);

@@ -5,7 +5,8 @@
 
 */bin/swf/*.swf
 */out
-*/.idea
+*.idea
 gipo/report
 gipo/test/TestMain.hx
 gipo/test/TestSuite.hx
+/out

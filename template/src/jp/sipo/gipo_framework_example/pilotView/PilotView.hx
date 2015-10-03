@@ -12,7 +12,7 @@ import jp.sipo.gipo_framework_example.scene.mock1.Mock1PilotView;
 import jp.sipo.gipo_framework_example.scene.mock0.Mock0PilotView;
 import jp.sipo.gipo_framework_example.context.ViewForLogic;
 import flash.display.Sprite;
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import flash.display.Sprite;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
 import jp.sipo.gipo_framework_example.scene.mock0.Mock0;
@@ -29,7 +29,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	public function new() 
 	{
 		super();
-		gear.addDiffusibleHandler(diffusible);
+		gear.addPreparationHandler(preparation);
 	}
 	
 	/**
@@ -45,7 +45,7 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 * 必要素材をdiffuse
 	 */
 	/* gearHandler */
-	public function diffusible(tool:GearDiffuseTool):Void
+	public function preparation(tool:GearPreparationTool):Void
 	{
 		gameLayer = new Sprite();
 		viewLayer.addChild(gameLayer);

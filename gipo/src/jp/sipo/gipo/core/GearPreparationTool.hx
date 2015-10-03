@@ -5,7 +5,7 @@ package jp.sipo.gipo.core;
  * @auther sipo
  */
 import haxe.PosInfos;
-class GearDiffuseTool
+class GearPreparationTool
 {
 	private var gear:Gear;
 	

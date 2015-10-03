@@ -1,6 +1,6 @@
 package ;
 
-import jp.sipo.gipo.core.GearDiffuseTool;
+import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
 
@@ -10,13 +10,13 @@ class AutoAbsorbTest
 {
 	public function new() { }
 	
-	@Test("Childで@:absorbを指定したSomethingはdiffusibleのタイミングで自動的にabsorbされている")
+	@Test("Childで@:absorbを指定したSomethingはpreparationのタイミングで自動的にabsorbされている")
 	private function childGearAbsorbSomething():Void 
 	{
 		var parent = new Parent();
 		var child = new Child();
 		
-		parent.gear.diffusibleHandlerList.add(function (tool:GearDiffuseTool):Void
+		parent.gear.preparationHandlerList.add(function (tool:GearPreparationTool):Void
 		{
 			// parentでSomethingを拡散
 			tool.diffuse(new Something("John Doe"), Something);
@@ -24,9 +24,9 @@ class AutoAbsorbTest
 			tool.bookChild(child);
 		});
 		
-		child.gear.diffusibleHandlerList.add(function (tool:GearDiffuseTool):Void 
+		child.gear.preparationHandlerList.add(function (tool:GearPreparationTool):Void 
 		{
-			// @:absorbを指定したSomethingは、diffusible内で使用することができる
+			// @:absorbを指定したSomethingは、preparation内で使用することができる
 			// （これ以前に自動的にabsorbが行われている）
 			Assert.isNotNull(child.something);
 			// 名前はparentで拡散したものと一致する

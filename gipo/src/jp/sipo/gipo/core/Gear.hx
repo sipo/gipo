@@ -22,7 +22,7 @@ enum GearPhase
 	/* 生成時（初期値） */
 	Create;
 	/* 初期化中 */
-	Diffusible;
+	Preparation;
 	/* 初期化で予約されたものの実行 */
 	Fulfill;
 	/* メイン処理中 */
@@ -58,7 +58,7 @@ class Gear implements GearOutside
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
-	private var diffusibleHandlerList:GearDispatcherFlexible<GearDiffuseTool -> Void>;
+	private var preparationHandlerList:GearDispatcherFlexible<GearPreparationTool -> Void>;
 	private var runDispatcher:GearDispatcher;
 	private var bubbleHandlerList:GearDispatcher;
 	private var disposeTaskStack:GearDispatcher;
@@ -95,7 +95,7 @@ class Gear implements GearOutside
 		// 初期状態の設定
 		phase = GearPhase.Create;
 		// HandlerListの初期化
-		diffusibleHandlerList = new GearDispatcherFlexible(AddBehaviorPreset.addTail, true);
+		preparationHandlerList = new GearDispatcherFlexible(AddBehaviorPreset.addTail, true);
 		runDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, true);
 		bubbleHandlerList = new GearDispatcher(AddBehaviorPreset.addHead, true);
 		disposeTaskStack = new GearDispatcher(AddBehaviorPreset.addHead, true);
@@ -125,26 +125,26 @@ class Gear implements GearOutside
 		return switch(phase)
 		{
 			case GearPhase.Create: true;
-			case GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: false;
+			case GearPhase.Preparation, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
 	
-	/* DiffuseTool可能時チェック */
-	inline private function checkPhaseCanDiffuseTool():Bool
+	/* PreparationTool可能時チェック */
+	inline private function checkPhaseCanPreparationTool():Bool
 	{
 		return switch(phase)
 		{
-			case GearPhase.Diffusible: true;
+			case GearPhase.Preparation: true;
 			case GearPhase.Create, GearPhase.Fulfill, GearPhase.Middle, GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
 	
-	/* Absorb可能かのチェック（DiffuseTool+MiddleTool） */
+	/* Absorb可能かのチェック（PreparationTool+MiddleTool） */
 	inline private function checkPhaseCanAbsorb():Bool
 	{
 		return switch(phase)
 		{
-			case GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle: true;
+			case GearPhase.Preparation, GearPhase.Fulfill, GearPhase.Middle: true;
 			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
@@ -155,7 +155,7 @@ class Gear implements GearOutside
 		return switch(phase)
 		{
 			case GearPhase.Fulfill, GearPhase.Middle: true;
-			case GearPhase.Create, GearPhase.Diffusible, GearPhase.Dispose, GearPhase.Invalid: false;
+			case GearPhase.Create, GearPhase.Preparation, GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
 	
@@ -164,7 +164,7 @@ class Gear implements GearOutside
 	{
 		return switch(phase)
 		{
-			case GearPhase.Create, GearPhase.Diffusible, GearPhase.Fulfill, GearPhase.Middle: true;
+			case GearPhase.Create, GearPhase.Preparation, GearPhase.Fulfill, GearPhase.Middle: true;
 			case GearPhase.Dispose, GearPhase.Invalid: false;
 		}
 	}
@@ -223,16 +223,16 @@ class Gear implements GearOutside
 		// 上位Diffuserがあれば設定
 		if (parentDiffuser != null) diffuser.setParent(parentDiffuser);
 		// 初期動作を呼び出し
-		phase = GearPhase.Diffusible;	// 初期化状態
+		phase = GearPhase.Preparation;	// 初期化状態
 		// 初期登録のの自動化
 		autoInitialize();
-		// 登録されたdiffusible関数の呼び出し
-		var diffuseTool:GearDiffuseTool = new GearDiffuseTool(this);
-		diffusibleHandlerList.execute(function (handler:GearDispatcherHandler<GearDiffuseTool -> Void>){
-			handler.func(diffuseTool);
+		// 登録されたpreparation関数の呼び出し
+		var preparationTool:GearPreparationTool = new GearPreparationTool(this);
+		preparationHandlerList.execute(function (handler:GearDispatcherHandler<GearPreparationTool -> Void>){
+			handler.func(preparationTool);
 		});
-		diffuseTool.dispose();
-		diffusibleHandlerList = null;
+		preparationTool.dispose();
+		preparationHandlerList = null;
 		// 予約履行フェーズ
 		phase = GearPhase.Fulfill;	
 		fulfill();
@@ -315,13 +315,12 @@ class Gear implements GearOutside
 	}
 	
 	/**
-	 * Diffusibleハンドラの追加
+	 * Preparationハンドラの追加
 	 */
-	public function addDiffusibleHandler(func:GearDiffuseTool -> Void, ?pos:PosInfos):Void
+	public function addPreparationHandler(func:GearPreparationTool -> Void, ?pos:PosInfos):Void
 	{
-		diffusibleHandlerList.add(func, pos);
+		preparationHandlerList.add(func, pos);
 	}
-	// TODO:<<尾野>>diffusible→preparation
 	
 	/**
 	 * Runハンドラの追加
@@ -410,7 +409,7 @@ class Gear implements GearOutside
 	 * diffuseインスタンスを追加する
 	 * @gearDispose
 	 */
-	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
+	@:allow(jp.sipo.gipo.core.GearPreparationTool)
 	private function diffuse(diffuseInstance:Dynamic, clazz:Class<Dynamic>):Void
 	{
 		diffuserAdd(diffuseInstance, clazz, false);	// 追加処理
@@ -428,7 +427,7 @@ class Gear implements GearOutside
 		{
 			if (!checkPhaseCreate()) throw new SipoError('別Gearにdiffuseする場合はそれがaddChildされる前に行わなければなりません');
 		}else{
-			if (!checkPhaseCanDiffuseTool()) throw new SipoError('処理の順序が間違っています。diffuseは、diffusibleメソッドの中で追加されなければいけません');
+			if (!checkPhaseCanPreparationTool()) throw new SipoError('処理の順序が間違っています。diffuseは、preparationメソッドの中で追加されなければいけません');
 		}
 		if (diffuseInstance == null) throw 'diffuseされるインスタンスがありません $diffuseInstance';
 	}
@@ -437,7 +436,7 @@ class Gear implements GearOutside
 	 * diffuseインスタンスをキーによって追加する
 	 * @gearDispose
 	 */
-	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
+	@:allow(jp.sipo.gipo.core.GearPreparationTool)
 	private function diffuseWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
 		diffuserAddWithKey(diffuseInstance, enumKey, false);	// 追加処理
@@ -454,10 +453,10 @@ class Gear implements GearOutside
 	 * 
 	 * @gearDispose
 	 */
-	@:allow(jp.sipo.gipo.core.GearDiffuseTool)
+	@:allow(jp.sipo.gipo.core.GearPreparationTool)
 	private function bookChild<T:(GearHolder)>(child:T, ?pos:PosInfos):T
 	{
-		if (!checkPhaseCanDiffuseTool()) throw new SipoError('処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません');
+		if (!checkPhaseCanPreparationTool()) throw new SipoError('処理の順序が間違っています。addChildDelayは、initializeメソッドの中で追加されなければいけません');
 		// 後で追加するリストに入れる
 		bookChildList.push(new PosWrapper<GearHolder>(child, pos)); // posを引き継いで、追加された箇所がわかるように
 		return child;
@@ -482,7 +481,7 @@ class Gear implements GearOutside
 		switch(phase)
 		{
 			case GearPhase.Create, GearPhase.Dispose, GearPhase.Invalid: throw new SipoError('Gearは処理中にしか子を登録することはできません。($phase) $pos');
-			case GearPhase.Diffusible : throw new SipoError('phase=${phase}の時のaddChildは、明示的にaddChildDelayを使用してください。($phase) $pos');
+			case GearPhase.Preparation : throw new SipoError('phase=${phase}の時のaddChildは、明示的にaddChildDelayを使用してください。($phase) $pos');
 			case GearPhase.Fulfill, GearPhase.Middle : 
 		}
 		// 追加
