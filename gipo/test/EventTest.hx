@@ -1,6 +1,6 @@
 package;
 
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
+import jp.sipo.gipo.core.Gear;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -1053,10 +1053,13 @@ class EventNode extends GearHolderImpl
 		if(info.constructorProc != null) {
 			info.constructorProc();
 		}
+		
+		gear.addPreparationHandler(preparation);
+		gear.addRunHandler(run);
+		gear.addBubbleHandler(bubble);
 	}
 
-	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearPreparationTool):Void
+	function preparation(tool:GearPreparationTool):Void
 	{
 		info.diffusibleTimeCode = EventTest.currentTimeCode();
 		if(info.diffusibleProc != null) {
@@ -1068,7 +1071,6 @@ class EventNode extends GearHolderImpl
 		}
 	}
 
-	@:handler(GearDispatcherKind.Run)
 	function run():Void
 	{
 		info.runTimeCode = EventTest.currentTimeCode();
@@ -1077,7 +1079,6 @@ class EventNode extends GearHolderImpl
 		}
 	}
 
-	@:handler(GearDispatcherKind.Bubble)
 	function bubble():Void
 	{
 		info.bubbleTimeCode = EventTest.currentTimeCode();

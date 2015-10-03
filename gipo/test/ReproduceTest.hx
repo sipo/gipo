@@ -11,7 +11,6 @@ import jp.sipo.gipo.reproduce.LogPart.LogwayKind;
 import jp.sipo.gipo.reproduce.LogPart.ReproducePhase;
 import jp.sipo.gipo.reproduce.LogWrapper;
 import jp.sipo.gipo.reproduce.Reproduce;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -1591,10 +1590,11 @@ class ReproduceTop extends GearHolderImpl
 	public function new()
 	{
 		super();
+		gear.addPreparationHandler(preparation);
+		gear.addRunHandler(run);
 	}
 
-	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearPreparationTool):Void
+	function preparation(tool:GearPreparationTool):Void
 	{
         reproduce = tool.bookChild(new Reproduce<ReproduceUpdateKind>());
         hook = tool.bookChild(new ReproduceHook());
@@ -1604,7 +1604,6 @@ class ReproduceTop extends GearHolderImpl
         reproduce.gearOutside().otherDiffuse(operationHook, OperationHookForReproduce);
 	}
 
-	@:handler(GearDispatcherKind.Run)
 	function run():Void
 	{
 	}

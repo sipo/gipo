@@ -1,14 +1,13 @@
 package ;
 
+import massive.munit.Assert;
 import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 import jp.sipo.gipo.core.state.StateGearHolder;
 import jp.sipo.gipo.core.state.StateSwitcherGear;
 import jp.sipo.gipo.core.GearPreparationTool;
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderImpl;
 import jp.sipo.gipo.core.Gear;
-import massive.munit.Assert;
 
 @:access(jp.sipo.gipo.core.state.StateSwitcherGear)
 @:access(jp.sipo.gipo.core.handler.GenericGearDispatcher)
@@ -157,6 +156,7 @@ class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>
 	public function new()
 	{
 		super();
+		gear.addPreparationHandler(preparation);
 	}
 
 	public function getStateSwicherGear():StateSwitcherGear
@@ -165,8 +165,7 @@ class TopSwitcher extends StateSwitcherGearHolderImpl<ChildState>
 	}
 
 	/* 初期化処理 */
-	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearPreparationTool):Void
+	function preparation(tool:GearPreparationTool):Void
 	{
 		tool.diffuse(this, TopSwitcher); // この階層以下で、このインスタンスを取得できるようにする
 	}
@@ -180,10 +179,10 @@ class ChildState extends StateGearHolderImpl
 	public function new()
 	{
 		super();
+		gear.addRunHandler(stateRun);
 	}
 
 	/* 初期化後処理（Haxeの仕様上、継承先と名前が被らないようにしないといけない） */
-	@:handler(GearDispatcherKind.Run)
 	private function stateRun():Void
 	{
 	}

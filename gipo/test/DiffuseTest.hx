@@ -1,6 +1,5 @@
 package;
 
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -351,9 +350,9 @@ class DiffuseNode extends DiffuseTop
 	public function new(info:DiffuseTreeInfo)
 	{
 		super(info);
+		gear.addRunHandler(run);
 	}
 
-	@:handler(GearDispatcherKind.Run)
 	function run():Void
 	{
 		info.autoData = autoData;
@@ -369,10 +368,10 @@ class DiffuseWithKeyTop extends GearHolderImpl
 	{
 		super();
 		this.info = info;
+		gear.addPreparationHandler(preparation);
 	}
 
-	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearPreparationTool):Void
+	function preparation(tool:GearPreparationTool):Void
 	{
 		if(info.diffuseData != null) {
 			tool.diffuseWithKey(info.diffuseData, DiffuseDataKey.Key1);
@@ -392,9 +391,9 @@ class DiffuseWithKeyNode extends DiffuseWithKeyTop
 	public function new(info:DiffuseTreeInfo)
 	{
 		super(info);
+		gear.addRunHandler(run);
 	}
 
-	@:handler(GearDispatcherKind.Run)
 	function run():Void
 	{
 		info.autoData = autoData;

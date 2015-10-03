@@ -1,6 +1,5 @@
 package;
 
-import jp.sipo.gipo.core.Gear.GearDispatcherKind;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -541,10 +540,12 @@ class RemoveNode extends GearHolderImpl
 			info.removedTimeCode = RemoveTest.currentTimeCode();
 			info.isRemoved = true;
 		});
+		
+		
+		gear.addPreparationHandler(preparation);
 	}
 
-	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearPreparationTool):Void
+	function preparation(tool:GearPreparationTool):Void
 	{
 		for(child in info.children) {
 			tool.bookChild(new RemoveNode(child));
@@ -569,10 +570,10 @@ class DisposeTaskTwiceNode extends GearHolderImpl
 			info.removedTimeCode2nd = RemoveTest.currentTimeCode();
 			info.isRemoved2nd = true;
 		});
+		gear.addPreparationHandler(preparation);
 	}
 
-	@:handler(GearDispatcherKind.Diffusible)
-	function diffusible(tool:GearPreparationTool):Void
+	function preparation(tool:GearPreparationTool):Void
 	{
 		for(child in info.children) {
 			tool.bookChild(new DisposeTaskTwiceNode(child));
