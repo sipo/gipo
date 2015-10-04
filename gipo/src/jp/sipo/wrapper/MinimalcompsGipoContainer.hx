@@ -137,6 +137,7 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 			uiLayer.removeChild(pushButton);
 		});
 		addComponent(pushButton);
+		pushButton.height *= config.buttonHeightScale;
 		return pushButton;
 	}
 	
@@ -163,7 +164,8 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 	private function addComponent(component:Component):Void
 	{
 		// サイズ反映
-		component.scaleX = component.scaleY = config.scale;
+		component.scaleX *= config.scale;
+		component.scaleY *= config.scale;
 		// 右寄せ左寄せ
 		switch (config.alignH){
 			case AlignH.Right : 
@@ -198,6 +200,8 @@ class Config
 	public var alignH:AlignH = AlignH.Left;
 	/** サイズ比 */
 	public var scale:Float = 1.0;
+	/** ボタンサイズ補正 */
+	public var buttonHeightScale:Float = 2.0;
 	
 	/** コンストラクタ */
 	public function new() { }
