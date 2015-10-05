@@ -136,8 +136,8 @@ class MinimalcompsGipoContainer extends GearHolderImpl
 			pushButton.removeEventListener(MouseEvent.CLICK, handler);
 			uiLayer.removeChild(pushButton);
 		});
-		addComponent(pushButton);
 		pushButton.height *= config.buttonHeightScale;
+		addComponent(pushButton);
 		return pushButton;
 	}
 	
