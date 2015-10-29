@@ -327,7 +327,7 @@ class Gear implements GearOutside
 	 */
 	public function addRunHandler(func:Void->Void, ?pos:PosInfos):Void
 	{
-		runDispatcher.autoAdd(func, pos);
+		runDispatcher.add(func, pos);
 	}
 	
 	/**
@@ -335,7 +335,7 @@ class Gear implements GearOutside
 	 */
 	public function addBubbleHandler(func:Void->Void, ?pos:PosInfos):Void
 	{
-		bubbleHandlerList.autoAdd(func, pos);
+		bubbleHandlerList.add(func, pos);
 	}
 	
 	/* 予約の履行 */

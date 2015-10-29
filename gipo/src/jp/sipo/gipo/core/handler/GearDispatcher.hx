@@ -34,14 +34,6 @@ class GearDispatcher extends GenericGearDispatcher<TFunc>
 	}
 	
 	/**
-	 * 自動登録用
-	 */
-	public function autoAdd(func:Dynamic, ?addPos:PosInfos):Void
-	{
-		add(cast(func), addPos);
-	}
-	
-	/**
 	 * 登録されたハンドラを実行する
 	 */
 	public function execute(?executePos:PosInfos):Void
