@@ -5,7 +5,7 @@ package jp.sipo.gipo_framework_example.context;
  * @auther sipo
  */
 import haxe.PosInfos;
-import jp.sipo.gipo.core.handler.GearDispatcherRedTape;
+import jp.sipo.gipo.core.handler.GearRoleDispatcher;
 import jp.sipo.gipo.core.handler.GearDispatcher;
 import jp.sipo.gipo_framework_example.context.ViewForLogic;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
@@ -15,7 +15,7 @@ class LogicScene extends StateGearHolderImpl
 	@:absorb
 	private var logic:Logic;
 	/* シーンごとのviewInputの受け取り処理 */
-	private var inputRedTape:GearDispatcherRedTape;
+	private var inputRole:GearRoleDispatcher;
 	/* updateイベント受け取り */
 	private var updateDispatcher:GearDispatcher;
 	/* ViewSceneが切り替えられたかどうか */
@@ -25,7 +25,7 @@ class LogicScene extends StateGearHolderImpl
 	public function new() 
 	{
 		super();
-		inputRedTape = new GearDispatcherRedTape();
+		inputRole = new GearRoleDispatcher();
 		updateDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
 		// ハンドラの登録
 		gear.addBubbleHandler(bubble);
@@ -53,7 +53,7 @@ class LogicScene extends StateGearHolderImpl
 	 */
 	inline public function noticeEvent(command:EnumValue):Void
 	{
-		inputRedTape.execute(command);
+		inputRole.execute(command);
 	}
 	
 	/**

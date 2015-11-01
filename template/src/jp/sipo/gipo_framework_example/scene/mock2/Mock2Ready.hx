@@ -37,7 +37,7 @@ class Mock2Ready extends LogicScene implements Mock2ReadyViewPeek
 		super();
 		// ハンドラの登録
 		gear.addRunHandler(run);
-		inputRedTape.set(viewInput, Mock2ReadyViewInput);
+		inputRole.set(viewInput, Mock2ReadyViewInput);
 	}
 	
 	/* 開始処理 */
