@@ -40,7 +40,7 @@ class Mock0 extends LogicScene
 		super();
 		// ハンドラの登録
 		gear.addRunHandler(run);
-		viewInputRedTape.set(viewInput, Mock0Input);
+		inputRedTape.set(viewInput, Mock0Input);
 	}
 	
 	/* 開始処理 */

@@ -15,7 +15,7 @@ class LogicScene extends StateGearHolderImpl
 	@:absorb
 	private var logic:Logic;
 	/* シーンごとのviewInputの受け取り処理 */
-	private var viewInputRedTape:GearDispatcherRedTape;
+	private var inputRedTape:GearDispatcherRedTape;
 	/* updateイベント受け取り */
 	private var updateDispatcher:GearDispatcher;
 	/* ViewSceneが切り替えられたかどうか */
@@ -27,7 +27,7 @@ class LogicScene extends StateGearHolderImpl
 	public function new() 
 	{
 		super();
-		viewInputRedTape = new GearDispatcherRedTape();
+		inputRedTape = new GearDispatcherRedTape();
 		updateDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
 		// ハンドラの登録
 		gear.addBubbleHandler(bubble);
@@ -55,7 +55,7 @@ class LogicScene extends StateGearHolderImpl
 	 */
 	inline public function noticeEvent(command:EnumValue):Void
 	{
-		viewInputRedTape.execute(command);
+		inputRedTape.execute(command);
 	}
 	
 	/**
