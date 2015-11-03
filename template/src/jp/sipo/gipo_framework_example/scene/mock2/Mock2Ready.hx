@@ -11,7 +11,7 @@ import jp.sipo.gipo_framework_example.scene.mock0.Mock0;
  * 設定
  * ===============================================================*/
 /** 入力 */
-enum Mock2ReadyInput
+enum Mock2ReadyViewInput
 {
 	CompleteReady;
 }
@@ -37,7 +37,7 @@ class Mock2Ready extends LogicScene implements Mock2ReadyViewPeek
 		super();
 		// ハンドラの登録
 		gear.addRunHandler(run);
-		inputRedTape.set(viewInput, Mock2ReadyInput);
+		inputRedTape.set(viewInput, Mock2ReadyViewInput);
 	}
 	
 	/* 開始処理 */
@@ -49,11 +49,11 @@ class Mock2Ready extends LogicScene implements Mock2ReadyViewPeek
 	
 	
 	/* Viewからの入力 */
-	private function viewInput(command:Mock2ReadyInput):Void
+	private function viewInput(command:Mock2ReadyViewInput):Void
 	{
 		switch(command)
 		{
-			case Mock2ReadyInput.CompleteReady: input_completeReady();
+			case Mock2ReadyViewInput.CompleteReady: input_completeReady();
 		}
 	}
 	

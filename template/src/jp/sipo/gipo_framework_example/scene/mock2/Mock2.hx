@@ -12,7 +12,7 @@ import jp.sipo.gipo_framework_example.context.LogicScene;
  * 設定
  * ===============================================================*/
 /** 入力 */
-enum Mock2Input
+enum Mock2ViewInput
 {
 	DemoChangeSceneButton;
 }
@@ -34,7 +34,7 @@ class Mock2 extends LogicScene
 		super();
 		// ハンドラの登録
 		gear.addRunHandler(run);
-		inputRedTape.set(viewInput, Mock2Input);
+		inputRedTape.set(viewInput, Mock2ViewInput);
 	}
 	
 	/* 開始処理 */
@@ -45,11 +45,11 @@ class Mock2 extends LogicScene
 	}
 	
 	/* Viewからの入力 */
-	private function viewInput(command:Mock2Input):Void
+	private function viewInput(command:Mock2ViewInput):Void
 	{
 		switch(command)
 		{
-			case Mock2Input.DemoChangeSceneButton: input_demoChangeSceneButton();
+			case Mock2ViewInput.DemoChangeSceneButton: input_demoChangeSceneButton();
 		}
 	}
 	

@@ -20,8 +20,6 @@ class LogicScene extends StateGearHolderImpl
 	private var updateDispatcher:GearDispatcher;
 	/* ViewSceneが切り替えられたかどうか */
 	private var isChangeViewScene:Bool = false;
-	/** このシーンに切り替わった時に、入力イベントを一度止める必要があるかどうか */
-	public var needAfterChangeBlockInput(default, null):Bool = true;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -65,4 +63,11 @@ class LogicScene extends StateGearHolderImpl
 	{
 		updateDispatcher.execute();
 	}
+}
+/**
+ * 入力が無い場合に使用するEnum
+ */
+enum BlamnkViewInput
+{
+	
 }

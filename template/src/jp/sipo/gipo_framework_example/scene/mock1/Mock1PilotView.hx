@@ -61,7 +61,7 @@ class Mock1PilotView extends PilotViewScene implements Mock1ViewOrder
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInstantInput(Mock1Input.DemoChangeSceneButton);
+		input.instant(Mock1ViewInput.DemoChangeSceneButton);
 	}
 	
 	/* 表示の更新 */

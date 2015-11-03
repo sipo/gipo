@@ -4,6 +4,7 @@ package ;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo_framework_example.pilotView.ViewSceneInput.ViewSceneInputNote;
 import jp.sipo.gipo.core.config.GearNoteTag;
 import jp.sipo.util.Note;
 import flash.events.Event;
@@ -38,7 +39,7 @@ class GipoTemplate
 	/** コンストラクタ */
 	public function new() 
 	{
-		Note.setTags([GearNoteTag.StateChange, GearNoteTag.Reproduce], []);
+		Note.setTags([GearNoteTag.StateChange, GearNoteTag.Reproduce, ViewSceneInputNote.CancelInput], []);
 		// ここから本処理の開始
 		top = new Top(Lib.current, new DevConfig());
 		top.gearOutside().initializeTop(null);
