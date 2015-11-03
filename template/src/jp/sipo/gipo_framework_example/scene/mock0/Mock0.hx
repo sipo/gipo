@@ -14,7 +14,7 @@ import jp.sipo.gipo_framework_example.context.LogicScene;
  * 設定
  * ===============================================================*/
 /** 入力 */
-enum Mock0Input
+enum Mock0ViewInput
 {
 	DemoDisplayButton;
 	DemoChangeSceneButton;
@@ -40,24 +40,24 @@ class Mock0 extends LogicScene
 		super();
 		// ハンドラの登録
 		gear.addRunHandler(run);
-		inputRedTape.set(viewInput, Mock0Input);
+		inputRedTape.set(viewInput, Mock0ViewInput);
 	}
 	
 	/* 開始処理 */
 	private function run():Void
 	{
 		// Viewの表示を切り替え、そこに対する命令の参照を得る
-		viewSceneOrder = changeViewScene(ViewSceneKind.Mock0Scene);
+		viewSceneOrder = changeViewScene(ViewSceneKind.Mock0Scene, Mock0ViewInput);
 	}
 	
 	/* Viewからの入力 */
-	private function viewInput(command:Mock0Input):Void
+	private function viewInput(command:Mock0ViewInput):Void
 	{
 		switch(command)
 		{
-			case Mock0Input.DemoDisplayButton: input_demoTraceButton();
-			case Mock0Input.DemoChangeSceneButton: input_demoChangeSceneButton();
-			case Mock0Input.DemoReadySceneButton: input_demoReadySceneButton();
+			case Mock0ViewInput.DemoDisplayButton: input_demoTraceButton();
+			case Mock0ViewInput.DemoChangeSceneButton: input_demoChangeSceneButton();
+			case Mock0ViewInput.DemoReadySceneButton: input_demoReadySceneButton();
 		}
 	}
 	

@@ -75,7 +75,6 @@ class Top extends GearHolderImpl
 		// 関係性の追加
 		// 	Logic周り
 		childDiffuse(hook , logic, LogicForHook);
-		childDiffuse(view , hook , HookForView);
 		childDiffuse(logic, view , ViewForLogic);
 		childDiffuse(logic, hook , HookForLogic);
 		// 	Operation周り
@@ -90,7 +89,7 @@ class Top extends GearHolderImpl
 		// ビューのレイヤーとなるSprite。DisplayObjectを使用するViewのみ使用し、Starlingを使用するViewでは無視されるかデバッグ表示のみに使用される
 		var viewLayer:Sprite = new Sprite();
 		current.addChild(viewLayer);
-		view.setContext(viewLayer);
+		view.setContext(viewLayer, hook);
 		view.gearOutside().disposeTask(function () current.removeChild(viewLayer));	// layerの削除処理をViewに連動させる
 		var operationViewLayer:Sprite = new Sprite();
 		current.addChild(operationViewLayer);

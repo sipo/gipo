@@ -14,7 +14,7 @@ interface ViewForLogic
 	 * 速度上の問題などで表示を引き継ぐ場合は、View側で意図的にキャッシュ処理をすること
 	 * （特に頻出するロード表示などは、常にGPUメモリ上に確保するなどする）
 	 */
-	public function changeScene(kind:ViewSceneKind, factorPos:PosInfos):ViewSceneOrder;
+	public function changeScene(kind:ViewSceneKind, allowSceneEnum:Enum<Dynamic>, factorPos:PosInfos):ViewSceneOrder;
 //	/** データの準備を依頼する。準備終了はViewLogicNoticeで通知される */
 //	Prepare(prepareKind:LogicViewOrderPrepare);
 }

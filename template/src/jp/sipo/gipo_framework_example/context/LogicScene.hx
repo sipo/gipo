@@ -34,11 +34,11 @@ class LogicScene extends StateGearHolderImpl
 	}
 	
 	/* 表示ViewSceneを変更をする。返ってきた値は、ViewSceneであり、各ScenOrderにcastして使う */
-	private function changeViewScene(viewSceneKind:ViewSceneKind, ?pos:PosInfos):Dynamic
+	private function changeViewScene(viewSceneKind:ViewSceneKind, allowEnum:Enum<Dynamic>, ?pos:PosInfos):Dynamic
 	{
 		isChangeViewScene = true;
 		var view:ViewForLogic = gear.absorb(ViewForLogic);
-		return view.changeScene(viewSceneKind, pos);
+		return view.changeScene(viewSceneKind, allowEnum, pos);
 	}
 	
 	/* run後チェック処理 */
@@ -65,4 +65,11 @@ class LogicScene extends StateGearHolderImpl
 	{
 		updateDispatcher.execute();
 	}
+}
+/**
+ * 入力が無い場合に使用するEnum
+ */
+enum BlamnkViewInput
+{
+	
 }

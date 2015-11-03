@@ -44,25 +44,24 @@ class Mock0PilotView extends PilotViewScene implements Mock0ViewOrder
 		uiContainer.addPushButton("入力テスト", demoDisplayButton_click);
 		uiContainer.addPushButton("遷移テスト", demoChangeSceneButton_click);
 		uiContainer.addPushButton("準備イベントテスト", demoReadySceneButton_click);
-		
 	}
 	
 	/* 反応テスト */
 	private function demoDisplayButton_click():Void
 	{
-		hook.viewInstantInput(Mock0Input.DemoDisplayButton);
+		input.instant(Mock0ViewInput.DemoDisplayButton);
 	}
 	
 	/* 遷移テスト */
 	private function demoChangeSceneButton_click():Void
 	{
-		hook.viewInstantInput(Mock0Input.DemoChangeSceneButton);
+		input.instant(Mock0ViewInput.DemoChangeSceneButton);
 	}
 	
 	/* 準備イベントテスト */
 	private function demoReadySceneButton_click():Void
 	{
-		hook.viewInstantInput(Mock0Input.DemoReadySceneButton);
+		input.instant(Mock0ViewInput.DemoReadySceneButton);
 	}
 	
 	/* ================================================================

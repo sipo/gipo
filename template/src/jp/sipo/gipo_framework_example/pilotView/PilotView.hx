@@ -5,6 +5,7 @@ package jp.sipo.gipo_framework_example.pilotView;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo_framework_example.context.Hook.HookForView;
 import haxe.PosInfos;
 import jp.sipo.gipo_framework_example.scene.mock2.Mock2ReadyPilotView;
 import jp.sipo.gipo_framework_example.scene.mock2.Mock2PilotView;
@@ -20,10 +21,14 @@ import jp.sipo.gipo_framework_example.scene.mock1.Mock1;
 import jp.sipo.gipo_framework_example.context.View;
 class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements View
 {
+	/* hook */
+	private var hook:HookForView;
 	/* 基本レイヤー */
 	private var viewLayer:Sprite;
 	/* ゲーム用レイヤー */
 	private var gameLayer:Sprite;
+	/* シーン用のinput処理 */
+	private var viewSceneInput:ViewSceneInput;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -36,9 +41,10 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 * 必要設定
 	 * すべてのViewで必要な要素を取得し、使わない場合は無視する
 	 */
-	public function setContext(viewLayer:Sprite):Void
+	public function setContext(viewLayer:Sprite, hook:HookForView):Void
 	{
 		this.viewLayer = viewLayer;
+		this.hook = hook;
 	}
 	
 	/**
@@ -51,6 +57,8 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 		viewLayer.addChild(gameLayer);
 		gear.disposeTask(function () viewLayer.removeChild(gameLayer));
 		tool.diffuseWithKey(gameLayer, PilotViewDiffuseKey.GameLayer);
+		viewSceneInput = new ViewSceneInput(hook);
+		tool.diffuse(viewSceneInput, ViewSceneInput);
 	}
 	
 	/* ================================================================
@@ -58,12 +66,16 @@ class PilotView extends StateSwitcherGearHolderImpl<PilotViewScene> implements V
 	 * ===============================================================*/
 	
 	/** シーンの変更を依頼する */
-	public function changeScene(sceneKind:ViewSceneKind, factorPos:PosInfos):ViewSceneOrder
+	public function changeScene(sceneKind:ViewSceneKind, allowSceneEnum:Enum<Dynamic>, factorPos:PosInfos):ViewSceneOrder
 	{
+		// 処理用enumを切り替え
+		viewSceneInput.setAllowEnum(allowSceneEnum);
 		// enumに対応するシーンを呼び出し
 		var scene:PilotViewScene = getScene(sceneKind);
 		// 原因となったコード位置を、デバッグのために渡しておく
 		scene.setFactorPos(factorPos);
+		// シーンの種類指定を登録
+		
 		// シーン変更の実行
 		stateSwitcherGear.changeState(scene);
 		// 命令を受け付けるためにシーンを返してやる
