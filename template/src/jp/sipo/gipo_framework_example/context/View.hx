@@ -12,6 +12,7 @@ package jp.sipo.gipo_framework_example.context;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo_framework_example.context.Hook.HookForView;
 import jp.sipo.gipo.core.GearHolder;
 import flash.display.Sprite;
 interface View extends GearHolder extends ViewForLogic
@@ -20,7 +21,7 @@ interface View extends GearHolder extends ViewForLogic
 	 * 必要設定
 	 * すべてのViewで必要な要素を取得し、使わない場合は無視する
 	 */
-	public function setContext(viewLayer:Sprite):Void;
+	public function setContext(viewLayer:Sprite, hook:HookForView):Void;
 	
 	/**
 	 * フレーム間の更新。

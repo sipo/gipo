@@ -8,7 +8,6 @@ import haxe.PosInfos;
 import jp.sipo.gipo.core.handler.GearDispatcher;
 import jp.sipo.gipo_framework_example.context.ViewForLogic.ViewSceneOrder;
 import jp.sipo.gipo_framework_example.pilotView.PilotView.PilotViewDiffuseKey;
-import jp.sipo.gipo_framework_example.context.Hook.HookForView;
 import jp.sipo.gipo.core.state.StateGearHolderImpl;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import flash.display.Sprite;
@@ -17,7 +16,7 @@ class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 	@:absorbWithKey(PilotViewDiffuseKey.GameLayer)
 	private var layer:Sprite;
 	@:absorb
-	private var hook:HookForView;
+	private var input:ViewSceneInput;
 	/** フレーム間の更新 */
 	public var asyncUpdateDispatcher(default, null):GearDispatcher;
 	/** ドラッグなどの入力状態の更新 */
