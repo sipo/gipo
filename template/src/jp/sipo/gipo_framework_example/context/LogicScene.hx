@@ -51,7 +51,7 @@ class LogicScene extends StateGearHolderImpl
 	/**
 	 * 入力などのイベント
 	 */
-	inline public function noticeEvent(command:EnumValue):Void
+	inline public function noticeInput(command:EnumValue):Void
 	{
 		inputRole.execute(command);
 	}
