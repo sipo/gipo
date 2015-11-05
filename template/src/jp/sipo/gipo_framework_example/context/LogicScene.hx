@@ -50,10 +50,3 @@ class LogicScene extends StateGearHolderImpl
 		updateDispatcher.execute();
 	}
 }
-/**
- * 入力が無い場合に使用するEnum
- */
-enum BlamnkViewInput
-{
-	
-}
