@@ -73,7 +73,7 @@ class Mock2ReadyPilotView extends PilotViewScene implements Mock2ReadyViewOrder
 		{
 			// 仮想的なロードが終わったらそれを通知する。
 			// イベントの要因Posについては、このシーンに切り替わったことが要因になるため、シーン変更の要因位置をそのまま流用する。
-			hook.viewReadyInput(Mock2ReadyInput.CompleteReady, factorPos);
+			input.ready(Mock2ReadyViewInput.CompleteReady, factorPos);
 		}
 	}
 	

@@ -26,8 +26,6 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 	
 	/* Logic内部の全体データ */
 	private var logicStatus:LogicStatus;
-	/* シーン変更直後の入力ロックフラグ */
-	private var afterChangeInputBlock:Bool = false;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -44,8 +42,6 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 		
 		tool.diffuse(this, Logic);
 		tool.diffuse(logicStatus, LogicStatus);
-		
-		stateSwitcherGear.addEnterStateChangeHandler(enterStateChangeHandler);
 	}
 	
 	/**
@@ -62,8 +58,6 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 	 */
 	public function update():Void
 	{
-		// 更新されたらロックは解除される（フレーム間イベントの場合、これはそのフレームの頭となる）
-		afterChangeInputBlock = false;
 		// シーンに更新処理を伝える
 		state.sceneUpdate();
 	}
@@ -75,12 +69,6 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 	public function snapshotEvent(kind:SnapshotKind, ?pos:PosInfos):Void
 	{
 		hook.logicSnapshot(new SnapshotImpl(kind, logicStatus), pos);
-	}
-	
-	/* state切り替わり時イベント */
-	private function enterStateChangeHandler(nextHolder:StateGearHolder):Void
-	{
-		afterChangeInputBlock = true;
 	}
 	
 	/* ================================================================
@@ -95,9 +83,6 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 			throw "未設定";	// TODO:LogicCommonを用意する
 			return;
 		}
-		// changeScene直後の入力をロック。
-		// MEMO:<<尾野>>本来はcommandごとに入力をロックするかどうか決まっている必要がありそう
-		if (state.needAfterChangeBlockInput && afterChangeInputBlock) return;
 		// その他のイベントの場合、下位へ渡す
 		state.noticeEvent(command);
 	}

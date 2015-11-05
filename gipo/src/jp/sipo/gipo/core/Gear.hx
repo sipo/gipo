@@ -159,8 +159,10 @@ class Gear implements GearOutside
 		}
 	}
 	
-	/* 無効前かどうか（まだGearHolderが生きているか）のチェック */
-	inline private function checkPhaseBeforeDispose():Bool
+	/**
+	 * 無効前かどうか（まだGearHolderが生きているか）のチェック
+	 */
+	public function checkPhaseBeforeDispose():Bool
 	{
 		return switch(phase)
 		{
