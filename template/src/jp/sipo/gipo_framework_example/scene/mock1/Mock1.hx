@@ -48,7 +48,7 @@ class Mock1 extends LogicScene implements Mock1ViewPeek
 		// ハンドラの登録
 		gear.addRunHandler(run);
 		updateDispatcher.add(update);
-		inputRedTape.set(viewInput, Mock1ViewInput);
+		inputRole.set(viewInput, Mock1ViewInput);
 	}
 	
 	/* gearHandler */

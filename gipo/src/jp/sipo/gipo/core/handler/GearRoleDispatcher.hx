@@ -9,7 +9,7 @@ import jp.sipo.util.SipoError;
 import haxe.PosInfos;
 private typedef TFunc = Dynamic/*EnumValue*/ -> Void;
 private typedef EnumName = String;
-class GearDispatcherRedTape
+class GearRoleDispatcher
 {
 	/* ハンドラの保持 */
 	private var roleMap:Map<EnumName, GearDispatcherHandler<TFunc>> = new Map<EnumName, GearDispatcherHandler<TFunc>>();
