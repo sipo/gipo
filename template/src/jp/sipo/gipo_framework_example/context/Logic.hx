@@ -75,7 +75,7 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 	 * hookに対する定義
 	 * ===============================================================*/
 	
-	public function noticeEvent(command:EnumValue, factorPos:PosInfos):Void
+	public function noticeInput(command:EnumValue, factorPos:PosInfos):Void
 	{
 		// MEMO:<<尾野>>ここにisがあるのが非常に残念なので、何とかしたくはあるが、さらにenumで包むと呼び出しが煩雑になるので悩ましい。
 		if (Std.is(command, LogicCommonEvent)){
@@ -84,7 +84,7 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 			return;
 		}
 		// その他のイベントの場合、下位へ渡す
-		state.noticeEvent(command);
+		state.noticeInput(command);
 	}
 	
 	/**
@@ -110,7 +110,7 @@ class Logic extends StateSwitcherGearHolderImpl<LogicScene> implements LogicForH
 interface LogicForHook
 {
 	/** イベントの発生 */
-	public function noticeEvent(command:EnumValue, factorPos:PosInfos):Void;
+	public function noticeInput(command:EnumValue, factorPos:PosInfos):Void;
 	/** スナップショットの適用 */
 	public function setSnapshot(snapshot:Snapshot, factorPos:PosInfos):Void;
 }

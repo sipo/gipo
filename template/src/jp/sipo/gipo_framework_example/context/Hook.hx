@@ -103,10 +103,10 @@ class Hook extends GearHolderImpl implements HookForView implements HookForLogic
 		{
 			case LogwayKind.Instant(command) :
 				// イベントの実行
-				logic.noticeEvent(command, factorPos);
+				logic.noticeInput(command, factorPos);
 			case LogwayKind.Ready(command) : 
 				// イベントの実行
-				logic.noticeEvent(command, factorPos);
+				logic.noticeInput(command, factorPos);
 			case LogwayKind.Snapshot(value) :
 				// イベントの実行
 				logic.setSnapshot(value, factorPos);

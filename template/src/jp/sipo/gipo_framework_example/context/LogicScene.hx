@@ -18,8 +18,6 @@ class LogicScene extends StateGearHolderImpl
 	private var inputRole:GearRoleDispatcher;
 	/* updateイベント受け取り */
 	private var updateDispatcher:GearDispatcher;
-	/* ViewSceneが切り替えられたかどうか */
-	private var isChangeViewScene:Bool = false;
 	
 	/** コンストラクタ */
 	public function new() 
@@ -27,31 +25,19 @@ class LogicScene extends StateGearHolderImpl
 		super();
 		inputRole = new GearRoleDispatcher();
 		updateDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, false);
-		// ハンドラの登録
-		gear.addBubbleHandler(bubble);
 	}
 	
 	/* 表示ViewSceneを変更をする。返ってきた値は、ViewSceneであり、各ScenOrderにcastして使う */
 	private function changeViewScene(viewSceneKind:ViewSceneKind, ?pos:PosInfos):Dynamic
 	{
-		isChangeViewScene = true;
 		var view:ViewForLogic = gear.absorb(ViewForLogic);
 		return view.changeScene(viewSceneKind, pos);
-	}
-	
-	/* run後チェック処理 */
-	private function bubble():Void
-	{
-		// runのあと、ちゃんとchangeViewSceneが実行されているかチェックする
-		// このチェックは規約的な推奨で、絶対ではない。速度などのために、シーンを切り替えてもViewを切り替えたくなければ削除しても良い。
-		// ただし、非常に忘れることの多い部分なので、
-		if (!isChangeViewScene) throw '${this}でchangeViewSceneが呼び出されていません。LogicSceneが切り替わった際は必ずchangeViewSceneを呼び出すことを推奨しています。';
 	}
 	
 	/**
 	 * 入力などのイベント
 	 */
-	inline public function noticeEvent(command:EnumValue):Void
+	inline public function noticeInput(command:EnumValue):Void
 	{
 		inputRole.execute(command);
 	}
@@ -63,11 +49,4 @@ class LogicScene extends StateGearHolderImpl
 	{
 		updateDispatcher.execute();
 	}
-}
-/**
- * 入力が無い場合に使用するEnum
- */
-enum BlamnkViewInput
-{
-	
 }
