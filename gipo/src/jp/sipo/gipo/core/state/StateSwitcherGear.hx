@@ -60,7 +60,7 @@ class StateSwitcherGear
 		// ２重呼び出しをロック
 		changeLock = true;
 		// State変更直前イベント
-		enterStateChangeDispatcher.genericExecute(function (handler:GearDispatcherHandler<StateGearHolder -> Void>)
+		enterStateChangeDispatcher.execute(function (handler:GearDispatcherHandler<StateGearHolder -> Void>)
 		{
 			handler.func(nextStateHolder); 
 		}, pos);
@@ -121,6 +121,6 @@ class StateSwitcherGear
 	 */
 	public function addEnterStateChangeHandler(func:StateGearHolder -> Void, ?pos:PosInfos):Void
 	{
-		enterStateChangeDispatcher.genericAdd(func, pos);
+		enterStateChangeDispatcher.add(func, pos);
 	}
 }

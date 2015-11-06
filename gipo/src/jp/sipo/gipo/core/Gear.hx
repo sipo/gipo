@@ -5,12 +5,12 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 import jp.sipo.gipo.core.handler.CancelKey;
 import Type;
 import jp.sipo.util.SipoError;
 import jp.sipo.util.SipoError;
 import jp.sipo.gipo.core.handler.GearDispatcherHandler;
-import jp.sipo.gipo.core.handler.GearDispatcherFlexible;
 import jp.sipo.gipo.core.handler.GearDispatcher;
 import haxe.rtti.Meta;
 import jp.sipo.util.SipoError;
@@ -58,7 +58,7 @@ class Gear implements GearOutside
 	/* 状況変数 */
 	private var phase:GearPhase;
 	/* 各種実行関数の登録 */
-	private var preparationHandlerList:GearDispatcherFlexible<GearPreparationTool -> Void>;
+	private var preparationHandlerList:GenericGearDispatcher<GearPreparationTool -> Void>;
 	private var runDispatcher:GearDispatcher;
 	private var bubbleHandlerList:GearDispatcher;
 	private var disposeTaskStack:GearDispatcher;
@@ -95,7 +95,7 @@ class Gear implements GearOutside
 		// 初期状態の設定
 		phase = GearPhase.Create;
 		// HandlerListの初期化
-		preparationHandlerList = new GearDispatcherFlexible(AddBehaviorPreset.addTail, true);
+		preparationHandlerList = new GenericGearDispatcher(AddBehaviorPreset.addTail, true);
 		runDispatcher = new GearDispatcher(AddBehaviorPreset.addTail, true);
 		bubbleHandlerList = new GearDispatcher(AddBehaviorPreset.addHead, true);
 		disposeTaskStack = new GearDispatcher(AddBehaviorPreset.addHead, true);
