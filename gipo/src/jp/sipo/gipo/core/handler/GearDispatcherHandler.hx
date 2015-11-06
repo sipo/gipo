@@ -21,4 +21,3 @@ class GearDispatcherHandler<TFunc> implements CancelKey
 		return '[Handler ${addPos} ${func}]';
 	}
 }
-// TODO:<<尾野>>名称変更

@@ -10,11 +10,14 @@ import haxe.PosInfos;
  * @author sipo
  */
 private typedef TFunc = Void -> Void;
-class GearDispatcher extends GenericGearDispatcher<TFunc>
+class GearDispatcher
 {
+	/* 移譲先 */
+	private var genericGearDispatcher:GenericGearDispatcher<TFunc>;
+	
 	public function new(addBehavior:GearDispatcherAddBehavior<TFunc>, once:Bool, ?pos:PosInfos)
 	{
-		super(addBehavior, once, pos);
+		genericGearDispatcher = new GenericGearDispatcher<TFunc>(addBehavior, once, pos);
 	}
 	
 	/**
@@ -22,7 +25,7 @@ class GearDispatcher extends GenericGearDispatcher<TFunc>
 	 */
 	public function add(func:TFunc, ?addPos:PosInfos):CancelKey
 	{
-		return genericAdd(func, addPos);
+		return genericGearDispatcher.add(func, addPos);
 	}
 	
 	/**
@@ -30,7 +33,7 @@ class GearDispatcher extends GenericGearDispatcher<TFunc>
 	 */
 	public function remove(key:CancelKey):Void
 	{
-		genericRemove(key);
+		genericGearDispatcher.remove(key);
 	}
 	
 	/**
@@ -38,7 +41,7 @@ class GearDispatcher extends GenericGearDispatcher<TFunc>
 	 */
 	public function execute(?executePos:PosInfos):Void
 	{
-		genericExecute(trat, executePos);
+		genericGearDispatcher.execute(trat, executePos);
 	}
 	/* 実行処理関数 */
 	inline private function trat(handler:GearDispatcherHandler<TFunc>):Void
