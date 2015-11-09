@@ -19,7 +19,7 @@ class StateGear
 	public function new(holder:StateGearHolder, gear:Gear)
 	{
 		this.gear = gear;
-		gear.addNeedTask(GearStateNeedTask.Core);
+		gear.addNeedTask(StateGearNeedTask.Core);
 	}
 	
 	
@@ -33,12 +33,12 @@ class StateGear
 	{
 		this.switcher = switcher;
 		changeStateLock = false;
-		gear.endNeedTask(GearStateNeedTask.Core);
+		gear.endNeedTask(StateGearNeedTask.Core);
 	}
 	
 	
 }
-enum GearStateNeedTask
+enum StateGearNeedTask
 {
 	Core;
 }
