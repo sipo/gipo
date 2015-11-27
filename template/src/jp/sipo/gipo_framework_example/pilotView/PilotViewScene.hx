@@ -24,9 +24,9 @@ class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 	private var input:ViewSceneInput;
 	/** フレーム間の更新 */
 	public var asyncUpdateDispatcher(default, null):GearDispatcher;
-	/** ドラッグなどの入力状態の更新 */
-	public var updateDispatcher(default, null):GearDispatcher;
 	/** 情報やカウンタの更新 */
+	public var updateDispatcher(default, null):GearDispatcher;
+	/** ドラッグなどの入力状態の更新 */
 	public var inputUpdateDispatcher(default, null):GearDispatcher;
 	/** 表示の更新（特に、必須ではない重い処理に使用する） */
 	public var drawDispatcher(default, null):GearDispatcher;
