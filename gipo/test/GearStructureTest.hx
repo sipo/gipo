@@ -1,5 +1,6 @@
 package;
 
+import haxe.ds.Option;
 import Type;
 import jp.sipo.gipo.core.GearHolder;
 import jp.sipo.gipo.core.Gear;
@@ -32,7 +33,7 @@ class GearStructureTest
 		parent = new GearHolderImpl();
 		child = new GearHolderImpl();
 		//根を初期化
-		parent.gearOutside().initializeTop(null);
+		parent.gearOutside().initializeTop(Option.None);
 	}
 	
 	@Test("setupが正しく行われている")

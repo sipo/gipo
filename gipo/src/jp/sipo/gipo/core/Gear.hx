@@ -5,15 +5,15 @@ package jp.sipo.gipo.core;
  * 
  * @author sipo
  */
+import haxe.ds.Option;
+import haxe.ds.Option;
 import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 import jp.sipo.gipo.core.handler.CancelKey;
 import Type;
 import jp.sipo.util.SipoError;
-import jp.sipo.util.SipoError;
 import jp.sipo.gipo.core.handler.GearDispatcherHandler;
 import jp.sipo.gipo.core.handler.GearDispatcher;
 import haxe.rtti.Meta;
-import jp.sipo.util.SipoError;
 import jp.sipo.gipo.util.PosWrapper;
 import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import haxe.PosInfos;
@@ -196,11 +196,18 @@ class Gear implements GearOutside
 	 * 
 	 * @param parentDiffuser diffuserだけ他から親子関係を持つ場合に、親として設定されるdiffuser。nullの場合は親を持たない
 	 */
-	public function initializeTop(parentDiffuser:Diffuser):Void
+	public function initializeTop(parentDiffuser:Option<Diffuser>):Void
 	{
 		if (!checkPhaseCreate()) throw new SipoError('既に親子関係が生成されたインスタンス(${this})をtopに設定しようとしました');
+		// Optionalをnullに変換する。外部向けにはOptionalであるべきだが、内部のinitializeCommonは速度的にnullを使用するため。
+		var _parentDiffuser:Diffuser;
+		switch(parentDiffuser)
+		{
+			case Option.Some(value) : _parentDiffuser = value;
+			case Option.None : _parentDiffuser = null;
+		}
 		// 初期化
-		initializeCommon(parentDiffuser);
+		initializeCommon(_parentDiffuser);
 	}
 	
 	/* 削除キャンセルのキーを登録 */

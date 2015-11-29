@@ -4,6 +4,7 @@ package jp.sipo.gipo.core;
  * 
  * @auther sipo
  */
+import haxe.ds.Option;
 import jp.sipo.gipo.core.handler.CancelKey;
 import haxe.PosInfos;
 interface GearOutside
@@ -13,7 +14,7 @@ interface GearOutside
 	 * 
 	 * @param parentDiffuser Diffuserのみをどこからか引き継ぎたい場合に設定する。不必要ならnull
 	 */
-	public function initializeTop(parentDiffuser:Diffuser):Void;
+	public function initializeTop(parentDiffuser:Option<Diffuser>):Void;
 	
 	/**
 	 * 親がなくとも動作するGearHolderを消去する
