@@ -169,13 +169,13 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 	
 	
 	/**
-	 * イベントの発生を受け取る
+	 * インプットの発生を受け取る
 	 */
 	public function noticeLog(logway:LogwayKind, factorPos:PosInfos):Void
 	{
 		var phaseValue:ReproducePhase<TUpdateKind> = switch(phase)
 		{
-			case Option.None : throw 'フェーズ中でなければ記録できません $phase';
+			case Option.None : throw 'Logicへの入力処理は、Topで設定されるフェーズの中でなければ記録できません $phase';
 			case Option.Some(v) : v;
 		}
 		// メイン処理
