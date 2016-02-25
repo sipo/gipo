@@ -231,6 +231,9 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 		startRecord();
 		// 再生を開始
 		stateSwitcherGear.changeState(new ReproduceReplay(log, executeEvent, replayEnd));
+		
+		// 開始0フレーム目にreadyの記録があった場合に進行を止める
+		canProgress = replayer.checkCanProgress();
 	}
 	/* イベントを実際に実行する処理 */
 	private function executeEvent(part:LogPart<TUpdateKind>):Void
