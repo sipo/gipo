@@ -141,13 +141,15 @@ class ReproduceReplay<TUpdateKind> extends StateGearHolderImpl implements Reprod
 	 */
 	public function endPhase(phaseValue:ReproducePhase<TUpdateKind>, canProgress:Bool):Void
 	{
-		if (!canProgress) return;
 		// 再生予定リストを再生
 		while (nextLogPartList.length != 0)
 		{
 			var part:LogPart<TUpdateKind> = nextLogPartList[0];
 			// phaseが一致しているもののでなければ終了
 			if (!part.equalPhase(phaseValue)) break;
+			// 実際のイベント待ちの処理だったら終了
+			if (yetReadyList.length > 0 && yetReadyList[0] == part) break;
+			
 			// 削除
 			nextLogPartList.shift();
 			// 実行
