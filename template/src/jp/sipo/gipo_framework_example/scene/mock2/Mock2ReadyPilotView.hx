@@ -58,7 +58,8 @@ class Mock2ReadyPilotView extends PilotViewScene implements Mock2ReadyViewOrder
 		asyncLabel = uiContainer.addLabel("asyncLabel");
 		
 		// 仮想的なViewの準備をするために、ランダムで待ちフレームを決める
-		asyncCountMax = 30 + Math.floor(Math.random() * 30 * 5);
+		var candidates = [1, 2, 150, 151];
+		asyncCountMax = candidates[Std.random(candidates.length)];
 		
 		drawSyncLabel();
 		drawAsyncLabel();

@@ -126,7 +126,6 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 	 */
 	public function checkCanProgress():Bool
 	{
-		canProgress = replayer.checkCanProgress();
 		return canProgress;
 	}
 	
@@ -147,6 +146,9 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 	 */
 	public function startOutFramePhase():Void
 	{
+		// 進行可能かの切り替えは、そのフレーム間フェーズの開始時に反映する。
+		canProgress = replayer.checkCanProgress();
+
 		startPhase(ReproducePhase.OutFrame);
 	}
 	/**

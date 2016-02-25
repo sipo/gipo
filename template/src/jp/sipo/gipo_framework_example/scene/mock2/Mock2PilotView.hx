@@ -37,7 +37,7 @@ class Mock2PilotView extends PilotViewScene implements Mock2ViewOrder
 		uiContainer = gear.addChild(new MinimalcompsGipoContainer(uiLayer));
 		// 表示設置
 		// ラベルの設置
-		uiContainer.addLabel("開発テスト画面2");
+		uiContainer.addLabel("開発テスト画面2 準備完了");
 		// ボタンの設置
 		uiContainer.addPushButton("遷移テスト", demoChangeSceneButton_click);
 		
