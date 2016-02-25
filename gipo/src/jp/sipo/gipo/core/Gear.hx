@@ -194,7 +194,7 @@ class Gear implements GearOutside
 	 * 通常のGearが親に追加された時の処理を代わりにしてしまう
 	 * 消去する時は、disposeTop
 	 * 
-	 * @param parentDiffuser diffuserだけ他から親子関係を持つ場合に、親として設定されるdiffuser。nullの場合は親を持たない
+	 * @param parentDiffuser diffuserだけ他から親子関係を持つ場合に、親として設定されるdiffuser。Option.Noneの場合は親を持たない
 	 */
 	public function initializeTop(parentDiffuser:Option<Diffuser>):Void
 	{
