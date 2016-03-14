@@ -425,9 +425,3 @@ class DiffuseDataSub extends DiffuseData
 {
 	public function new() { super(); }
 }
-
-enum DiffuseDataKey
-{
-	Key1;
-	Key2;
-}
