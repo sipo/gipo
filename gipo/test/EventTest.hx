@@ -1,5 +1,6 @@
 package;
 
+import haxe.ds.Option;
 import jp.sipo.gipo.core.Gear;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
@@ -97,7 +98,7 @@ class EventTest
 		Assert.areEqual(-1, top.bubbleTimeCode);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called in order
 		Assert.areEqual(0, top.diffusibleTimeCode);
@@ -139,7 +140,7 @@ class EventTest
 		Assert.areEqual(-1, nodeAA.bubbleTimeCode);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called in order
 		Assert.areEqual(0, top.diffusibleTimeCode);
@@ -200,7 +201,7 @@ class EventTest
 		Assert.areEqual(-1, nodeBB.bubbleTimeCode);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called in order
 		Assert.areEqual(0, top.diffusibleTimeCode);
@@ -261,7 +262,7 @@ class EventTest
 		Assert.areEqual(-1, nodeBB.bubbleTimeCode);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called in order
 		Assert.areEqual(0, top.diffusibleTimeCode);
@@ -321,7 +322,7 @@ class EventTest
 		Assert.areEqual(-1, nodeBB.bubbleTimeCode);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called in order before addChild
 		Assert.areEqual(0, top.diffusibleTimeCode);
@@ -391,7 +392,7 @@ class EventTest
 		Assert.areEqual(-1, nodeBB.bubbleTimeCode);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called in order before addChild
 		Assert.areEqual(0, top.diffusibleTimeCode);
@@ -430,7 +431,7 @@ class EventTest
 		Assert.isNull(nodeB.node);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called and API called successfully
 		Assert.isNotNull(nodeB.node);
@@ -459,7 +460,7 @@ class EventTest
 		Assert.isNull(nodeB.node);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called and API called successfully
 		Assert.isNotNull(nodeB.node);
@@ -488,7 +489,7 @@ class EventTest
 		Assert.isNull(nodeB.node);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called and API called successfully
 		Assert.isNotNull(nodeB.node);
@@ -508,7 +509,7 @@ class EventTest
 
 		// build gear tree
 		var topGear = new EventNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: before call
 		Assert.isNull(nodeB.node);
@@ -538,7 +539,7 @@ class EventTest
 
 		// build gear tree
 		var topGear = new EventNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler is called and API called successfully
 		Assert.isFalse(nodeA.node.gear.childGearList.has(nodeAA.node.gear));
@@ -561,7 +562,7 @@ class EventTest
 
 		// build gear tree
 		var topGear = new EventNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler is called and API called successfully
 		Assert.isFalse(nodeA.node.gear.childGearList.has(nodeAA.node.gear));
@@ -580,7 +581,7 @@ class EventTest
 
 		// build gear tree
 		var topGear = new EventNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: before call
 		Assert.isTrue(nodeA.node.gear.childGearList.has(nodeAA.node.gear));
@@ -621,7 +622,7 @@ class EventTest
 		Assert.isNull(absorbedData);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called and API called successfully
 		Assert.isNotNull(absorbedData);
@@ -656,7 +657,7 @@ class EventTest
 		Assert.isNull(absorbedData);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler is called and API called successfully
 		Assert.isNotNull(absorbedData);
@@ -691,7 +692,7 @@ class EventTest
 		Assert.isNull(absorbedData);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler is called and API called successfully
 		Assert.isNotNull(absorbedData);
@@ -718,7 +719,7 @@ class EventTest
 
 		// build gear tree
 		var topGear = new EventNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: before call
 		Assert.isNull(absorbedData);
@@ -760,7 +761,7 @@ class EventTest
 		Assert.isNull(absorbedData);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handlers are called and API called successfully
 		Assert.isNotNull(absorbedData);
@@ -795,7 +796,7 @@ class EventTest
 		Assert.isNull(absorbedData);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler is called and API called successfully
 		Assert.isNotNull(absorbedData);
@@ -830,7 +831,7 @@ class EventTest
 		Assert.isNull(absorbedData);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler is called and API called successfully
 		Assert.isNotNull(absorbedData);
@@ -857,7 +858,7 @@ class EventTest
 
 		// build gear tree
 		var topGear = new EventNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: before call
 		Assert.isNull(absorbedData);
@@ -893,7 +894,7 @@ class EventTest
 		Assert.isFalse(isCalled);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler does not called yet
 		Assert.isFalse(isCalled);
@@ -928,7 +929,7 @@ class EventTest
 		Assert.isFalse(isCalled);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler does not called yet
 		Assert.isFalse(isCalled);
@@ -963,7 +964,7 @@ class EventTest
 		Assert.isFalse(isCalled);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler does not called yet
 		Assert.isFalse(isCalled);
@@ -998,7 +999,7 @@ class EventTest
 		Assert.isFalse(isCalled);
 
 		// build gear tree
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify: handler does not called yet
 		Assert.isFalse(isCalled);
@@ -1023,7 +1024,7 @@ class EventTest
 
 		// build gear tree
 		var topGear = new EventNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// call
 		var isCalled = false;

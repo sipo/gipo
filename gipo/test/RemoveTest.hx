@@ -1,5 +1,6 @@
 package;
 
+import haxe.ds.Option;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -87,7 +88,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
@@ -138,7 +139,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
@@ -190,7 +191,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
@@ -244,7 +245,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
@@ -302,7 +303,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
@@ -361,7 +362,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
@@ -423,7 +424,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new RemoveNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));
@@ -480,7 +481,7 @@ class RemoveTest
 
 		// build gear tree
 		var topGear = new DisposeTaskTwiceNode(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// check before removing
 		Assert.isTrue(top.self.gear.childGearList.has(nodeA.self.gear));

@@ -1,5 +1,6 @@
 package ;
 
+import haxe.ds.Option;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -33,7 +34,7 @@ class AutoAbsorbTest
 			Assert.areEqual(child.something.name, "John Doe");
 		});
 		
-		parent.gearOutside().initializeTop(null);
+		parent.gearOutside().initializeTop(Option.None);
 	}
 	
 }
