@@ -45,7 +45,7 @@ class ReproduceTest
 
         // build gear tree
         topGear = new ReproduceTop();
-        topGear.gearOutside().initializeTop(null);
+        topGear.gearOutside().initializeTop(Option.None);
 
         reproduce = topGear.reproduce;
         hook = topGear.hook;

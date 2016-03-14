@@ -1,5 +1,6 @@
 package;
 
+import haxe.ds.Option;
 import jp.sipo.gipo.core.GearPreparationTool;
 import jp.sipo.gipo.core.GearHolderImpl;
 import massive.munit.Assert;
@@ -32,7 +33,7 @@ class DiffuseTest
 		
 		// build gear tree
 		var topGear = new DiffuseTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 		
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -70,7 +71,7 @@ class DiffuseTest
 
 		// build gear tree
 		var topGear = new DiffuseTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -119,7 +120,7 @@ class DiffuseTest
 
 		// build gear tree
 		var topGear = new DiffuseTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData); // absorbed before diffuse dataA
@@ -154,7 +155,7 @@ class DiffuseTest
 
 		// build gear tree
 		var topGear = new DiffuseTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -185,7 +186,7 @@ class DiffuseTest
 
 		// build gear tree
 		var topGear = new DiffuseWithKeyTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -223,7 +224,7 @@ class DiffuseTest
 
 		// build gear tree
 		var topGear = new DiffuseWithKeyTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);
@@ -272,7 +273,7 @@ class DiffuseTest
 
 		// build gear tree
 		var topGear = new DiffuseWithKeyTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData); // absorbed before diffuse dataA
@@ -307,7 +308,7 @@ class DiffuseTest
 
 		// build gear tree
 		var topGear = new DiffuseWithKeyTop(top);
-		topGear.gearOutside().initializeTop(null);
+		topGear.gearOutside().initializeTop(Option.None);
 
 		// verify
 		Assert.areEqual(data, nodeA.autoData);

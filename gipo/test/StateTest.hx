@@ -1,5 +1,6 @@
 package ;
 
+import haxe.ds.Option;
 import massive.munit.Assert;
 import jp.sipo.gipo.core.handler.GenericGearDispatcher;
 import jp.sipo.gipo.core.state.StateGearHolder;
@@ -47,7 +48,7 @@ class StateTest
 	@Test
 	public function changeStateTest():Void
 	{
-		top.gearOutside().initializeTop(null);
+		top.gearOutside().initializeTop(Option.None);
 		Assert.areEqual(null, top.state);
 
 		top.changeState(childA);
@@ -78,7 +79,7 @@ class StateTest
 	@Test
 	public function setLastTreatmentHandlerTest():Void
 	{
-		top.gearOutside().initializeTop(null);
+		top.gearOutside().initializeTop(Option.None);
 		Assert.isNull(stateSwitcherGear.lastStateTreatment);
 		Assert.areEqual(0, topSwitcherGear.childGearList.length);
 
@@ -108,7 +109,7 @@ class StateTest
 	@Test
 	public function addEnterStateChangeHandlerTest():Void
 	{
-		top.gearOutside().initializeTop(null);
+		top.gearOutside().initializeTop(Option.None);
 
 		var funcList = stateSwitcherGear.enterStateChangeDispatcher.list;
 
@@ -131,7 +132,7 @@ class StateTest
 	@Test
 	public function addStateAssignmentHandlerTest():Void
 	{
-		top.gearOutside().initializeTop(null);
+		top.gearOutside().initializeTop(Option.None);
 
 		var assignmentList = stateSwitcherGear.stateAssignmentList;
 
