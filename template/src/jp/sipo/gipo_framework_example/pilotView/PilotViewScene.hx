@@ -15,7 +15,7 @@ import jp.sipo.gipo.core.handler.AddBehaviorPreset;
 import flash.display.Sprite;
 class PilotViewScene extends StateGearHolderImpl implements ViewSceneOrder
 {
-	@:absorbWithKey(PilotViewDiffuseKey.GameLayer)
+	@:absorbWithKey(jp.sipo.gipo_framework_example.pilotView.PilotView.PilotViewDiffuseKey.GameLayer)
 	private var layer:Sprite;
 	@:absorb
 	/* シーン用のinputを生成する */
