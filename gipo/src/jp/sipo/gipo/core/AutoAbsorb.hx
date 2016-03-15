@@ -191,15 +191,50 @@ private class Impl {
 		
 		// キーは定義に対して1つだけ存在
 		
-		// メタデータ '@:absorbWithKey(foobar.baz.Hoge.Fuga)' が定義されているとき
-		var tpath:String = null; // 'foobar.baz.Hoge'
-		var value:String = null; // 'Fuga'
+		// メタデータ '@:absorbWithKey(foobar.baz.Hoge.Fuga.Moja)' が定義されているとき
+		var tpath:String = null; // 'foobar.baz.Hoge.Fuga'
+		var value:String = null; // 'Moja'
+		var rpath:String = null; // 'foobar.baz.Fuga'
 		
 		{
 			var strs = ExprTools.toString(entry.params[0]).split('.');
 			
-			tpath = strs.slice( 0, -1).join('.');
-			value = strs.slice(-1    ).join('.');
+			if (strs.length <= 1) {
+				// 'Fuga' や 'Moja' など Enum または EnumValue のみしか指定がされていない
+				Context.fatalError('#10 : @:absorbWithKey には EnumValue までの完全修飾名をキーとして指定します', entry.pos);
+			}
+			
+			if (strs.length <= 2) {
+				// 'Fuga.Moja' など ルートに配置された型Enum
+				tpath = strs[0];
+				value = strs[1];
+			} else {
+				// 'baz.Fuga.Moja' や 'baz.Hoge.Fuga.Moja' など
+				// 完全修飾名を '.' で分解したとき 最後から3番目の要素が大文字から始まっている場合
+				// enum の定義名とモジュールの定義名が一致しないと判断する
+				// このとき 実行時に 'Type.resolveEnum' は 'baz.Fuga.Moja' を期待するためモジュール名を削除する
+				
+				tpath = strs.slice( 0, -1).join('.');
+				value = strs.slice(-1    ).join('.');
+				
+				// 'foobar.baz.Fuga.Moja' のとき 'baz'
+				// 'foobar.baz.Hoge.Fuga.Moja' のとき 'Hoge'
+				var enumNameOrLastPackage:String = strs[strs.length - 3];
+				// 'foobar.baz.Fuga.Moja' のとき 'b'
+				// 'foobar.baz.Hoge.Fuga.Moja' のとき 'H'
+				var char:String = enumNameOrLastPackage.charAt(0);
+				
+				// 大文字ならば
+				if (isUpperCase(char)) {
+					// enum の定義名とモジュールの名前が一致しない
+					// モジュールの名前を削除
+					strs.remove(enumNameOrLastPackage);
+				}
+				
+				// 'foobar.baz.Fuga.Moja'      のとき 'foobar.baz.Fuga.Moja'
+				// 'foobar.baz.Hoge.Fuga.Moja' のとき 'foobar.baz.Fuga.Moja'
+				rpath = strs.slice( 0, -1).join('.');
+			}
 		}
 		
 		try {
@@ -221,10 +256,10 @@ private class Impl {
 					
 					// '@:absorbWithKey' を削除
 					field.meta.remove(AutoAbsorbTag.ABSORB_WITH_KEY_TAG_HOOK);
-					// フィールドに '@absorbWithKey(tpath, value)' を追加
+					// フィールドに '@absorbWithKey(rpath, value)' を追加
 					field.meta.add(AutoAbsorbTag.ABSORB_WITH_KEY_TAG, [
 						// キーの列挙(Enum)の完全修飾名
-						{ expr : ExprDef.EConst(Constant.CString(tpath)), pos : Context.currentPos() },
+						{ expr : ExprDef.EConst(Constant.CString(rpath)), pos : Context.currentPos() },
 						// キー(EnumValue)の完全修飾名
 						{ expr : ExprDef.EConst(Constant.CString(value)), pos : Context.currentPos() },
 					], Context.currentPos());
@@ -240,5 +275,9 @@ private class Impl {
 	}
 	
 	#end
+	
+	private static function isUpperCase(char:String):Bool {
+		return char == char.toUpperCase();
+	}
 	
 }
