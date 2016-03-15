@@ -38,17 +38,7 @@ class AutoAbsorbTag {
 private class Impl {
 	
 	macro private static function build():Array<Field> {
-		#if debug_auto_absorb
-		var begin = Sys.cpuTime();
-		#end
-		
 		Context.onGenerate(onGenerate);
-		
-		#if debug_auto_absorb
-		var end = Sys.cpuTime();
-		log((end - begin) + 's', Context.currentPos());
-		#end
-		
 		return Context.getBuildFields();
 	}
 	
@@ -59,7 +49,6 @@ private class Impl {
 		Context.warning('[AutoAbsorb]' + ' ' + message, pos);
 		#end
 	}
-	
 	
 	private static function onGenerate(types:Array<MacroType>):Void {
 		// すべての型について
