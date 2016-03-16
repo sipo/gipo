@@ -55,7 +55,7 @@ class Hook extends GearHolderImpl implements HookForView implements HookForLogic
 {
 	@:absorb
 	private var logic:LogicForHook;
-	@:absorbWithKey(TopDiffuseKey.ReproduceKey)
+	@:absorbWithKey(jp.sipo.gipo_framework_example.context.Top.TopDiffuseKey.ReproduceKey)
 	private var reproduce:Reproduce<UpdateKind>;
 	
 	/** コンストラクタ */

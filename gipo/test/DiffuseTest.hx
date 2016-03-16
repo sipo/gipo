@@ -386,7 +386,7 @@ class DiffuseWithKeyTop extends GearHolderImpl
 
 class DiffuseWithKeyNode extends DiffuseWithKeyTop
 {
-	@:absorbWithKey(DiffuseDataKey.Key1)
+	@:absorbWithKey(DiffuseTest.DiffuseDataKey.Key1)
 	public var autoData:DiffuseData;
 
 	public function new(info:DiffuseTreeInfo)

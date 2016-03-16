@@ -23,7 +23,7 @@ class OperationLogic extends GearHolderImpl
 {
 	@:absorb
 	private var operationView:OperationView;
-	@:absorbWithKey(TopDiffuseKey.ReproduceKey)
+	@:absorbWithKey(jp.sipo.gipo_framework_example.context.Top.TopDiffuseKey.ReproduceKey)
 	private var reproduce:Reproduce<UpdateKind>;
 	
 	/* 最後に読み込んだログ */
