@@ -4,6 +4,7 @@ package jp.sipo.gipo.reproduce;
  * 
  * @auther sipo
  */
+import jp.sipo.gipo.core.GearHolder;
 import jp.sipo.gipo.core.state.StateSwitcherGearHolderLowLevelImpl;
 import jp.sipo.gipo.core.config.GearNoteTag;
 import jp.sipo.gipo.reproduce.LogWrapper;
@@ -118,6 +119,12 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 	/* 記録の開始 */
 	private function startRecord():Void
 	{
+		if (recorder != null)
+		{
+			// 現在のレコーダを削除
+			gear.removeChild(recorder);
+		}
+		
 		recorder = gear.addChild(new ReproduceRecordImpl<TUpdateKind>());
 	}
 	
@@ -268,6 +275,23 @@ class Reproduce<TUpdateKind> extends StateSwitcherGearHolderLowLevelImpl
 		log.setPosition(logIndex);
 		bookReplay = BookReplay.Book(log);
 	}
+	
+	/**
+	 * 記録済みのログを消去する
+	 */
+	public function clear():Void
+	{
+		frame = 0;
+		
+		// 予約を消す
+		bookReplay = BookReplay.None;
+		
+		// 記録ログをリセットして記録しなおし
+		startRecord();
+		
+		// 再生は待機状態へ
+		stateSwitcherGear.changeState(new ReproduceReplayWait<TUpdateKind>(executeEvent));
+	}
 }
 interface ReproduceReplayState<TUpdateKind> extends StateGearHolder
 {
@@ -296,7 +320,7 @@ enum BookReplay<TUpdateKind>
 	None;
 	Book(replayLog:ReplayLog<TUpdateKind>);
 }
-interface ReproduceRecord<TUpdateKind>
+interface ReproduceRecord<TUpdateKind> extends GearHolder
 {
 	/**
 	 * ログの保存

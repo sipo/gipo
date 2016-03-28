@@ -70,6 +70,7 @@ class OperationOverView extends GearHolderImpl implements OperationView
 		logCounter = openUiContainer.addLabel("none");
 		openUiContainer.addPushButton("SaveLog", saveLogButton_click);
 		openUiContainer.addPushButton("LoadLog", loadLogButton_click);
+		openUiContainer.addPushButton("Restart", restartButton_click);
 		comboBox = openUiContainer.addComboBox([], comboBox_select);
 		comboBox.visible = false;
 		startReplayButton = openUiContainer.addPushButton("StartReplay", startReplayButton_click);
@@ -110,6 +111,12 @@ class OperationOverView extends GearHolderImpl implements OperationView
 	private function minimizeButton_click():Void
 	{
 		changeMode(Mode.Minimize);
+	}
+	
+	/* 再スタートボタンをクリック */
+	private function restartButton_click():Void
+	{
+		hook.noticeOperationViewEvent(OperationViewEvent.Restart);
 	}
 	
 	/* 保存ボタンをクリック */

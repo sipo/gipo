@@ -27,6 +27,8 @@ enum OperationViewEvent
 	LocalSave;
 	/** ローカル読み込みの指示 */
 	LocalLoad;
+	/** はじめから */
+	Restart;
 	/** リプレイの開始 */
 	StartReplay(logIndex:Int);
 }

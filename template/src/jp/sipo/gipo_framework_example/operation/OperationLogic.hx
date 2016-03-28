@@ -5,26 +5,31 @@ package jp.sipo.gipo_framework_example.operation;
  * 
  * @auther sipo
  */
-import jp.sipo.gipo_framework_example.context.reproduce.UpdateKind;
-import jp.sipo.gipo_framework_example.operation.OperationView;
-import haxe.ds.Option;
-import jp.sipo.gipo.reproduce.LogWrapper;
-import jp.sipo.gipo_framework_example.context.Top;
-import String;
-import flash.utils.ByteArray;
-import jp.sipo.gipo.reproduce.Reproduce;
-import haxe.Serializer;
-import jp.sipo.util.HandlerUtil;
 import flash.events.Event;
 import flash.net.FileReference;
-import jp.sipo.gipo.core.GearHolderImpl;
+import flash.utils.ByteArray;
+import haxe.Serializer;
 import haxe.Unserializer;
+import haxe.ds.Option;
+import jp.sipo.gipo.core.GearHolderImpl;
+import jp.sipo.gipo.reproduce.LogWrapper.RecordLog;
+import jp.sipo.gipo.reproduce.LogWrapper.ReplayLog;
+import jp.sipo.gipo.reproduce.Reproduce;
+import jp.sipo.gipo_framework_example.context.Logic;
+import jp.sipo.gipo_framework_example.context.Top;
+import jp.sipo.gipo_framework_example.context.reproduce.SnapshotKind;
+import jp.sipo.gipo_framework_example.context.reproduce.UpdateKind;
+import jp.sipo.gipo_framework_example.operation.OperationView;
+import jp.sipo.util.HandlerUtil;
+
 class OperationLogic extends GearHolderImpl
 {
 	@:absorb
 	private var operationView:OperationView;
 	@:absorbWithKey(jp.sipo.gipo_framework_example.context.Top.TopDiffuseKey.ReproduceKey)
 	private var reproduce:Reproduce<UpdateKind>;
+	@:absorb
+	private var logic:Logic;
 	
 	/* 最後に読み込んだログ */
 	private var loadFile:Option<RecordLog<UpdateKind>> = Option.None;
@@ -49,6 +54,7 @@ class OperationLogic extends GearHolderImpl
 			case OperationViewEvent.LocalSave : localSave();
 			case OperationViewEvent.LocalLoad :  localLoad();
 			case OperationViewEvent.StartReplay(logIndex) :  startReplay(logIndex);
+			case OperationViewEvent.Restart: restart();
 		}
 	}
 	
@@ -104,6 +110,16 @@ class OperationLogic extends GearHolderImpl
 		}
 		// リプレイを開始
 		reproduce.startReplay(reproduceFile.convertReplay(), logIndex); 
+	}
+	
+	/* リプレイ情報を消去して、初めから */
+	private function restart():Void
+	{
+		// 保存している内容を消去
+		reproduce.clear(); 
+		
+		// hookに初期化用のsnapshotを渡す
+		logic.start();
 	}
 	
 	/* ================================================================
