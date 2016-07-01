@@ -6,6 +6,7 @@ package jp.sipo.gipo.core;
  * @author sipo
  */
 import Map.IMap;
+import haxe.EnumTools.EnumValueTools;
 import haxe.PosInfos;
 import jp.sipo.util.SipoError;
 class Diffuser
@@ -15,7 +16,7 @@ class Diffuser
 	/* クラスを使った辞書 */
 	private var instanceClassDictionary:Map<String, Dynamic>;	// MEMO:本来は、Class<Dynamic>などをキーにしたいが、Mapが対応していない
 	/* Enumキーを使った辞書 */
-	private var instanceEnumDictionary:Map<EnumValue, Dynamic>;
+	private var instanceEnumDictionary:Map<String, Map<EnumValue, Dynamic>>;
 	/* 関連クラス（デバッグ表示のみに使用される） */
 	private var holder:Dynamic;
 	
@@ -28,7 +29,7 @@ class Diffuser
 		// 変数初期化
 		parent = null;
 		instanceClassDictionary = new Map<String, Dynamic>();
-		instanceEnumDictionary = new Map<EnumValue, Dynamic>();
+		instanceEnumDictionary = new Map<String, Map<EnumValue, Dynamic>>();
 	}
 	
 	/* ================================================================
@@ -71,8 +72,9 @@ class Diffuser
 	 */ 
 	public function addWithKey(diffuseInstance:Dynamic, enumKey:EnumValue):Void
 	{
-		if (instanceEnumDictionary.exists(enumKey)) throw new SipoError("既に登録されているEnumを登録しようとしました" + instanceEnumDictionary.get(enumKey));
-		instanceEnumDictionary.set(enumKey, diffuseInstance);
+		var targetDictionary = getTargetEnumDictionary(enumKey);
+		if (targetDictionary.exists(enumKey)) throw new SipoError("既に登録されているEnumを登録しようとしました" + targetDictionary.get(enumKey));
+		targetDictionary.set(enumKey, diffuseInstance);
 	}
 	
 	/**
@@ -80,7 +82,8 @@ class Diffuser
 	 */
 	public function removeWithKey(enumKey:EnumValue):Void
 	{
-		instanceEnumDictionary.remove(enumKey);
+		var targetDictionary = getTargetEnumDictionary(enumKey);
+		targetDictionary.remove(enumKey);
 	}
 	
 	/**
@@ -114,7 +117,8 @@ class Diffuser
 	}
 	private function getWithKey_(enumKey:EnumValue, startDiffuser:Diffuser, pos:PosInfos):Dynamic
 	{
-		var answer:Dynamic = instanceEnumDictionary.get(enumKey);
+		var targetDictionary = getTargetEnumDictionary(enumKey);
+		var answer:Dynamic = targetDictionary.get(enumKey);
 		if (answer == null) {
 			// 対象インスタンスが、辞書になく、これ以上親もない場合はエラー
 			if (parent == null)
@@ -127,7 +131,18 @@ class Diffuser
 		}
 		return answer;
 	}
-	
+	private function getTargetEnumDictionary(enumKey:EnumValue):Map<EnumValue, Dynamic>
+	{
+		var enumName = Type.getEnumName(Type.getEnum(enumKey));
+		if (instanceEnumDictionary.exists(enumName))
+		{
+			return instanceEnumDictionary.get(enumName);
+		}
+		else
+		{
+			return instanceEnumDictionary[enumName] = new Map();
+		}
+	}
 	
 	/**
 	 * 消去処理。親との関連を切り離す
