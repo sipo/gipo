@@ -376,6 +376,7 @@ class DiffuseWithKeyTop extends GearHolderImpl
 	{
 		if(info.diffuseData != null) {
 			tool.diffuseWithKey(info.diffuseData, DiffuseDataKey.Key1);
+			tool.diffuseWithKey(info.diffuseData, DiffuseDataKey2.Key1);
 		}
 
 		for(child in info.children) {
@@ -427,6 +428,12 @@ class DiffuseDataSub extends DiffuseData
 }
 
 enum DiffuseDataKey
+{
+	Key1;
+	Key2;
+}
+
+enum DiffuseDataKey2
 {
 	Key1;
 	Key2;
